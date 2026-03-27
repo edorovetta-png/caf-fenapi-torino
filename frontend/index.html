@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAF FENAPI Torino — Centro di Assistenza Fiscale</title>
+  <meta name="description" content="CAF FENAPI sede provinciale di Torino. Assistenza fiscale per dipendenti, pensionati e imprese. Modello 730, ISEE, IMU e molto altro. Prenota un appuntamento.">
+  <meta name="keywords" content="CAF, FENAPI, Torino, assistenza fiscale, 730, ISEE, patronato, dichiarazione dei redditi">
+  <meta name="author" content="CAF FENAPI Torino">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CAF FENAPI Torino — Centro di Assistenza Fiscale">
+  <meta property="og:description" content="Assistenza fiscale qualificata a Torino. Modello 730, ISEE, IMU e servizi per cittadini e imprese.">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23206088'/><text x='50%25' y='55%25' text-anchor='middle' dy='.35em' font-family='sans-serif' font-weight='800' font-size='44' fill='white'>CF</text></svg>">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       FLOATING CTA — "Prenota un Appuntamento"
+       ════════════════════════════════════════════════════════════════════ -->
+  <div class="floating-cta" id="floatingCta">
+    <a href="https://caffenapi.lovable.app/" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <span class="cta-text-full">Prenota un Appuntamento</span>
+      <span class="cta-text-short">Prenota</span>
+    </a>
+  </div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scrollTop" aria-label="Torna su">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       HEADER
+       ════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Top Bar -->
+  <div class="header-top">
+    <div class="container">
+      <div class="header-top-contacts">
+        <a href="tel:+393517091611">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          351 709 1611
+        </a>
+        <a href="mailto:fenapitorino@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          fenapitorino@gmail.com
+        </a>
+      </div>
+      <div class="header-top-social">
+        <a href="https://www.facebook.com/fenapigroup/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="https://www.fenapigroup.it" target="_blank" rel="noopener noreferrer" aria-label="Sito Nazionale">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header class="header-main" id="headerMain">
+    <div class="container">
+      <a href="#" class="logo">
+        <div class="logo-icon">CF</div>
+        <div class="logo-text">
+          <strong>CAF FENAPI</strong>
+          <span>Sede Provinciale di Torino</span>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Apri menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="nav-wrapper" id="navWrapper">
+        <nav class="nav-main">
+          <a href="#home" class="active">Home</a>
+          <a href="#servizi">Servizi</a>
+          <a href="#chi-siamo">Chi Siamo</a>
+          <a href="#il-gruppo">Il Gruppo</a>
+          <a href="#contatti">Contatti</a>
+        </nav>
+        <div class="header-cta">
+          <a href="https://caffenapi.lovable.app/" target="_blank" rel="noopener noreferrer" class="btn-appointment" id="headerAppointmentBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Prenota
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       HERO SECTION
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <img src="images/hero_banner.png" alt="CAF FENAPI Torino — ufficio moderno con vista su Torino" width="1920" height="1080">
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Sede Provinciale di Torino
+        </div>
+        <h1>CAF FENAPI <em>Torino</em></h1>
+        <p class="hero-subtitle">Assistenza fiscale qualificata per dipendenti, pensionati e imprese. Al tuo fianco per ogni esigenza fiscale e previdenziale.</p>
+        <div class="hero-actions">
+          <a href="https://caffenapi.lovable.app/" target="_blank" rel="noopener noreferrer" class="btn-hero-primary" id="heroAppointmentBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Prenota un Appuntamento
+          </a>
+          <a href="#servizi" class="btn-hero-secondary">Scopri i Nostri Servizi</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="number counter-animated" data-target="231">0</div>
+            <div class="label">Sedi in Italia</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number counter-animated" data-target="30">0</div>
+            <div class="label">Anni di Esperienza</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number counter-animated" data-target="19">0</div>
+            <div class="label">Regioni Servite</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number counter-animated" data-target="13">0</div>
+            <div class="label">Paesi Esteri</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       SERVIZI
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="services" id="servizi">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>I Nostri Servizi</h2>
+        <p>Assistenza fiscale completa e qualificata per cittadini e imprese. Il CAF FENAPI di Torino offre un mondo di servizi.</p>
+      </div>
+
+      <div class="services-grid stagger-children">
+        <!-- Modello 730 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <h4>Modello 730</h4>
+          <p>Compilazione e trasmissione della dichiarazione dei redditi per lavoratori dipendenti e pensionati.</p>
+          <a href="#servizi-dettaglio" class="service-link">Scopri di pi&ugrave; &rarr;</a>
+        </div>
+
+        <!-- ISEE -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h4>Modello ISEE</h4>
+          <p>Calcolo dell'Indicatore della Situazione Economica Equivalente per accedere a prestazioni agevolate.</p>
+          <a href="#servizi-dettaglio" class="service-link">Scopri di pi&ugrave; &rarr;</a>
+        </div>
+
+        <!-- IMU / TASI -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <h4>IMU / TASI</h4>
+          <p>Calcolo e assistenza per il pagamento delle imposte comunali sugli immobili.</p>
+          <a href="#servizi-dettaglio" class="service-link">Scopri di pi&ugrave; &rarr;</a>
+        </div>
+
+        <!-- RED -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <h4>Dichiarazione RED</h4>
+          <p>Compilazione della dichiarazione reddituale per i pensionati con prestazioni legate al reddito.</p>
+          <a href="#contatti" class="service-link">Contattaci &rarr;</a>
+        </div>
+
+        <!-- UNICO PF -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          </div>
+          <h4>UNICO PF</h4>
+          <p>Modello Redditi Persone Fisiche per titolari di partita IVA, liberi professionisti e autonomi.</p>
+          <a href="#contatti" class="service-link">Contattaci &rarr;</a>
+        </div>
+
+        <!-- Pensioni -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h4>Pensioni</h4>
+          <p>Assistenza previdenziale completa: domande di pensione, ricostituzione, supplementi e ricorsi tramite il Patronato INAPI.</p>
+          <a href="#contatti" class="service-link">Contattaci &rarr;</a>
+        </div>
+
+        <!-- Invalidit&agrave; -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </div>
+          <h4>Invalidit&agrave; Civile</h4>
+          <p>Assistenza per il riconoscimento dell'invalidit&agrave; civile, accompagnamento e indennit&agrave; di frequenza.</p>
+          <a href="#contatti" class="service-link">Contattaci &rarr;</a>
+        </div>
+
+        <!-- Successioni -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          </div>
+          <h4>Successioni</h4>
+          <p>Dichiarazioni di successione, volture catastali e assistenza per pratiche ereditarie.</p>
+          <a href="#contatti" class="service-link">Contattaci &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       CTA BANNER — Prenota Appuntamento
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="cta-banner">
+    <div class="container fade-in">
+      <h2>Hai bisogno di assistenza fiscale?</h2>
+      <p>Prenota subito un appuntamento presso la nostra sede di Torino. Il nostro team di esperti &egrave; pronto ad aiutarti.</p>
+      <a href="https://caffenapi.lovable.app/" target="_blank" rel="noopener noreferrer" class="btn-cta" id="bannerAppointmentBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Prenota un Appuntamento
+      </a>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       CHI SIAMO
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="about" id="chi-siamo">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image fade-in-left">
+          <img src="images/services_image.png" alt="Consulenza fiscale professionale presso CAF FENAPI Torino" width="800" height="500">
+          <div class="about-image-badge">
+            <div class="badge-number">1992</div>
+            <div class="badge-text">Anno di fondazione</div>
+          </div>
+        </div>
+        <div class="about-content fade-in-right">
+          <h2>Chi Siamo: <span class="highlight-text">un mondo di servizi</span></h2>
+          <p>Il <strong>CAF FENAPI</strong> &egrave; il Centro di Assistenza Fiscale promosso dalla Federazione Nazionale Autonoma Piccoli Imprenditori. Costituito per garantire a tutti i cittadini l'assistenza fiscale di qualit&agrave;, il CAF FENAPI &egrave; presente su tutto il territorio nazionale.</p>
+          <p>La nostra <strong>sede provinciale di Torino</strong> offre assistenza qualificata per dipendenti, pensionati e imprese. La nostra mission &egrave; orientata a favorire la semplificazione e il miglioramento dei rapporti tra cittadini e Pubblica Amministrazione.</p>
+          <p>FENAPI &egrave; un'organizzazione professionale di categoria senza fini di lucro che dal 1992 associa i Piccoli Imprenditori nei comparti artigianato, commercio, agricoltura, pesca, piccola industria e servizi.</p>
+          <div class="about-values">
+            <div class="about-value">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Tutela e rappresentanza
+            </div>
+            <div class="about-value">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Innovazione continua
+            </div>
+            <div class="about-value">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Giustizia sociale
+            </div>
+            <div class="about-value">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Radicamento territoriale
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       SERVIZI DETTAGLIO (730 e ISEE)
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="servizi-dettaglio" id="servizi-dettaglio">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Modello 730 e ISEE</h2>
+        <p>I nostri servizi principali per l'assistenza fiscale ai cittadini.</p>
+      </div>
+
+      <div class="servizi-detail-grid">
+        <div class="servizio-detail-card fade-in-left">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3>Modello 730</h3>
+          </div>
+          <p>Il modello 730 &egrave; la dichiarazione dei redditi utilizzabile dai lavoratori dipendenti e dai pensionati. Il contribuente pu&ograve; accedere alla propria dichiarazione precompilata tramite il CAF FENAPI.</p>
+          <ul class="features-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Compilazione e trasmissione telematica
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Apposizione del visto di conformit&agrave;
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Gestione 730 precompilato
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Assistenza personalizzata
+            </li>
+          </ul>
+        </div>
+
+        <div class="servizio-detail-card fade-in-right">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h3>Modello ISEE</h3>
+          </div>
+          <p>L'ISEE &egrave; lo strumento che permette di misurare la condizione economica delle famiglie, determinando chi ha diritto a prestazioni sociali agevolate, esenzioni e agevolazioni tariffarie.</p>
+          <ul class="features-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              ISEE ordinario e corrente
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              ISEE universitario
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              ISEE sociosanitario
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Aggiornamento e rinnovo
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       IL GRUPPO FENAPI
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="gruppo" id="il-gruppo">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Il Gruppo FENAPI</h2>
+        <p>Un sistema integrato di enti e servizi a disposizione dei cittadini e delle imprese.</p>
+      </div>
+
+      <div class="gruppo-grid stagger-children">
+        <a href="https://www.fenapigroup.it/inapi/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#127979;</div>
+          <h5>Patronato INAPI</h5>
+          <p>Assistenza previdenziale e sociale</p>
+        </a>
+        <a href="https://www.fenapigroup.it/caf-fenapi/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#128196;</div>
+          <h5>CAF FENAPI</h5>
+          <p>Assistenza fiscale dipendenti e pensionati</p>
+        </a>
+        <a href="https://www.fenapigroup.it/caf-impresa-fenapi/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#128188;</div>
+          <h5>CAF Impresa FENAPI</h5>
+          <p>Assistenza fiscale per le imprese</p>
+        </a>
+        <a href="https://www.fenapigroup.it/caa-fenapi/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#127806;</div>
+          <h5>CAA FENAPI</h5>
+          <p>Centro Assistenza Agricola</p>
+        </a>
+        <a href="https://www.fondoconoscenza.it/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#127891;</div>
+          <h5>Fondo Conoscenza</h5>
+          <p>Fondo interprofessionale per la formazione</p>
+        </a>
+        <a href="https://www.fenapigroup.it/siamo-impresa-pmi-fenapi/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#128736;</div>
+          <h5>Siamo Impresa PMI</h5>
+          <p>Unione del manifatturiero</p>
+        </a>
+        <a href="https://www.fenapigroup.it/cipalf/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#128101;</div>
+          <h5>CIPALF</h5>
+          <p>Politiche attive per il lavoro</p>
+        </a>
+        <a href="http://www.enfip.it/" target="_blank" rel="noopener noreferrer" class="gruppo-card" style="text-decoration:none;">
+          <div class="gruppo-card-icon">&#128218;</div>
+          <h5>ENFIP</h5>
+          <p>Istruzione professionale</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       CONTATTI
+       ════════════════════════════════════════════════════════════════════ -->
+  <section class="contatti" id="contatti">
+    <div class="container">
+      <div class="section-title fade-in">
+        <h2>Contattaci</h2>
+        <p>Vieni a trovarci nella nostra sede di Torino o contattaci per informazioni e appuntamenti.</p>
+      </div>
+
+      <div class="contatti-grid">
+        <div class="contatti-info fade-in-left">
+          <!-- Indirizzo -->
+          <div class="contatto-item">
+            <div class="contatto-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="contatto-text">
+              <h5>Indirizzo</h5>
+              <p>Via Sagra S. Michele, 53<br>10141 Torino TO</p>
+            </div>
+          </div>
+
+          <!-- Telefono -->
+          <div class="contatto-item">
+            <div class="contatto-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div class="contatto-text">
+              <h5>Telefono</h5>
+              <a href="tel:+393517091611">351 709 1611</a>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="contatto-item">
+            <div class="contatto-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="contatto-text">
+              <h5>Email</h5>
+              <a href="mailto:fenapitorino@gmail.com">fenapitorino@gmail.com</a>
+            </div>
+          </div>
+
+          <!-- Orari -->
+          <div class="contatto-item">
+            <div class="contatto-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="contatto-text">
+              <h5>Orari di Apertura</h5>
+              <p>Luned&igrave; &ndash; Venerd&igrave;<br>10:00 &ndash; 13:30  |  15:00 &ndash; 18:00</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mappa -->
+        <div class="contatti-map fade-in-right">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2816.966!2d7.6346!3d45.0732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47886d3b1d3d9c3b%3A0x0!2sVia+Sagra+San+Michele%2C+53%2C+10141+Torino+TO!5e0!3m2!1sit!2sit!4v1"
+            width="600"
+            height="450"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Mappa CAF FENAPI Torino">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Ribbon -->
+  <div class="footer-ribbon">
+    <p>Pi&ugrave; valore alla persona, pi&ugrave; futuro per l'impresa</p>
+  </div>
+
+  <!-- Footer Main -->
+  <footer class="footer-main">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1 — Logo + description -->
+        <div class="footer-col footer-logo-section">
+          <div class="footer-logo-text">
+            <div class="logo-mark">CF</div>
+            <span class="logo-name">CAF FENAPI Torino</span>
+          </div>
+          <p>Centro di Assistenza Fiscale della Federazione Nazionale Autonoma Piccoli Imprenditori. Sede provinciale di Torino al servizio di cittadini e imprese dal 1992.</p>
+          <div class="footer-social">
+            <a href="https://www.facebook.com/fenapigroup/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="https://www.fenapigroup.it" target="_blank" rel="noopener noreferrer" aria-label="Sito Nazionale">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Col 2 — Link Enti -->
+        <div class="footer-col">
+          <h5>Enti FENAPI Group</h5>
+          <a href="http://www.inapi.it/" target="_blank" rel="noopener noreferrer">Patronato INAPI</a>
+          <a href="http://caf.fenapi.it/" target="_blank" rel="noopener noreferrer">CAF Fenapi</a>
+          <a href="http://www.cafimpresa.fenapi.it/www/" target="_blank" rel="noopener noreferrer">CAF Impresa FENAPI</a>
+          <a href="http://www.fondoconoscenza.it/" target="_blank" rel="noopener noreferrer">Fondo Conoscenza</a>
+          <a href="http://www.enfip.it/" target="_blank" rel="noopener noreferrer">ENFIP</a>
+        </div>
+
+        <!-- Col 3 — Link Utili -->
+        <div class="footer-col">
+          <h5>Link Utili</h5>
+          <a href="https://www.inps.it/" target="_blank" rel="noopener noreferrer">INPS</a>
+          <a href="https://www.inail.it/" target="_blank" rel="noopener noreferrer">INAIL</a>
+          <a href="https://www.lavoro.gov.it/" target="_blank" rel="noopener noreferrer">Ministero del Lavoro</a>
+          <a href="https://www.agenziaentrate.gov.it/" target="_blank" rel="noopener noreferrer">Agenzia delle Entrate</a>
+          <a href="https://www.fenapigroup.it/carta-servizi/" target="_blank" rel="noopener noreferrer">Carta dei Servizi</a>
+        </div>
+
+        <!-- Col 4 — Contatti -->
+        <div class="footer-col">
+          <h5>Sede di Torino</h5>
+          <a href="https://maps.google.com/?q=Via+Sagra+S.+Michele+53+10141+Torino" target="_blank" rel="noopener noreferrer">Via Sagra S. Michele, 53<br>10141 Torino TO</a>
+          <a href="tel:+393517091611">Tel: 351 709 1611</a>
+          <a href="mailto:fenapitorino@gmail.com">fenapitorino@gmail.com</a>
+          <p style="margin-top:8px;">Lun &ndash; Ven: 10:00&ndash;13:30 / 15:00&ndash;18:00</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; 2026 CAF FENAPI &mdash; Sede Provinciale di Torino. Tutti i diritti riservati.</p>
+      <div>
+        <a href="https://www.fenapigroup.it/centro-privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+        &nbsp;|&nbsp;
+        <a href="https://www.fenapigroup.it/centro-privacy/informativa-sui-cookie/" target="_blank" rel="noopener noreferrer">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       JAVASCRIPT
+       ════════════════════════════════════════════════════════════════════ -->
+  <script src="script.js"></script>
+</body>
+</html>
