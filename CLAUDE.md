@@ -36,13 +36,6 @@ npm run test:watch   # run tests in watch mode
 npm run lint         # eslint
 ```
 
-### Backend (FastAPI — currently scaffold only)
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
 ### Execution scripts
 ```bash
 pip install -r requirements.txt   # root requirements.txt
