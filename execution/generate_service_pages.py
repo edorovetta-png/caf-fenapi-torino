@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Genera le pagine servizi rimanenti per CAF FENAPI Torino.
+Genera le pagine servizi rimanenti per Circolo FENAPI Torino.
 Execution layer script — deterministic page generation.
 """
 
@@ -12,7 +12,7 @@ SERVIZI_DIR = str(Path(__file__).parent.parent / "frontend" / "servizi")
 # Template components
 def header_html(title_short):
     return f'''<header class="header-main" id="headerMain"><div class="container">
-    <a href="../index.html" class="logo"><div class="logo-icon">CF</div><div class="logo-text"><strong>CAF FENAPI</strong><span>Sede Provinciale di Torino</span></div></a>
+    <a href="../index.html" class="logo"><div class="logo-icon">CF</div><div class="logo-text"><strong>CIRCOLO FENAPI</strong><span>Provincia di Torino</span></div></a>
     <button class="nav-toggle" id="navToggle" aria-label="Apri menu"><span></span><span></span><span></span></button>
     <div class="nav-wrapper" id="navWrapper"><nav class="nav-main"><a href="../index.html">Home</a><a href="../index.html#servizi" class="active">Servizi</a><a href="../index.html#chi-siamo">Chi Siamo</a><a href="../index.html#il-gruppo">Il Gruppo</a><a href="../index.html#contatti">Contatti</a></nav>
     <div class="header-cta"><a href="https://caffenapi.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-appointment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Prenota</a></div></div>
@@ -23,12 +23,12 @@ FLOATING = '''<div class="floating-cta" id="floatingCta"><a href="https://caffen
 
 FOOTER = '''<div class="footer-ribbon"><p>Pi&ugrave; valore alla persona, pi&ugrave; futuro per l\'impresa</p></div>
   <footer class="footer-main"><div class="container"><div class="footer-grid">
-    <div class="footer-col footer-logo-section"><div class="footer-logo-text"><div class="logo-mark">CF</div><span class="logo-name">CAF FENAPI Torino</span></div><p>Centro di Assistenza Fiscale. Sede provinciale di Torino.</p></div>
+    <div class="footer-col footer-logo-section"><div class="footer-logo-text"><div class="logo-mark">CF</div><span class="logo-name">Circolo FENAPI Torino</span></div><p>Centro di Assistenza Fiscale. Sede provinciale di Torino.</p></div>
     <div class="footer-col"><h5>Servizi</h5><a href="modello-730.html">Modello 730</a><a href="modello-isee.html">Modello ISEE</a><a href="imu-tasi.html">IMU / TASI</a><a href="red.html">Dichiarazione RED</a><a href="unico-pf.html">UNICO PF</a></div>
     <div class="footer-col"><h5>Altro</h5><a href="pensioni.html">Pensioni</a><a href="invalidita.html">Invalidit&agrave; Civile</a><a href="successioni.html">Successioni</a><a href="../index.html#chi-siamo">Chi Siamo</a></div>
     <div class="footer-col"><h5>Sede di Torino</h5><a href="https://maps.google.com/?q=Via+Sagra+S.+Michele+53+10141+Torino" target="_blank">Via Sagra S. Michele, 53<br>10141 Torino TO</a><a href="tel:+393517091611">Tel: 351 709 1611</a><a href="mailto:fenapitorino@gmail.com">fenapitorino@gmail.com</a></div>
   </div></div></footer>
-  <div class="footer-bottom"><div class="container"><p>&copy; 2026 CAF FENAPI &mdash; Sede Provinciale di Torino.</p><div><a href="https://www.fenapigroup.it/centro-privacy/" target="_blank">Privacy</a> | <a href="https://www.fenapigroup.it/centro-privacy/informativa-sui-cookie/" target="_blank">Cookie</a></div></div></div>'''
+  <div class="footer-bottom"><div class="container"><p>&copy; 2026 Circolo FENAPI Circolo FENAPI &mdash; Sede Provincialemdash; Provincia di Torino.</p><div><a href="https://www.fenapigroup.it/centro-privacy/" target="_blank">Privacy</a> | <a href="https://www.fenapigroup.it/centro-privacy/informativa-sui-cookie/" target="_blank">Cookie</a></div></div></div>'''
 
 def sidebar_html(nav_items, cta_title="Hai bisogno di assistenza?"):
     nav_links = "\n".join([f'        <a href="#{k}">{v}</a>' for k,v in nav_items])
@@ -59,7 +59,7 @@ def make_page(filename, title, meta_desc, subtitle, breadcrumb_name, nav_items, 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title} &mdash; CAF FENAPI Torino</title>
+  <title>{title} &mdash; Circolo FENAPI Torino</title>
   <meta name="description" content="{meta_desc}">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23206088'/><text x='50%25' y='55%25' text-anchor='middle' dy='.35em' font-family='sans-serif' font-weight='800' font-size='44' fill='white'>CF</text></svg>">
   <link rel="stylesheet" href="../styles.css">
@@ -96,7 +96,7 @@ def make_page(filename, title, meta_desc, subtitle, breadcrumb_name, nav_items, 
 make_page(
     "imu-tasi.html",
     "IMU / TASI",
-    "Calcolo e assistenza IMU e TASI presso il CAF FENAPI di Torino. Supporto per imposte comunali sugli immobili.",
+    "Calcolo e assistenza IMU e TASI presso il Circolo FENAPI di Torino. Supporto per imposte comunali sugli immobili.",
     "Calcolo e assistenza per le imposte comunali sugli immobili",
     "IMU / TASI",
     [("cos-e","Cos'&egrave; l'IMU"), ("chi-paga","Chi deve pagare"), ("calcolo","Come si calcola"), ("scadenze","Scadenze"), ("documenti","Documenti necessari")],
@@ -104,7 +104,7 @@ make_page(
         '''<section id="cos-e" class="content-section fade-in">
         <h2>Cos'&egrave; l'IMU</h2>
         <p>L'IMU (Imposta Municipale Unica) &egrave; l'imposta comunale dovuta dai possessori di immobili, aree fabbricabili e terreni agricoli. A partire dal 2020, la TASI &egrave; stata abolita e incorporata nella nuova IMU.</p>
-        <p>Il CAF FENAPI di Torino offre assistenza completa per il calcolo dell'IMU, la compilazione dei modelli F24 per il versamento e la verifica delle eventuali esenzioni spettanti.</p>
+        <p>Il Circolo FENAPI di Torino offre assistenza completa per il calcolo dell'IMU, la compilazione dei modelli F24 per il versamento e la verifica delle eventuali esenzioni spettanti.</p>
         <div class="info-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           <div><strong>Esenzione abitazione principale</strong><p>L'abitazione principale e le relative pertinenze (una per categoria C/2, C/6 e C/7) sono esenti dall'IMU, salvo le categorie catastali A/1, A/8 e A/9 (immobili di lusso).</p></div>
@@ -151,7 +151,7 @@ make_page(
 make_page(
     "red.html",
     "Dichiarazione RED",
-    "Compilazione della dichiarazione RED presso il CAF FENAPI di Torino per pensionati con prestazioni legate al reddito.",
+    "Compilazione della dichiarazione RED presso il Circolo FENAPI di Torino per pensionati con prestazioni legate al reddito.",
     "Dichiarazione reddituale per pensionati con prestazioni collegate al reddito",
     "Dichiarazione RED",
     [("cos-e","Cos'&egrave; il RED"), ("chi-deve","Chi deve presentarlo"), ("informazioni","Informazioni richieste"), ("documenti","Documenti necessari")],
@@ -198,14 +198,14 @@ make_page(
       </section>'''
     ],
     "Devi presentare il RED?",
-    "Il CAF FENAPI di Torino ti assiste nella compilazione e trasmissione della dichiarazione RED."
+    "Il Circolo FENAPI di Torino ti assiste nella compilazione e trasmissione della dichiarazione RED."
 )
 
 # ── UNICO PF ────────────────────────────────────────────────────────────
 make_page(
     "unico-pf.html",
     "UNICO PF",
-    "Modello Redditi Persone Fisiche (ex UNICO) presso il CAF FENAPI di Torino per titolari di partita IVA e autonomi.",
+    "Modello Redditi Persone Fisiche (ex UNICO) presso il Circolo FENAPI di Torino per titolari di partita IVA e autonomi.",
     "Modello Redditi PF per titolari di partita IVA, liberi professionisti e lavoratori autonomi",
     "UNICO PF",
     [("cos-e","Cos'&egrave; il Modello Redditi PF"), ("chi-deve","Chi deve utilizzarlo"), ("differenze","Differenze con il 730"), ("documenti","Documenti necessari")],
@@ -213,7 +213,7 @@ make_page(
         '''<section id="cos-e" class="content-section fade-in">
         <h2>Cos'&egrave; il Modello Redditi PF</h2>
         <p>Il Modello Redditi Persone Fisiche (ex Modello UNICO) &egrave; la dichiarazione dei redditi utilizzata dai contribuenti che non possono o non vogliono utilizzare il Modello 730. &Egrave; obbligatorio per i titolari di partita IVA, i liberi professionisti e i lavoratori autonomi.</p>
-        <p>Il CAF FENAPI di Torino offre assistenza qualificata nella compilazione e trasmissione telematica del Modello Redditi PF.</p>
+        <p>Il Circolo FENAPI di Torino offre assistenza qualificata nella compilazione e trasmissione telematica del Modello Redditi PF.</p>
       </section>''',
         '''<section id="chi-deve" class="content-section fade-in">
         <h2>Chi deve utilizzare il Modello Redditi PF</h2>
@@ -259,14 +259,14 @@ make_page(
 make_page(
     "pensioni.html",
     "Pensioni",
-    "Assistenza previdenziale completa presso CAF FENAPI Torino: domande di pensione, ricostituzione, supplementi e ricorsi tramite il Patronato INAPI.",
+    "Assistenza previdenziale completa presso Circolo FENAPI Torino: domande di pensione, ricostituzione, supplementi e ricorsi tramite il Patronato INAPI.",
     "Assistenza previdenziale completa tramite il Patronato INAPI",
     "Pensioni",
     [("servizi","I nostri servizi"), ("tipi","Tipologie di pensione"), ("previdenziale","Interventi previdenziali"), ("documenti","Documenti necessari")],
     [
         '''<section id="servizi" class="content-section fade-in">
         <h2>Assistenza pensionistica</h2>
-        <p>Tramite il <strong>Patronato INAPI</strong>, il CAF FENAPI di Torino offre assistenza previdenziale completa. I nostri operatori qualificati vi supportano in tutte le fasi: dalla verifica della posizione contributiva alla presentazione della domanda, fino all'eventuale ricorso.</p>
+        <p>Tramite il <strong>Patronato INAPI</strong>, il Circolo FENAPI di Torino offre assistenza previdenziale completa. I nostri operatori qualificati vi supportano in tutte le fasi: dalla verifica della posizione contributiva alla presentazione della domanda, fino all'eventuale ricorso.</p>
         <div class="info-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           <div><strong>Servizio gratuito</strong><p>L'assistenza previdenziale tramite il Patronato INAPI &egrave; interamente gratuita per il cittadino.</p></div>
@@ -320,7 +320,7 @@ make_page(
 make_page(
     "invalidita.html",
     "Invalidit&agrave; Civile",
-    "Assistenza per invalidità civile, accompagnamento e indennità presso il CAF FENAPI di Torino tramite il Patronato INAPI.",
+    "Assistenza per invalidità civile, accompagnamento e indennità presso il Circolo FENAPI di Torino tramite il Patronato INAPI.",
     "Riconoscimento dell'invalidit&agrave; civile, accompagnamento e indennit&agrave; di frequenza",
     "Invalidit&agrave; Civile",
     [("cos-e","Cos'&egrave; l'invalidit&agrave; civile"), ("prestazioni","Prestazioni previste"), ("procedura","Come presentare domanda"), ("documenti","Documenti necessari")],
@@ -328,7 +328,7 @@ make_page(
         '''<section id="cos-e" class="content-section fade-in">
         <h2>Cos'&egrave; l'invalidit&agrave; civile</h2>
         <p>L'invalidit&agrave; civile &egrave; la condizione riconosciuta ai cittadini affetti da minorazioni congenite o acquisite che comportano una riduzione della capacit&agrave; lavorativa o, per i minori e gli ultrasessantacinquenni, difficolt&agrave; persistenti a svolgere le funzioni e i compiti propri dell'et&agrave;.</p>
-        <p>Il CAF FENAPI di Torino, tramite il <strong>Patronato INAPI</strong>, assiste i cittadini nell'intero percorso: dalla presentazione della domanda all'eventuale ricorso.</p>
+        <p>Il Circolo FENAPI di Torino, tramite il <strong>Patronato INAPI</strong>, assiste i cittadini nell'intero percorso: dalla presentazione della domanda all'eventuale ricorso.</p>
       </section>''',
         '''<section id="prestazioni" class="content-section fade-in">
         <h2>Prestazioni previste</h2>
@@ -370,7 +370,7 @@ make_page(
 make_page(
     "successioni.html",
     "Successioni",
-    "Dichiarazioni di successione e volture catastali presso il CAF FENAPI di Torino. Assistenza completa per pratiche ereditarie.",
+    "Dichiarazioni di successione e volture catastali presso il Circolo FENAPI di Torino. Assistenza completa per pratiche ereditarie.",
     "Dichiarazioni di successione, volture catastali e pratiche ereditarie",
     "Successioni",
     [("cos-e","Cos'&egrave; la dichiarazione"), ("obbligati","Chi deve presentarla"), ("termini","Termini e scadenze"), ("documenti","Documenti necessari")],
@@ -378,7 +378,7 @@ make_page(
         '''<section id="cos-e" class="content-section fade-in">
         <h2>Cos'&egrave; la dichiarazione di successione</h2>
         <p>La dichiarazione di successione &egrave; un adempimento obbligatorio di natura fiscale che gli eredi devono presentare all'Agenzia delle Entrate entro 12 mesi dalla data di apertura della successione (generalmente la data del decesso).</p>
-        <p>Il CAF FENAPI di Torino assiste gli eredi nella compilazione e trasmissione telematica della dichiarazione, nel calcolo delle imposte dovute e nella presentazione delle volture catastali.</p>
+        <p>Il Circolo FENAPI di Torino assiste gli eredi nella compilazione e trasmissione telematica della dichiarazione, nel calcolo delle imposte dovute e nella presentazione delle volture catastali.</p>
       </section>''',
         '''<section id="obbligati" class="content-section fade-in">
         <h2>Chi deve presentare la dichiarazione</h2>
@@ -423,7 +423,7 @@ make_page(
       </section>'''
     ],
     "Devi presentare una dichiarazione di successione?",
-    "Il CAF FENAPI di Torino ti assiste nella compilazione della dichiarazione e nelle volture catastali."
+    "Il Circolo FENAPI di Torino ti assiste nella compilazione della dichiarazione e nelle volture catastali."
 )
 
 print("\n✅ Tutte le pagine servizi sono state create con successo!")

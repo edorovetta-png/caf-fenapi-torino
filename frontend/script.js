@@ -1,5 +1,5 @@
 /**
- * CAF FENAPI Torino — Main Script
+ * Circolo FENAPI Torino — Main Script
  * Gestisce: navigazione, scroll animations, counter, mobile menu
  */
 
