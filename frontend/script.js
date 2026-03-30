@@ -142,7 +142,7 @@
         const eased = 1 - Math.pow(1 - progress, 3);
         const current = Math.round(eased * target);
 
-        counter.textContent = current + (target > 20 ? '+' : '+');
+        counter.textContent = current + '+';
 
         if (progress < 1) {
           requestAnimationFrame(updateCounter);

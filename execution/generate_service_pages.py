@@ -5,8 +5,9 @@ Execution layer script — deterministic page generation.
 """
 
 import os
+from pathlib import Path
 
-SERVIZI_DIR = "/Users/edoardorovetta/Desktop/Antigravity/frontend/servizi"
+SERVIZI_DIR = str(Path(__file__).parent.parent / "frontend" / "servizi")
 
 # Template components
 def header_html(title_short):
