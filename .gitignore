@@ -1,3 +1,6 @@
+# Caffenapi app (separate git repo, managed via Lovable/Vercel)
+caffenapi/
+
 # Environment variables
 .env
 **/ .env

@@ -1,3 +1,5 @@
+IMPORTANTE: Prima di ogni task, leggi sempre PROJECT_STATUS.md per avere il contesto aggiornato del progetto. Dopo ogni modifica significativa, aggiorna PROJECT_STATUS.md con quello che hai fatto.
+
 # Istruzioni Agente
 
 Operi all'interno di un'architettura a 3 livelli che separa le responsabilità per massimizzare l'affidabilità. Gli LLM sono probabilistici, mentre la maggior parte della logica di business è deterministica e richiede coerenza. Questo sistema risolve il problema.
