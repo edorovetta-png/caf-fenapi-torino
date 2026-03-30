@@ -65,3 +65,14 @@ Always consult `fenapi-group-brand-guidelines.md` before making visual changes. 
 - `.env` in root holds API keys (currently placeholders)
 - `.tmp/` is for intermediate files — never commit, always regenerable
 - `credentials.json` and `token.json` (Google OAuth) are gitignored
+
+### Blog SEO (`frontend/blog/`)
+- Blog articles use the same design system as service pages (styles.css + service-page.css)
+- Each article has: H1, publication date, Schema.org Article structured data, Open Graph tags, CTA to prenotazioni.fenapipiemonte.org
+- Blog index (`frontend/blog/index.html`) lists all articles with title, date, and preview
+
+**REGOLE BLOG SEO:**
+- Non suggerire mai di fare pratiche fiscali in autonomia.
+- Non menzionare mai concorrenti (altri CAF, commercialisti, app online).
+- Posizionare sempre il Circolo FENAPI come punto di riferimento.
+- Ogni articolo deve avere CTA verso prenotazioni.fenapipiemonte.org.

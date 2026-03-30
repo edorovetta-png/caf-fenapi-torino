@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-03-30 (audit completo + tutti i 28 fix)
+> Ultimo aggiornamento: 2026-03-30 (blog SEO + sitemap aggiornata)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -65,6 +65,9 @@ Antigravity/
 │   ├── service-page.css         # Stili condivisi per le pagine servizi
 │   ├── script.js                # JS: scroll, menu, animazioni, counter
 │   ├── images/                  # Immagini (hero_banner.png, services_image.png)
+│   ├── blog/                    # Blog SEO
+│   │   ├── index.html           # Indice articoli
+│   │   └── modello-730-2026-scadenze-novita.html
 │   ├── servizi/                 # 8 pagine servizi dedicate
 │   │   ├── modello-730.html
 │   │   ├── modello-isee.html
@@ -120,6 +123,12 @@ Antigravity/
 - **Responsive**: breakpoint a 900px e 600px
 - **Naming**: coerente "Circolo FENAPI" ovunque
 - **Orari**: Lun-Gio 9:00-18:00, Ven 9:00-12:00
+- **Blog SEO** (`frontend/blog/`): sezione blog attiva con 1 articolo pubblicato
+  - Pagina indice con lista articoli
+  - Articolo "Modello 730 nel 2026: Scadenze, Novit&agrave; e Come Presentarlo" (keyword: 730 2026, scadenze 730, modello 730 novit&agrave;)
+  - Schema.org Article structured data su ogni articolo
+  - CTA verso prenotazioni.fenapipiemonte.org
+  - Link "Blog" aggiunto nella navigazione header di tutte le pagine
 - **Cosa manca**:
   - Nessun logo reale (usa placeholder "CF" in SVG)
   - Immagini hero/servizi probabilmente placeholder
@@ -156,7 +165,7 @@ Antigravity/
 ### Priorita Media
 3. **Dominio unico**: valutare integrazione sito vetrina + app sotto un unico dominio
 4. **Test**: aumentare la copertura test nell'app prenotazioni
-5. **SEO avanzato**: aggiungere sitemap.xml, robots.txt, og:image
+5. **SEO avanzato**: sitemap.xml e robots.txt aggiunti; manca og:image. Blog SEO attivo con primo articolo.
 
 ### Priorita Bassa
 6. **Build pipeline**: minificazione CSS/JS e ottimizzazione immagini per il sito vetrina
