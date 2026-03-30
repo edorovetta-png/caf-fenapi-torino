@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   CAF FENAPI Torino — Design System
+   Circolo FENAPI Provincia di Torino — Design System
    Based on fenapi-group-brand-guidelines.md
    ══════════════════════════════════════════════════════════════════════════ */
 
@@ -275,7 +275,6 @@ h6 { font-size: 14px; line-height: 18px; font-weight: 400; }
 /* Main header */
 .header-main {
   background: var(--white);
-  border-top: 4px solid var(--primary);
   padding: 0;
   position: sticky;
   top: 0;
