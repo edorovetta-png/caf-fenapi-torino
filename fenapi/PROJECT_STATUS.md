@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-03-31 (logo reale, loghi ingranditi, blog aggiornati, redesign Refined Editorial)
+> Ultimo aggiornamento: 2026-03-31 (bugfix double-booking GCal, setup Vercel aggiornato, redesign Refined Editorial)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -144,7 +144,7 @@ Antigravity/
 - **Area admin**: login (Supabase Auth) con ProtectedRoute, dashboard, CRUD categorie, gestione operatori
 - **Analytics**: pagina dedicata con grafici Recharts
 - **Email**: invio conferma sia per prenotazioni utente che admin, con sanitizzazione HTML
-- **Google Calendar**: sincronizzazione appuntamenti
+- **Google Calendar**: sincronizzazione appuntamenti bidirezionale, con validazione server-side tramite `freeBusy` (previene collisioni in fase di Reschedule o assegnazione 'Indifferente')
 - **Database**: 13 migrazioni (incluso unique constraint anti-double-booking)
 - **Venerdi**: Michela ha slot fino alle 16:30, altri operatori solo mattina (controllato server-side)
 - **Cosa manca**:
