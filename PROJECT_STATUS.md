@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-03-30 (blog SEO + sitemap aggiornata)
+> Ultimo aggiornamento: 2026-03-31 (redesign "Refined Editorial" sito + piattaforma)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -117,10 +117,16 @@ Antigravity/
 ### Sito Vetrina (`frontend/`) — FUNZIONANTE
 - **Homepage** (`index.html`): completa con tutte le sezioni
 - **8 pagine servizi**: funzionanti con Open Graph, header top bar, footer coerente
-- **Design system**: completo in `styles.css`, allineato a brand guidelines
+- **Design system v2 "Refined Editorial"**: redesign completo in `styles.css`
+  - Font Lora (serif) per i titoli h1-h4, Open Sans per body e UI
+  - Accento oro caldo (#C4A052) per linee decorative sotto i titoli di sezione
+  - Top bar scura (#11344a), header glassmorphism, footer scuro (#1e2329)
+  - Label uppercase editoriali sopra i titoli ("Cosa facciamo", "Dove trovarci", ecc.)
+  - Transizioni cubic-bezier, dot pattern sottile, hover raffinati
+  - Coerenza grafica unificata con la piattaforma prenotazioni
 - **JavaScript**: funzionante (scroll, menu, animazioni, counter)
 - **Google Analytics 4**: integrato su tutte le pagine
-- **Responsive**: breakpoint a 900px e 600px
+- **Responsive**: breakpoint a 1024px, 768px e 480px
 - **Naming**: coerente "Circolo FENAPI" ovunque
 - **Orari**: Lun-Gio 9:00-18:00, Ven 9:00-12:00
 - **Blog SEO** (`frontend/blog/`): sezione blog attiva con 1 articolo pubblicato
@@ -137,14 +143,19 @@ Antigravity/
 ### App Prenotazioni (`caffenapi/`) — FUNZIONANTE (Vercel + Supabase)
 - **Deploy**: caffenapi.vercel.app
 - **Repo git separato**: github.com/edorovetta-png/caffenapi.git (gitignored)
-- **Brand**: allineato a guidelines (Open Sans, colori #206088/#2c79ac)
+- **Design v2 "Refined Editorial"**: redesign per coerenza con sito vetrina
+  - Font Lora (serif) per titoli, Open Sans per body, Shadows Into Light per ribbon
+  - Header con top bar scura (#11344a) + header glassmorphism (come sito vetrina)
+  - Footer ricco: ribbon con citazione, 4 colonne (logo, contatti, sede, orari), bottom bar
+  - Hero scuro con accenti geometrici radiali (oro + azzurro)
+  - Service cards raffinate con bordo animato e hover lift
+  - Sezioni con label uppercase + titolo serif + linea oro decorativa
 - **Prenotazione utente**: dialog multi-step completo
 - **Area admin**: login (Supabase Auth) con ProtectedRoute, dashboard, CRUD categorie, gestione operatori
 - **Analytics**: pagina dedicata con grafici Recharts
 - **Email**: invio conferma sia per prenotazioni utente che admin, con sanitizzazione HTML
 - **Google Calendar**: sincronizzazione appuntamenti
 - **Database**: 13 migrazioni (incluso unique constraint anti-double-booking)
-- **Footer**: con contatti completi (telefono, email, indirizzo, orari)
 - **Venerdi**: Michela ha slot fino alle 16:30, altri operatori solo mattina (controllato server-side)
 - **Cosa manca**:
   - Test: framework configurato (Vitest) ma copertura da verificare
