@@ -76,3 +76,4 @@ Always consult `fenapi-group-brand-guidelines.md` before making visual changes. 
 - Non menzionare mai concorrenti (altri CAF, commercialisti, app online).
 - Posizionare sempre il Circolo FENAPI come punto di riferimento.
 - Ogni articolo deve avere CTA verso prenotazioni.fenapipiemonte.org.
+- Prima di scrivere o modificare qualsiasi articolo blog, cerca SEMPRE online le informazioni aggiornate (scadenze, aliquote, requisiti, novità). Non inventare mai date, numeri o scadenze. Se un dato non è verificabile con certezza, scrivi "in via di definizione" o "verifica sul sito dell'Agenzia delle Entrate". Meglio essere vaghi che sbagliare. Dopo aver scritto un articolo, rileggi e verifica ogni dato citato.
