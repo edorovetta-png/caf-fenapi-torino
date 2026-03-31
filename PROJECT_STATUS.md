@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-03-31 (redesign "Refined Editorial" sito + piattaforma)
+> Ultimo aggiornamento: 2026-03-31 (logo reale, loghi ingranditi, blog aggiornati, redesign Refined Editorial)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -129,14 +129,15 @@ Antigravity/
 - **Responsive**: breakpoint a 1024px, 768px e 480px
 - **Naming**: coerente "Circolo FENAPI" ovunque
 - **Orari**: Lun-Gio 9:00-18:00, Ven 9:00-12:00
-- **Blog SEO** (`frontend/blog/`): sezione blog attiva con 1 articolo pubblicato
+- **Logo reale**: `logo-fenapi.png` integrato in header (56px) e footer (48px) di tutte le pagine, favicon aggiornata
+- **Blog SEO** (`frontend/blog/`): sezione blog attiva con 8 articoli pubblicati
   - Pagina indice con lista articoli
-  - Articolo "Modello 730 nel 2026: Scadenze, Novit&agrave; e Come Presentarlo" (keyword: 730 2026, scadenze 730, modello 730 novit&agrave;)
+  - Articoli: 730, ISEE, IMU, pensioni, invalidità, successioni, bonus famiglie, dichiarazione dipendenti
   - Schema.org Article structured data su ogni articolo
   - CTA verso prenotazioni.fenapipiemonte.org
   - Link "Blog" aggiunto nella navigazione header di tutte le pagine
+  - Loghi e favicon aggiornati su tutti gli articoli
 - **Cosa manca**:
-  - Nessun logo reale (usa placeholder "CF" in SVG)
   - Immagini hero/servizi probabilmente placeholder
   - Nessun sistema di build/ottimizzazione
 
@@ -163,6 +164,8 @@ Antigravity/
 ### Script di Esecuzione (`execution/`) — PARZIALE
 - **`utils.py`**: completo e funzionante
 - **`generate_service_pages.py`**: funzionante, path relativo, URL Vercel, naming aggiornato
+- **`update_logos.py`**: script per aggiornare loghi su tutte le pagine HTML
+- **`update_favicons.py`**: script per aggiornare favicon su tutte le pagine HTML
 - **Cosa manca**: nessuna direttiva specifica scritta (solo il template vuoto)
 
 ---
@@ -170,8 +173,7 @@ Antigravity/
 ## 5. Prossimi Step
 
 ### Priorita Alta
-1. **Logo reale**: sostituire il placeholder "CF" con il logo ufficiale FENAPI su entrambe le app
-2. **Immagini reali**: sostituire le immagini placeholder nella hero e nei servizi
+1. **Immagini reali**: sostituire le immagini placeholder nella hero e nei servizi (logo gia sostituito)
 
 ### Priorita Media
 3. **Dominio unico**: valutare integrazione sito vetrina + app sotto un unico dominio
