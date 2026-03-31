@@ -320,13 +320,13 @@ h6 { font-size: 14px; line-height: 20px; font-weight: 600; }
 .logo {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 1.5rem;
   text-decoration: none;
 }
 
 .logo-icon {
-  width: 56px;
-  height: 56px;
+  width: 55px; /* auto-calculated 70 * 312/400 */
+  height: 70px;
   background: var(--primary);
   border-radius: 10px;
   display: flex;
@@ -351,11 +351,11 @@ h6 { font-size: 14px; line-height: 20px; font-weight: 600; }
 
 .logo-text strong {
   font-family: var(--font-heading);
-  font-size: 19px;
+  font-size: 24px;
   font-weight: 700;
-  color: var(--text-dark);
+  color: #034687;
   line-height: 1.2;
-  letter-spacing: -0.3px;
+  transition: color var(--transition-base);
 }
 
 .logo-text span {
@@ -1294,8 +1294,8 @@ h6 { font-size: 14px; line-height: 20px; font-weight: 600; }
 }
 
 .footer-logo-section .logo-mark {
-  width: 48px;
-  height: 48px;
+  width: 47px;
+  height: 60px;
   background: var(--primary);
   border-radius: 8px;
   display: flex;

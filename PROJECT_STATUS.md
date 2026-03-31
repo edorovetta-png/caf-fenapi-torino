@@ -129,7 +129,7 @@ Antigravity/
 - **Responsive**: breakpoint a 1024px, 768px e 480px
 - **Naming**: coerente "Circolo FENAPI" ovunque
 - **Orari**: Lun-Gio 9:00-18:00, Ven 9:00-12:00
-- **Logo reale**: `logo-fenapi.png` integrato in header (56px) e footer (48px) di tutte le pagine, favicon aggiornata
+- **Logo reale**: `logo-fenapi.png` integrato in header (70px) e footer (60px) di tutte le pagine, favicon aggiornata
 - **Blog SEO** (`frontend/blog/`): sezione blog attiva con 8 articoli pubblicati
   - Pagina indice con lista articoli
   - Articoli: 730, ISEE, IMU, pensioni, invalidità, successioni, bonus famiglie, dichiarazione dipendenti
