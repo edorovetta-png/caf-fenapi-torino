@@ -59,50 +59,39 @@ Il progetto segue un'architettura a 3 livelli documentata in `Gemini.md`: Dirett
 
 ```
 Antigravity/
-├── frontend/                    # Sito vetrina statico
-│   ├── index.html               # Homepage (single page con sezioni)
-│   ├── styles.css               # Design system completo (CSS custom properties)
-│   ├── service-page.css         # Stili condivisi per le pagine servizi
-│   ├── script.js                # JS: scroll, menu, animazioni, counter
-│   ├── images/                  # Immagini (hero_banner.png, services_image.png)
-│   ├── blog/                    # Blog SEO
-│   │   ├── index.html           # Indice articoli
-│   │   └── modello-730-2026-scadenze-novita.html
-│   ├── servizi/                 # 8 pagine servizi dedicate
-│   │   ├── modello-730.html
-│   │   ├── modello-isee.html
-│   │   ├── imu-tasi.html
-│   │   ├── red.html
-│   │   ├── unico-pf.html
-│   │   ├── pensioni.html
-│   │   ├── invalidita.html
-│   │   └── successioni.html
-│   └── README.md
+├── CLAUDE.md                    # Istruzioni generali workspace
+├── Gemini.md                    # Istruzioni generali agente
 │
-├── caffenapi/                   # App prenotazioni (gitignored, repo separato)
-│   ├── src/
-│   │   ├── App.tsx              # Router con ProtectedRoute per admin
-│   │   ├── pages/               # 6 pagine (Index, AdminLogin, AdminDashboard, Analytics, ManageAppointment, NotFound)
-│   │   ├── components/          # Componenti React (BookingDialog, AdminBookingDialog, ProtectedRoute, ecc.)
-│   │   │   └── ui/             # ~50 componenti shadcn/ui
-│   │   ├── hooks/               # Custom hooks
-│   │   ├── integrations/supabase/ # Client con validazione env + tipi
-│   │   └── lib/                 # Utility (servizi, colori)
-│   ├── supabase/
-│   │   ├── migrations/          # 13 migrazioni SQL (incluso unique constraint)
-│   │   └── functions/           # 8 Edge Functions
-│   └── package.json
-│
-├── execution/                   # Script Python (Livello 3)
-│   ├── utils.py                 # Utility: logger, env, JSON I/O, retry
-│   └── generate_service_pages.py # Generatore pagine servizi HTML
-│
-├── directives/                  # SOP in Markdown (Livello 1)
-│   └── template_direttiva.md    # Template vuoto per nuove direttive
-│
-├── fenapi-group-brand-guidelines.md  # Brand guidelines complete
-├── Gemini.md                    # Istruzioni agente (architettura 3 livelli)
-├── CLAUDE.md                    # Contesto per Claude Code
+├── fenapi/                      # Progetto FENAPI
+│   ├── CLAUDE.md                # Istruzioni specifiche progetto FENAPI
+│   ├── Gemini.md                # Istruzioni agente specifiche FENAPI
+│   ├── PROJECT_STATUS.md        # Stato aggiornato del progetto
+│   ├── fenapi-group-brand-guidelines.md  # Brand guidelines
+│   │
+│   ├── frontend/                # Sito vetrina statico
+│   │   ├── index.html           # Homepage
+│   │   ├── styles.css           # Design system v2 "Refined Editorial"
+│   │   ├── service-page.css     # Stili pagine servizi e blog
+│   │   ├── script.js            # JS: scroll, menu, animazioni
+│   │   ├── images/              # Immagini e logo
+│   │   ├── blog/                # Blog SEO (8 articoli)
+│   │   └── servizi/             # 8 pagine servizi dedicate
+│   │
+│   ├── caffenapi/               # App prenotazioni (gitignored, repo separato)
+│   │   ├── src/
+│   │   │   ├── pages/           # 6 pagine React
+│   │   │   ├── components/      # Componenti + ~50 shadcn/ui
+│   │   │   └── lib/             # Utility
+│   │   └── supabase/            # Migrazioni + Edge Functions
+│   │
+│   ├── execution/               # Script Python (Livello 3)
+│   │   ├── utils.py
+│   │   ├── generate_service_pages.py
+│   │   ├── update_logos.py
+│   │   └── update_favicons.py
+│   │
+│   ├── directives/              # SOP in Markdown (Livello 1)
+│   └── requirements.txt
 ├── PROJECT_STATUS.md            # Questo file
 ├── DEBUG_REPORT.md              # Report audit con stato di tutti i problemi
 ├── .env                         # Variabili d'ambiente (placeholder)

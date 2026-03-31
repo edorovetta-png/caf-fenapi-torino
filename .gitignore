@@ -1,12 +1,13 @@
 # Caffenapi app (separate git repo, managed via Lovable/Vercel)
-caffenapi/
+fenapi/caffenapi/
 
 # Environment variables
 .env
-**/ .env
+**/.env
 
 # Temporary files
 .tmp/
+**/.tmp/
 
 # Google OAuth Credentials
 credentials.json
