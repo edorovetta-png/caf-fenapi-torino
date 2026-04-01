@@ -1,26 +1,34 @@
 # PROJECT STATUS — Magazzino QR (Terminali CAAT)
 
-> Ultimo aggiornamento: 2026-04-01 (Task 15)
+> Ultimo aggiornamento: 2026-04-01
 > Questo file serve come contesto condiviso tra Claude e Gemini. Ogni agente DEVE leggerlo prima di iniziare e aggiornarlo dopo ogni modifica significativa.
 
 ---
 
 ## 1. Descrizione del Progetto
 
-PWA per gestione magazzino con QR code. Permette di gestire prodotti, clienti, ordini, scansione QR e stampa etichette.
+**Magazzino QR** — PWA per gestione magazzino con QR code, composizione ordini multi-operatore, e analytics clienti. Uso interno su rete WiFi, multi-device (desktop gestione + smartphone scanner).
+
+Spec: `docs/superpowers/specs/2026-04-01-magazzino-qr-design.md`
+Brief: `brief-magazzino-qr.md` (root workspace)
+Piano: `docs/superpowers/plans/2026-04-01-magazzino-qr.md`
 
 ---
 
 ## 2. Tech Stack
 
-- **Frontend:** React 19 + TypeScript + Vite 8
-- **Styling:** Tailwind CSS v4 + shadcn/ui (New York style, Zinc)
-- **State/Data:** @tanstack/react-query + Supabase JS client
-- **Routing:** react-router-dom v7
-- **Charts:** recharts
-- **QR:** qrcode + html5-qrcode
-- **Icons:** lucide-react
-- **Testing:** vitest + @testing-library/react + jsdom
+| Layer | Tecnologia |
+|-------|-----------|
+| Frontend | React 19 + TypeScript + Vite 8 |
+| UI | Tailwind CSS v4 + shadcn/ui (New York, Zinc) |
+| Routing | React Router v7 (lazy loading) |
+| State/Cache | TanStack Query v5 |
+| Backend/DB | Supabase (PostgreSQL + Auth + RLS) |
+| QR | qrcode + html5-qrcode |
+| Charts | Recharts |
+| Icons | lucide-react |
+| Test | Vitest + Testing Library + jsdom |
+| Stampa | CSS @media print 50x25mm Zebra |
 
 ---
 
@@ -30,107 +38,61 @@ PWA per gestione magazzino con QR code. Permette di gestire prodotti, clienti, o
 Terminali-CAAT/
 ├── PROJECT_STATUS.md
 ├── brief-magazzino-qr.md
-├── .env.example             # Template variabili env (versionato)
-├── .env.local               # Credenziali Supabase (gitignored via *.local)
-├── docs/
-├── package.json
-├── vite.config.ts
-├── tsconfig.json / tsconfig.app.json / tsconfig.node.json
-├── tailwind.config.ts (via @tailwindcss/vite plugin)
-├── postcss.config.js
-├── components.json (shadcn/ui config)
-├── index.html
+├── .env.example / .env.local (gitignored)
+├── package.json, vite.config.ts, tsconfig*.json
+├── components.json (shadcn config)
+├── index.html (con meta PWA)
 ├── public/
+│   └── manifest.json
+├── supabase/migrations/
+│   ├── 001_initial_schema.sql
+│   └── 002_rls_policies.sql
 ├── src/
-│   ├── main.tsx
-│   ├── App.tsx
-│   ├── index.css (Tailwind + shadcn theme)
-│   ├── vite-env.d.ts
-│   ├── lib/
-│   │   ├── utils.ts (cn helper)
-│   │   ├── supabase.ts (Supabase client singleton)
-│   │   ├── qr.ts (encode/parse/validate QRCodeData)
-│   │   └── export.ts (CSV export: order, customers, download)
-│   ├── types/index.ts (tutti i tipi entità)
-│   └── components/ui/ (shadcn components)
-├── supabase/
-│   └── migrations/
-│       ├── 001_initial_schema.sql  (profiles, customers, products, orders, order_items)
-│       └── 002_rls_policies.sql   (RLS + auth.user_role() function)
-└── tests/
-    ├── setup.ts
-    └── lib/
-        ├── qr.test.ts (7 tests, all passing)
-        └── export.test.ts (1 test, passing)
+│   ├── main.tsx, App.tsx, index.css
+│   ├── types/index.ts
+│   ├── lib/ (supabase, qr, export, analytics, utils)
+│   ├── hooks/ (useAuth, useProducts, useCustomers, useOrders, useAnalytics)
+│   ├── components/ (Layout, ProtectedRoute, QRCode, QRScanner, LabelPrint, OrderItemRow, StatCard, ui/)
+│   └── pages/ (Login, Dashboard, Products, ProductDetail, Customers, CustomerDetail, Scanner, OrderNew, Orders, OrderDetail, Analytics)
+├── tests/lib/ (qr.test.ts, export.test.ts)
+└── docs/superpowers/ (specs/, plans/)
 ```
 
 ---
 
 ## 4. Stato Attuale
 
-- [x] Task 1: Project Scaffolding completato
-  - Vite + React + TypeScript inizializzato
-  - Tailwind CSS v4 con @tailwindcss/vite plugin configurato
-  - shadcn/ui inizializzato con componenti: button, input, label, card, table, select, dialog, dropdown-menu, badge, tabs, separator, sheet, sonner
-  - Vitest configurato con jsdom e @testing-library
-  - Path alias `@` -> `./src` configurato
-  - Dev server e build funzionanti
-- [x] Task 2: TypeScript Types completato
-  - Creato `src/types/index.ts` con tutti i tipi entità
-  - Tipi: UserRole, OrderStatus, Profile, Customer, Product, Order, OrderWithCustomer, OrderItem, OrderItemWithProduct, QRCodeData, CustomerStats, ProductSales, CrossSellPair, DormantCustomer, MonthlyRevenue
-  - `npx tsc --noEmit` passa senza errori
-- [x] Task 3: Supabase Client + DB Migrations completato
-  - Creato `src/lib/supabase.ts` con singleton client (VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY)
-  - Creato `.env.example` (versionato) e `.env.local` (gitignored via `*.local`)
-  - Creato `supabase/migrations/001_initial_schema.sql`: tabelle profiles, customers, products, orders, order_items + trigger updated_at + handle_new_user
-  - Creato `supabase/migrations/002_rls_policies.sql`: RLS abilitato su tutte le tabelle + `auth.user_role()` function + policy admin/operatore
-  - `npx tsc --noEmit` passa senza errori
+**Implementazione completa.** Tutti i 16 task del piano eseguiti.
 
-- [x] Task 4: QR Utilities (TDD) completato
-  - Creato `tests/lib/qr.test.ts` con 7 test (TDD: scritti prima dell'implementazione)
-  - Creato `src/lib/qr.ts` con: `encodeQRData`, `isValidQRData`, `parseQRData`
-  - `encodeQRData(sku, id)` → JSON string con `{ app: 'magazzino-qr', sku, id }`
-  - `isValidQRData(data)` → type guard per `QRCodeData`
-  - `parseQRData(raw)` → `QRCodeData | null` (null per JSON invalido, app errata, campi mancanti)
-  - Tutti 7 test passano; `npx tsc --noEmit` senza errori
+- TypeScript: 0 errori (`npx tsc --noEmit`)
+- Test: 8/8 passati (qr + export)
+- 16 commit puliti su branch `feat/magazzino-qr`
 
----
+### Funzionalità implementate
 
-- [x] Task 5: CSV Export Utility (TDD) completato
-  - Creato `tests/lib/export.test.ts` con 1 test (TDD: scritto prima dell'implementazione)
-  - Creato `src/lib/export.ts` con: `exportOrderToCSV`, `orderCSVFilename`, `downloadCSV`, `exportCustomersToCSV`
-  - `exportOrderToCSV(order, items, customer)` → CSV con BOM UTF-8, header semicolon-separated, una riga per item
-  - `orderCSVFilename(order)` → `ordine_{number}_{yyyymmdd}.csv`
-  - `downloadCSV(content, filename)` → trigger browser download via Blob + anchor
-  - `exportCustomersToCSV(customers)` → CSV con BOM, header, una riga per cliente
-  - 1 test passa; `npx tsc --noEmit` senza errori
+- **Auth**: login email/password, ruoli admin/operatore, RLS su tutte le tabelle
+- **Prodotti**: CRUD completo, generazione QR code, stampa etichette 50x25mm Zebra
+- **Clienti**: CRUD completo, storico ordini per cliente
+- **Ordini**: composizione (manuale + scanner QR), lista con filtri, dettaglio, export CSV
+- **Scanner QR**: fotocamera posteriore, parsing QR, aggiunta a ordine, creazione ordine on-the-fly
+- **Dashboard**: stat cards, grafico ordini settimanali
+- **Analytics**: trend fatturato, clienti dormienti, cross-selling
+- **PWA**: manifest, meta tags iOS/Android
 
----
+### Da fare per andare live
 
----
-
-- [x] Task 13: Dashboard Page completato
-  - Creato `src/components/StatCard.tsx`: componente riutilizzabile con titolo, valore, icona (LucideIcon), subtitle opzionale
-  - Sostituito `src/pages/Dashboard.tsx` con dashboard completo:
-    - Greeting con titolo "Dashboard" + "Ciao, {display_name}"
-    - Quick actions: bottoni Scanner (/scan) e Nuovo Ordine (/orders/new)
-    - 4 stat cards in grid (ordini oggi, bozze, prodotti attivi, clienti admin-only) — query parallelizzate con Promise.all
-    - Bar chart "Ordini ultimi 7 giorni" con Recharts (admin only), giorni in italiano (Lun-Dom)
-  - `npx tsc --noEmit` passa senza errori
-
-- [x] Task 15: PWA Configuration completato
-  - Creato `public/manifest.json`: configurazione PWA con name, short_name, description, start_url, display standalone, theme/background colors, orientation portrait, icons 192x192 e 512x512
-  - Aggiunto 6 meta tag a `index.html` per PWA e iOS:
-    - `<link rel="manifest" href="/manifest.json" />`
-    - `<meta name="theme-color" content="#1e40af" />`
-    - `<meta name="apple-mobile-web-app-capable" content="yes" />`
-    - `<meta name="apple-mobile-web-app-status-bar-style" content="default" />`
-    - `<meta name="apple-mobile-web-app-title" content="MagQR" />`
-    - `<link rel="apple-touch-icon" href="/icon-192.png" />`
-  - Committed con: "feat: add PWA manifest and meta tags"
+1. Creare progetto Supabase Cloud ed eseguire le migration SQL
+2. Configurare .env.local con URL e anon key reali
+3. Creare primo utente admin via Supabase dashboard
+4. Generare icone PWA (icon-192.png, icon-512.png)
+5. (Futuro) Deploy su Vercel
+6. (Futuro) Integrazione Arca
 
 ---
 
 ## 5. Prossimi Step
 
-- Task 6+: (da definire — scanner, orders, customers pages)
+- Setup Supabase Cloud + primo utente admin
+- Test end-to-end manuale dell'app con dati reali
+- Generare icone PWA
+- Deploy Vercel quando pronto
