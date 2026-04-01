@@ -3,7 +3,6 @@ import { supabase } from '@/lib/supabase'
 import type {
   Order,
   OrderWithCustomer,
-  OrderItem,
   OrderItemWithProduct,
   OrderStatus,
 } from '@/types'

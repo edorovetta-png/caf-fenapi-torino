@@ -3,7 +3,7 @@ import type { Order, OrderItemWithProduct, Customer } from '@/types'
 const BOM = '\uFEFF'
 const HEADER = 'SKU;Descrizione;Quantita;UnitaMisura;PrezzoUnitario;TotaleRiga;NoteCliente'
 
-export function exportOrderToCSV(order: Order, items: OrderItemWithProduct[], customer: Customer): string {
+export function exportOrderToCSV(_order: Order, items: OrderItemWithProduct[], customer: Customer): string {
   const rows = items.map((item) =>
     [item.product.sku, item.product.name, item.quantity, item.product.unit,
      item.unit_price.toFixed(2), item.line_total.toFixed(2), customer.name].join(';')

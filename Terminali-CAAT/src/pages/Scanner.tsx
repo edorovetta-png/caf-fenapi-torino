@@ -212,7 +212,7 @@ export default function Scanner() {
             </p>
             <div className="space-y-1">
               <Label>Cliente</Label>
-              <Select value={customerId} onValueChange={setCustomerId}>
+              <Select value={customerId} onValueChange={(val) => setCustomerId(val ?? '')}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleziona cliente" />
                 </SelectTrigger>

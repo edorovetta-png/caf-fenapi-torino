@@ -42,18 +42,18 @@ async function fetchStats(isAdmin: boolean): Promise<StatsResult> {
   ] = [
     supabase
       .from('orders')
-      .select('id', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true })
       .gte('created_at', todayISO),
     supabase
       .from('orders')
-      .select('id', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true })
       .eq('status', 'bozza'),
     supabase
       .from('products')
-      .select('id', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true })
       .eq('is_active', true),
     isAdmin
-      ? supabase.from('customers').select('id', { count: 'exact', head: true })
+      ? supabase.from('customers').select('*', { count: 'exact', head: true })
       : Promise.resolve({ count: null, error: null }),
   ]
 
@@ -91,7 +91,7 @@ async function fetchWeeklyChart(): Promise<ChartDay[]> {
     (days as (ChartDay & { start: string; end: string })[]).map(({ start, end }) =>
       supabase
         .from('orders')
-        .select('id', { count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true })
         .in('status', ['confermato', 'evaso'])
         .gte('created_at', start)
         .lt('created_at', end)
@@ -130,18 +130,18 @@ export default function Dashboard() {
 
       {/* Quick actions */}
       <div className="flex flex-wrap gap-2">
-        <Button asChild>
-          <Link to="/scan">
+        <Link to="/scan">
+          <Button>
             <ScanLine className="mr-2 h-4 w-4" />
             Scanner
-          </Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link to="/orders/new">
+          </Button>
+        </Link>
+        <Link to="/orders/new">
+          <Button variant="outline">
             <Plus className="mr-2 h-4 w-4" />
             Nuovo Ordine
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
 
       {/* Stat cards */}

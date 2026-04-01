@@ -101,7 +101,7 @@ export default function Analytics() {
                     <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip
-                      formatter={(value: number) => [`€ ${formatEur(value)}`, 'Fatturato']}
+                      formatter={((value: number) => [`€ ${formatEur(value)}`, 'Fatturato']) as any}
                     />
                     <Line
                       type="monotone"
