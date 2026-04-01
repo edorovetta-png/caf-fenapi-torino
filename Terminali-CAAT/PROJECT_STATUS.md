@@ -1,6 +1,6 @@
 # PROJECT STATUS — Magazzino QR (Terminali CAAT)
 
-> Ultimo aggiornamento: 2026-04-01 (Task 4)
+> Ultimo aggiornamento: 2026-04-01 (Task 5)
 > Questo file serve come contesto condiviso tra Claude e Gemini. Ogni agente DEVE leggerlo prima di iniziare e aggiornarlo dopo ogni modifica significativa.
 
 ---
@@ -49,7 +49,8 @@ Terminali-CAAT/
 │   ├── lib/
 │   │   ├── utils.ts (cn helper)
 │   │   ├── supabase.ts (Supabase client singleton)
-│   │   └── qr.ts (encode/parse/validate QRCodeData)
+│   │   ├── qr.ts (encode/parse/validate QRCodeData)
+│   │   └── export.ts (CSV export: order, customers, download)
 │   ├── types/index.ts (tutti i tipi entità)
 │   └── components/ui/ (shadcn components)
 ├── supabase/
@@ -59,7 +60,8 @@ Terminali-CAAT/
 └── tests/
     ├── setup.ts
     └── lib/
-        └── qr.test.ts (7 tests, all passing)
+        ├── qr.test.ts (7 tests, all passing)
+        └── export.test.ts (1 test, passing)
 ```
 
 ---
@@ -94,6 +96,17 @@ Terminali-CAAT/
 
 ---
 
+- [x] Task 5: CSV Export Utility (TDD) completato
+  - Creato `tests/lib/export.test.ts` con 1 test (TDD: scritto prima dell'implementazione)
+  - Creato `src/lib/export.ts` con: `exportOrderToCSV`, `orderCSVFilename`, `downloadCSV`, `exportCustomersToCSV`
+  - `exportOrderToCSV(order, items, customer)` → CSV con BOM UTF-8, header semicolon-separated, una riga per item
+  - `orderCSVFilename(order)` → `ordine_{number}_{yyyymmdd}.csv`
+  - `downloadCSV(content, filename)` → trigger browser download via Blob + anchor
+  - `exportCustomersToCSV(customers)` → CSV con BOM, header, una riga per cliente
+  - 1 test passa; `npx tsc --noEmit` senza errori
+
+---
+
 ## 5. Prossimi Step
 
-- Task 5: CSV Export (TDD)
+- Task 6: (da definire)
