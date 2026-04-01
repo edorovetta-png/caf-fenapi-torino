@@ -1,6 +1,6 @@
 # PROJECT STATUS — Magazzino QR (Terminali CAAT)
 
-> Ultimo aggiornamento: 2026-04-01 (Task 3)
+> Ultimo aggiornamento: 2026-04-01 (Task 4)
 > Questo file serve come contesto condiviso tra Claude e Gemini. Ogni agente DEVE leggerlo prima di iniziare e aggiornarlo dopo ogni modifica significativa.
 
 ---
@@ -48,7 +48,8 @@ Terminali-CAAT/
 │   ├── vite-env.d.ts
 │   ├── lib/
 │   │   ├── utils.ts (cn helper)
-│   │   └── supabase.ts (Supabase client singleton)
+│   │   ├── supabase.ts (Supabase client singleton)
+│   │   └── qr.ts (encode/parse/validate QRCodeData)
 │   ├── types/index.ts (tutti i tipi entità)
 │   └── components/ui/ (shadcn components)
 ├── supabase/
@@ -56,7 +57,9 @@ Terminali-CAAT/
 │       ├── 001_initial_schema.sql  (profiles, customers, products, orders, order_items)
 │       └── 002_rls_policies.sql   (RLS + auth.user_role() function)
 └── tests/
-    └── setup.ts
+    ├── setup.ts
+    └── lib/
+        └── qr.test.ts (7 tests, all passing)
 ```
 
 ---
@@ -81,9 +84,16 @@ Terminali-CAAT/
   - Creato `supabase/migrations/002_rls_policies.sql`: RLS abilitato su tutte le tabelle + `auth.user_role()` function + policy admin/operatore
   - `npx tsc --noEmit` passa senza errori
 
+- [x] Task 4: QR Utilities (TDD) completato
+  - Creato `tests/lib/qr.test.ts` con 7 test (TDD: scritti prima dell'implementazione)
+  - Creato `src/lib/qr.ts` con: `encodeQRData`, `isValidQRData`, `parseQRData`
+  - `encodeQRData(sku, id)` → JSON string con `{ app: 'magazzino-qr', sku, id }`
+  - `isValidQRData(data)` → type guard per `QRCodeData`
+  - `parseQRData(raw)` → `QRCodeData | null` (null per JSON invalido, app errata, campi mancanti)
+  - Tutti 7 test passano; `npx tsc --noEmit` senza errori
+
 ---
 
 ## 5. Prossimi Step
 
-- Task 4: QR Utilities (TDD)
 - Task 5: CSV Export (TDD)
