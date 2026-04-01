@@ -32,9 +32,58 @@ export interface Product {
   supplier: string | null
   barcode_data: string | null
   vat_rate: number
+  min_stock: number
   is_active: boolean
   created_at: string
   updated_at: string
+}
+
+export interface ProductLot {
+  id: string
+  product_id: string
+  lot_number: string
+  expiry_date: string | null
+  quantity_received: number
+  quantity_in_stock: number
+  cost_price: number | null
+  supplier: string | null
+  received_at: string
+  qr_data: string
+  notes: string | null
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface ProductLotWithProduct extends ProductLot {
+  product: Product
+}
+
+export type StockStatus = 'ok' | 'sotto_scorta' | 'in_scadenza' | 'scaduto' | 'esaurito'
+
+export interface ProductStock {
+  product_id: string
+  sku: string
+  name: string
+  category: string | null
+  unit: string
+  price: number
+  min_stock: number
+  total_stock: number
+  active_lots: number
+  nearest_expiry: string | null
+  stock_status: StockStatus
+}
+
+export interface ExpiringLot {
+  lot_id: string
+  lot_number: string
+  expiry_date: string
+  quantity_in_stock: number
+  sku: string
+  product_name: string
+  category: string | null
+  days_until_expiry: number
 }
 
 export interface Order {
@@ -57,6 +106,7 @@ export interface OrderItem {
   id: string
   order_id: string
   product_id: string
+  lot_id: string | null
   quantity: number
   unit_price: number
   line_total: number
@@ -65,12 +115,14 @@ export interface OrderItem {
 
 export interface OrderItemWithProduct extends OrderItem {
   product: Product
+  lot: ProductLot | null
 }
 
 export interface QRCodeData {
   app: 'magazzino-qr'
   sku: string
   id: string
+  lot?: string
 }
 
 export interface CustomerStats {

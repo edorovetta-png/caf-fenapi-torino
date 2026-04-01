@@ -92,7 +92,7 @@ export function useOrderItems(orderId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('order_items')
-        .select('*, product:products(*)')
+        .select('*, product:products(*), lot:product_lots(*)')
         .eq('order_id', orderId!)
         .order('created_at')
       if (error) throw error
@@ -147,7 +147,7 @@ export function useAddOrderItem() {
           unit_price: input.unit_price,
           line_total,
         })
-        .select('*, product:products(*)')
+        .select('*, product:products(*), lot:product_lots(*)')
         .single()
       if (error) throw error
       await recalculateOrderTotal(input.order_id)
@@ -174,7 +174,7 @@ export function useUpdateOrderItem() {
         .from('order_items')
         .update({ quantity: input.quantity, unit_price: input.unit_price, line_total })
         .eq('id', input.id)
-        .select('*, product:products(*)')
+        .select('*, product:products(*), lot:product_lots(*)')
         .single()
       if (error) throw error
       await recalculateOrderTotal(input.order_id)

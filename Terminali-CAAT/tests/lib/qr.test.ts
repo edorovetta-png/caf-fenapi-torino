@@ -32,7 +32,23 @@ describe('isValidQRData', () => {
   it('returns true for valid data', () => {
     expect(isValidQRData({ app: 'magazzino-qr', sku: 'X', id: 'Y' })).toBe(true)
   })
+  it('returns true for data with lot', () => {
+    expect(isValidQRData({ app: 'magazzino-qr', sku: 'X', id: 'Y', lot: 'Z' })).toBe(true)
+  })
   it('returns false for wrong app', () => {
     expect(isValidQRData({ app: 'other', sku: 'X', id: 'Y' })).toBe(false)
+  })
+})
+
+describe('encodeQRData with lot', () => {
+  it('includes lot in JSON when provided', () => {
+    const result = encodeQRData('SKU-1', 'prod-id', 'lot-id')
+    const parsed = JSON.parse(result)
+    expect(parsed.lot).toBe('lot-id')
+  })
+  it('omits lot when not provided', () => {
+    const result = encodeQRData('SKU-1', 'prod-id')
+    const parsed = JSON.parse(result)
+    expect(parsed.lot).toBeUndefined()
   })
 })
