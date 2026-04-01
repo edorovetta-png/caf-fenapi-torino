@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import {
@@ -25,7 +25,8 @@ import OrderItemRow from '@/components/OrderItemRow'
 import { exportOrderToCSV, orderCSVFilename, downloadCSV } from '@/lib/export'
 import { toast } from 'sonner'
 import { ArrowLeft, Download, Copy, CheckCircle, Truck, XCircle, Search, Plus } from 'lucide-react'
-import type { OrderStatus, Product } from '@/types'
+import { useActiveLots } from '@/hooks/useLots'
+import type { OrderStatus, Product, ProductLot } from '@/types'
 
 const STATUS_BADGE_VARIANT: Record<OrderStatus, 'secondary' | 'default' | 'outline' | 'destructive'> = {
   bozza: 'secondary',
@@ -53,11 +54,21 @@ export default function OrderDetail() {
   const updateStatus = useUpdateOrderStatus()
   const addItem = useAddOrderItem()
   const [productSearch, setProductSearch] = useState('')
+  const [lotSelectProduct, setLotSelectProduct] = useState<Product | null>(null)
   const { data: searchProducts } = useProducts(
     productSearch ? { search: productSearch } : undefined
   )
+  const { data: activeLots } = useActiveLots(lotSelectProduct?.id)
 
-  async function handleAddProduct(product: Product) {
+  function handleAddProduct(product: Product) {
+    if (lotSelectProduct?.id === product.id) {
+      setLotSelectProduct(null)
+      return
+    }
+    setLotSelectProduct(product)
+  }
+
+  async function handleAddWithLot(product: Product, lot?: ProductLot) {
     if (!order) return
     try {
       const lastPrice = await getLastPriceForCustomer(order.customer_id, product.id)
@@ -66,7 +77,9 @@ export default function OrderDetail() {
         product_id: product.id,
         quantity: 1,
         unit_price: lastPrice ?? product.price,
+        lot_id: lot?.id ?? null,
       })
+      setLotSelectProduct(null)
       setProductSearch('')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Errore aggiunta prodotto')
@@ -257,24 +270,61 @@ export default function OrderDetail() {
                     {(searchProducts ?? [])
                       .filter((p) => p.is_active)
                       .map((product) => (
-                        <div
-                          key={product.id}
-                          className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium truncate">{product.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {product.sku} · {product.price.toFixed(2)} €/{product.unit}
-                            </p>
+                        <div key={product.id}>
+                          <div className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm font-medium truncate">{product.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {product.sku} · {product.price.toFixed(2)} €/{product.unit}
+                              </p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => handleAddProduct(product)}
+                              disabled={addItem.isPending}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => handleAddProduct(product)}
-                            disabled={addItem.isPending}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
+                          {lotSelectProduct?.id === product.id && (
+                            <div className="ml-4 mb-1 border-l-2 border-primary/30 pl-3 space-y-1">
+                              {!activeLots ? (
+                                <p className="text-xs text-muted-foreground py-1">Caricamento lotti...</p>
+                              ) : activeLots.length === 0 ? (
+                                <DetailLotAutoAdd product={product} onAdd={handleAddWithLot} />
+                              ) : (
+                                <>
+                                  <p className="text-xs font-medium text-muted-foreground py-1">Seleziona lotto:</p>
+                                  {activeLots.map((lot) => (
+                                    <button
+                                      key={lot.id}
+                                      type="button"
+                                      className="w-full text-left py-1 px-2 rounded hover:bg-muted text-sm flex justify-between items-center"
+                                      onClick={() => handleAddWithLot(product, lot)}
+                                      disabled={addItem.isPending}
+                                    >
+                                      <span>{lot.lot_number}</span>
+                                      <span className="text-xs text-muted-foreground">
+                                        {lot.expiry_date
+                                          ? `Scad. ${new Date(lot.expiry_date).toLocaleDateString('it-IT')}`
+                                          : 'No scadenza'}
+                                        {' \u00b7 '}{lot.quantity_in_stock} disp.
+                                      </span>
+                                    </button>
+                                  ))}
+                                  <button
+                                    type="button"
+                                    className="w-full text-left py-1 px-2 rounded hover:bg-muted text-xs text-muted-foreground"
+                                    onClick={() => handleAddWithLot(product)}
+                                    disabled={addItem.isPending}
+                                  >
+                                    Aggiungi senza lotto
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                     {!searchProducts?.length && (
@@ -322,4 +372,19 @@ export default function OrderDetail() {
       </div>
     </div>
   )
+}
+
+/** Auto-adds product without lot when activeLots query resolves to empty */
+function DetailLotAutoAdd({
+  product,
+  onAdd,
+}: {
+  product: Product
+  onAdd: (product: Product, lot?: ProductLot) => void
+}) {
+  useEffect(() => {
+    onAdd(product)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return <p className="text-xs text-muted-foreground py-1">Aggiunta in corso...</p>
 }

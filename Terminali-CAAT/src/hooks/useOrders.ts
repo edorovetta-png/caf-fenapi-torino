@@ -37,19 +37,6 @@ interface OrderFilters {
   to?: string
 }
 
-async function recalculateOrderTotal(orderId: string) {
-  const { data: items, error: itemsError } = await supabase
-    .from('order_items')
-    .select('line_total')
-    .eq('order_id', orderId)
-  if (itemsError) throw itemsError
-  const total_amount = (items ?? []).reduce((sum, i) => sum + i.line_total, 0)
-  const { error } = await supabase
-    .from('orders')
-    .update({ total_amount })
-    .eq('id', orderId)
-  if (error) throw error
-}
 
 export function useOrders(filters?: OrderFilters) {
   return useQuery({
@@ -136,6 +123,7 @@ export function useAddOrderItem() {
       product_id: string
       quantity: number
       unit_price: number
+      lot_id?: string | null
     }) => {
       const line_total = input.quantity * input.unit_price
       const { data, error } = await supabase
@@ -146,11 +134,11 @@ export function useAddOrderItem() {
           quantity: input.quantity,
           unit_price: input.unit_price,
           line_total,
+          lot_id: input.lot_id ?? null,
         })
         .select('*, product:products(*), lot:product_lots(*)')
         .single()
       if (error) throw error
-      await recalculateOrderTotal(input.order_id)
       return data as OrderItemWithProduct
     },
     onSuccess: (_data, variables) => {
@@ -177,7 +165,6 @@ export function useUpdateOrderItem() {
         .select('*, product:products(*), lot:product_lots(*)')
         .single()
       if (error) throw error
-      await recalculateOrderTotal(input.order_id)
       return data as OrderItemWithProduct
     },
     onSuccess: (_data, variables) => {
@@ -196,7 +183,6 @@ export function useDeleteOrderItem() {
         .delete()
         .eq('id', input.id)
       if (error) throw error
-      await recalculateOrderTotal(input.order_id)
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['order_items', variables.order_id] })

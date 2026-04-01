@@ -53,6 +53,13 @@ export default function OrderItemRow({
         <p className="text-xs text-muted-foreground">
           {item.product.sku} &middot; IVA {vatRate}%
         </p>
+        {item.lot && (
+          <p className="text-xs text-muted-foreground">
+            Lotto {item.lot.lot_number}
+            {item.lot.expiry_date &&
+              ` \u00b7 Scad. ${new Date(item.lot.expiry_date).toLocaleDateString('it-IT')}`}
+          </p>
+        )}
       </div>
       <div className="w-20 shrink-0">
         {editable ? (

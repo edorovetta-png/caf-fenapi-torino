@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useProduct } from '@/hooks/useProducts'
+import { useLot } from '@/hooks/useLots'
 import { useCustomers } from '@/hooks/useCustomers'
 import { useCreateOrder, useAddOrderItem, useOrderItems } from '@/hooks/useOrders'
 import { parseQRData } from '@/lib/qr'
@@ -29,11 +30,13 @@ export default function Scanner() {
   const [state, setState] = useState<ScannerState>('scanning')
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null)
   const [scannedProductId, setScannedProductId] = useState<string | null>(null)
+  const [scannedLotId, setScannedLotId] = useState<string | null>(null)
   const [quantity, setQuantity] = useState('1')
   const [customerId, setCustomerId] = useState('')
   const [itemCount, setItemCount] = useState(0)
 
   const { data: product } = useProduct(scannedProductId ?? undefined)
+  const { data: scannedLot } = useLot(scannedLotId ?? undefined)
   const { data: orderItems } = useOrderItems(currentOrderId ?? undefined)
   const createOrder = useCreateOrder()
   const addItem = useAddOrderItem()
@@ -48,6 +51,7 @@ export default function Scanner() {
       return
     }
     setScannedProductId(qr.id)
+    setScannedLotId(qr.lot ?? null)
     setQuantity('1')
     setState('scanned')
   }, [])
@@ -58,6 +62,18 @@ export default function Scanner() {
     if (!qty || qty <= 0) {
       toast.error('Quantità non valida')
       return
+    }
+
+    // Lot validation
+    if (scannedLotId && scannedLot) {
+      if (!scannedLot.is_active) {
+        toast.error(`Lotto ${scannedLot.lot_number} non attivo`)
+        return
+      }
+      if (scannedLot.quantity_in_stock < qty) {
+        toast.error(`Scorta insufficiente per lotto ${scannedLot.lot_number}: disponibili ${scannedLot.quantity_in_stock}`)
+        return
+      }
     }
 
     // If no order yet, prompt for customer selection
@@ -73,10 +89,12 @@ export default function Scanner() {
         product_id: product.id,
         quantity: qty,
         unit_price: product.price,
+        lot_id: scannedLotId,
       })
       setItemCount((prev) => prev + 1)
       toast.success(`${product.name} aggiunto all'ordine`)
       setScannedProductId(null)
+      setScannedLotId(null)
       setState('scanning')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Errore aggiunta prodotto')
@@ -112,10 +130,12 @@ export default function Scanner() {
         product_id: product.id,
         quantity: qty,
         unit_price: product.price,
+        lot_id: scannedLotId,
       })
       setItemCount(1)
       toast.success(`Ordine creato e ${product.name} aggiunto`)
       setScannedProductId(null)
+      setScannedLotId(null)
       setState('scanning')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Errore creazione ordine')
@@ -154,6 +174,24 @@ export default function Scanner() {
               <p className="text-sm text-muted-foreground">
                 {product.sku} &middot; {product.price.toFixed(2)} &euro;/{product.unit}
               </p>
+              {scannedLot && (
+                <div className="mt-1 text-sm">
+                  <p>
+                    Lotto: <strong>{scannedLot.lot_number}</strong>
+                    {scannedLot.expiry_date &&
+                      ` \u00b7 Scad. ${new Date(scannedLot.expiry_date).toLocaleDateString('it-IT')}`}
+                  </p>
+                  <p className="text-muted-foreground">
+                    Disponibili: {scannedLot.quantity_in_stock}
+                  </p>
+                  {!scannedLot.is_active && (
+                    <p className="text-destructive font-medium">Lotto non attivo</p>
+                  )}
+                  {scannedLot.is_active && scannedLot.quantity_in_stock <= 0 && (
+                    <p className="text-destructive font-medium">Scorta esaurita</p>
+                  )}
+                </div>
+              )}
             </div>
             <div className="space-y-1">
               <Label htmlFor="qty">Quantità</Label>
@@ -170,6 +208,7 @@ export default function Scanner() {
                 variant="outline"
                 onClick={() => {
                   setScannedProductId(null)
+                  setScannedLotId(null)
                   setState('scanning')
                 }}
               >
@@ -237,6 +276,7 @@ export default function Scanner() {
                 variant="outline"
                 onClick={() => {
                   setScannedProductId(null)
+                  setScannedLotId(null)
                   setState('scanning')
                 }}
               >
