@@ -5,9 +5,7 @@ import {
   useOrderItems,
   useUpdateOrderStatus,
   useAddPickingScan,
-  usePickingScans,
 } from '@/hooks/useOrders'
-import { useLot } from '@/hooks/useLots'
 import { parseQRData } from '@/lib/qr'
 import QRScanner from '@/components/QRScanner'
 import { Button } from '@/components/ui/button'
@@ -23,13 +21,10 @@ export default function Picking() {
 
   const { data: order, isLoading: orderLoading } = useOrder(id)
   const { data: orderItems } = useOrderItems(id)
-  const { data: pickingScans } = usePickingScans(id)
   const updateStatus = useUpdateOrderStatus()
   const addPickingScan = useAddPickingScan()
 
-  const [scannerActive, setScannerActive] = useState(true)
   const [lastScannedLotId, setLastScannedLotId] = useState<string | null>(null)
-  const { data: lastScannedLot } = useLot(lastScannedLotId ?? undefined)
 
   const pickedCount = (orderItems ?? []).filter((i) => i.picked).length
   const totalCount = (orderItems ?? []).length
