@@ -1,6 +1,6 @@
 # PROJECT STATUS — Magazzino QR (Terminali CAAT)
 
-> Ultimo aggiornamento: 2026-04-01
+> Ultimo aggiornamento: 2026-04-01 (Task 2)
 > Questo file serve come contesto condiviso tra Claude e Gemini. Ogni agente DEVE leggerlo prima di iniziare e aggiornarlo dopo ogni modifica significativa.
 
 ---
@@ -45,6 +45,7 @@ Terminali-CAAT/
 │   ├── index.css (Tailwind + shadcn theme)
 │   ├── vite-env.d.ts
 │   ├── lib/utils.ts (cn helper)
+│   ├── types/index.ts (tutti i tipi entità)
 │   └── components/ui/ (shadcn components)
 └── tests/
     └── setup.ts
@@ -61,11 +62,14 @@ Terminali-CAAT/
   - Vitest configurato con jsdom e @testing-library
   - Path alias `@` -> `./src` configurato
   - Dev server e build funzionanti
+- [x] Task 2: TypeScript Types completato
+  - Creato `src/types/index.ts` con tutti i tipi entità
+  - Tipi: UserRole, OrderStatus, Profile, Customer, Product, Order, OrderWithCustomer, OrderItem, OrderItemWithProduct, QRCodeData, CustomerStats, ProductSales, CrossSellPair, DormantCustomer, MonthlyRevenue
+  - `npx tsc --noEmit` passa senza errori
 
 ---
 
 ## 5. Prossimi Step
 
-- Task 2: TypeScript Types (definire tipi per prodotti, clienti, ordini, ecc.)
 - Task 3: Supabase Client + DB Migrations
 - Task 4: QR Utilities (TDD)
