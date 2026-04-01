@@ -51,9 +51,9 @@ Terminali-CAAT/
 │   ├── main.tsx, App.tsx, index.css
 │   ├── types/index.ts
 │   ├── lib/ (supabase, qr, export, analytics, utils)
-│   ├── hooks/ (useAuth, useProducts, useCustomers, useOrders, useAnalytics)
+│   ├── hooks/ (useAuth, useProducts, useCustomers, useOrders, useAnalytics, useLots)
 │   ├── components/ (Layout, ProtectedRoute, QRCode, QRScanner, LabelPrint, OrderItemRow, StatCard, ui/)
-│   └── pages/ (Login, Dashboard, Products, ProductDetail, Customers, CustomerDetail, Scanner, OrderNew, Orders, OrderDetail, Analytics)
+│   └── pages/ (Login, Dashboard, Products, ProductDetail, Customers, CustomerDetail, Scanner, OrderNew, Orders, OrderDetail, Analytics, Inventory)
 ├── tests/lib/ (qr.test.ts, export.test.ts)
 └── docs/superpowers/ (specs/, plans/)
 ```
@@ -75,7 +75,8 @@ Terminali-CAAT/
 - **Clienti**: CRUD completo, storico ordini per cliente
 - **Ordini**: composizione (manuale + scanner QR), lista con filtri, dettaglio, export CSV
 - **Scanner QR**: fotocamera posteriore, parsing QR, aggiunta a ordine, creazione ordine on-the-fly
-- **Dashboard**: stat cards, grafico ordini settimanali
+- **Inventario**: overview stock prodotti con filtri (categoria, stato, ricerca), summary cards, alert lotti in scadenza espandibile
+- **Dashboard**: stat cards, grafico ordini settimanali, alert lotti in scadenza e prodotti sotto scorta (admin)
 - **Analytics**: trend fatturato, clienti dormienti, cross-selling
 - **PWA**: manifest, meta tags iOS/Android
 

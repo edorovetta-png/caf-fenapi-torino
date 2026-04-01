@@ -14,6 +14,7 @@ const OrderNew = lazy(() => import('@/pages/OrderNew'))
 const Orders = lazy(() => import('@/pages/Orders'))
 const OrderDetail = lazy(() => import('@/pages/OrderDetail'))
 const Analytics = lazy(() => import('@/pages/Analytics'))
+const Inventory = lazy(() => import('@/pages/Inventory'))
 
 function Loading() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="orders/new" element={<OrderNew />} />
             <Route path="orders" element={<Orders />} />
             <Route path="orders/:id" element={<OrderDetail />} />
+            <Route path="inventory" element={<Inventory />} />
             <Route path="analytics" element={<ProtectedRoute requiredRole="admin"><Analytics /></ProtectedRoute>} />
           </Route>
         </Routes>

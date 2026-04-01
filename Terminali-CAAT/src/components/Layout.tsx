@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 import {
-  LayoutDashboard, Package, Users, ShoppingCart, ScanLine, BarChart3, LogOut,
+  LayoutDashboard, Package, Users, ShoppingCart, ScanLine, BarChart3, LogOut, Warehouse,
 } from 'lucide-react'
 
 const adminLinks = [
@@ -10,6 +10,7 @@ const adminLinks = [
   { to: '/scan', label: 'Scanner', icon: ScanLine },
   { to: '/orders', label: 'Ordini', icon: ShoppingCart },
   { to: '/products', label: 'Prodotti', icon: Package },
+  { to: '/inventory', label: 'Inventario', icon: Warehouse },
   { to: '/customers', label: 'Clienti', icon: Users },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
 ]
@@ -19,6 +20,7 @@ const operatorLinks = [
   { to: '/scan', label: 'Scanner', icon: ScanLine },
   { to: '/orders', label: 'Ordini', icon: ShoppingCart },
   { to: '/products', label: 'Prodotti', icon: Package },
+  { to: '/inventory', label: 'Inventario', icon: Warehouse },
 ]
 
 export default function Layout() {

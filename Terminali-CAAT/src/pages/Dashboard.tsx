@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import StatCard from '@/components/StatCard'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ShoppingCart, Package, Users, FileText, ScanLine, Plus } from 'lucide-react'
+import { ShoppingCart, Package, Users, FileText, ScanLine, Plus, AlertTriangle, Clock } from 'lucide-react'
 import {
   BarChart,
   Bar,
@@ -14,6 +14,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
+import { useExpiringLots, useProductStock } from '@/hooks/useLots'
 
 const ITALIAN_DAYS = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab']
 
@@ -98,6 +99,12 @@ async function fetchWeeklyChart(): Promise<ChartDay[]> {
   }))
 }
 
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return '-'
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
 export default function Dashboard() {
   const { profile, isAdmin } = useAuth()
 
@@ -111,6 +118,9 @@ export default function Dashboard() {
     queryFn: fetchWeeklyChart,
     enabled: isAdmin,
   })
+
+  const { data: expiringLots } = useExpiringLots()
+  const { data: stockProducts } = useProductStock()
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
@@ -183,6 +193,71 @@ export default function Dashboard() {
                 </BarChart>
               </ResponsiveContainer>
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Expiring lots alert (admin only) */}
+      {isAdmin && expiringLots && expiringLots.length > 0 && (
+        <Card className="border-orange-300">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2 text-orange-800">
+              <AlertTriangle className="h-4 w-4" />
+              Lotti in scadenza ({expiringLots.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {expiringLots.map((lot) => (
+                <div key={lot.lot_id} className="flex items-center justify-between text-sm border-b last:border-0 pb-2">
+                  <div>
+                    <span className="font-medium">{lot.product_name}</span>
+                    <span className="text-muted-foreground ml-2">Lotto: {lot.lot_number}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-muted-foreground">{lot.quantity_in_stock} in stock</span>
+                    <span className="text-orange-700 font-medium flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {lot.days_until_expiry}g
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Low stock alert (admin only) */}
+      {isAdmin && stockProducts && stockProducts.filter((p) => p.stock_status === 'sotto_scorta' || p.stock_status === 'esaurito').length > 0 && (
+        <Card className="border-yellow-300">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2 text-yellow-800">
+              <AlertTriangle className="h-4 w-4" />
+              Prodotti sotto scorta
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {stockProducts
+                .filter((p) => p.stock_status === 'sotto_scorta' || p.stock_status === 'esaurito')
+                .map((p) => (
+                  <div key={p.product_id} className="flex items-center justify-between text-sm border-b last:border-0 pb-2">
+                    <div>
+                      <span className="font-medium">{p.name}</span>
+                      <span className="text-muted-foreground ml-2">{p.sku}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-muted-foreground">
+                        {p.total_stock} / {p.min_stock} {p.unit}
+                      </span>
+                      <span className={`font-medium ${p.stock_status === 'esaurito' ? 'text-red-600' : 'text-yellow-700'}`}>
+                        {p.stock_status === 'esaurito' ? 'Esaurito' : 'Sotto scorta'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+            </div>
           </CardContent>
         </Card>
       )}
