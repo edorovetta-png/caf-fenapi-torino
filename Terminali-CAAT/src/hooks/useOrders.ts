@@ -7,6 +7,29 @@ import type {
   OrderStatus,
 } from '@/types'
 
+/**
+ * Returns the last price a customer paid for a product,
+ * or null if they never bought it.
+ */
+export async function getLastPriceForCustomer(
+  customerId: string,
+  productId: string,
+): Promise<number | null> {
+  const { data } = await supabase
+    .from('order_items')
+    .select('unit_price, order:orders!inner(customer_id, status)')
+    .eq('product_id', productId)
+    .eq('order.customer_id', customerId)
+    .in('order.status', ['confermato', 'evaso'])
+    .order('created_at', { ascending: false })
+    .limit(1)
+
+  if (data && data.length > 0) {
+    return Number(data[0].unit_price)
+  }
+  return null
+}
+
 interface OrderFilters {
   status?: OrderStatus
   customer_id?: string

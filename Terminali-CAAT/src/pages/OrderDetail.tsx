@@ -8,6 +8,7 @@ import {
   useDeleteOrderItem,
   useUpdateOrderStatus,
   useAddOrderItem,
+  getLastPriceForCustomer,
 } from '@/hooks/useOrders'
 import { useProducts } from '@/hooks/useProducts'
 import { Button } from '@/components/ui/button'
@@ -59,11 +60,12 @@ export default function OrderDetail() {
   async function handleAddProduct(product: Product) {
     if (!order) return
     try {
+      const lastPrice = await getLastPriceForCustomer(order.customer_id, product.id)
       await addItem.mutateAsync({
         order_id: order.id,
         product_id: product.id,
         quantity: 1,
-        unit_price: product.price,
+        unit_price: lastPrice ?? product.price,
       })
       setProductSearch('')
     } catch (err) {

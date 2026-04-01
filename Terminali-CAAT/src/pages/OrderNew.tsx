@@ -10,6 +10,7 @@ import {
   useDeleteOrderItem,
   useOrderItems,
   useUpdateOrderStatus,
+  getLastPriceForCustomer,
 } from '@/hooks/useOrders'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -79,13 +80,14 @@ export default function OrderNew() {
   }
 
   async function handleAddProduct(product: Product) {
-    if (!order) return
+    if (!order || !customerId) return
     try {
+      const lastPrice = await getLastPriceForCustomer(customerId, product.id)
       await addItem.mutateAsync({
         order_id: order.id,
         product_id: product.id,
         quantity: 1,
-        unit_price: product.price,
+        unit_price: lastPrice ?? product.price,
       })
     } catch (err) {
       toast.error(
