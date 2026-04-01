@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   useOrder,
@@ -24,7 +24,6 @@ export default function Picking() {
   const updateStatus = useUpdateOrderStatus()
   const addPickingScan = useAddPickingScan()
 
-  const [lastScannedLotId, setLastScannedLotId] = useState<string | null>(null)
 
   const pickedCount = (orderItems ?? []).filter((i) => i.picked).length
   const totalCount = (orderItems ?? []).length
@@ -59,9 +58,6 @@ export default function Picking() {
       const lotId = qr.lot ?? null
 
       // If lot is specified, we can validate expiry (the lot data comes from the query)
-      if (lotId) {
-        setLastScannedLotId(lotId)
-      }
 
       // Increment quantity_picked by 1
       const newQtyPicked = matchingItem.quantity_picked + 1
@@ -262,7 +258,7 @@ export default function Picking() {
             <p className="text-sm font-medium text-center">
               Scansiona prodotto
             </p>
-            <QRScanner onScan={handleScan} active={scannerActive && !allPicked} />
+            <QRScanner onScan={handleScan} active={!allPicked} />
             <p className="text-xs text-muted-foreground text-center">
               Inquadra il QR code del prodotto per registrare la raccolta
             </p>
