@@ -102,6 +102,7 @@ export default function Products() {
         cost_price: form.cost_price ? parseFloat(form.cost_price) : null,
         supplier: form.supplier || null,
         vat_rate: 22,
+        min_stock: 0,
         is_active: true,
       })
       toast.success('Prodotto creato con successo')
