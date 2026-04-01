@@ -84,6 +84,36 @@ export function useCreateLot() {
   })
 }
 
+/**
+ * Fetches the recommended lot (FEFO — earliest expiry with sufficient stock)
+ * for each product ID. Returns a Map<productId, ProductLot>.
+ */
+export function useRecommendedLots(productIds: string[]) {
+  return useQuery({
+    queryKey: ['lots', 'recommended', productIds],
+    queryFn: async () => {
+      if (!productIds.length) return new Map<string, ProductLot>()
+      const { data, error } = await supabase
+        .from('product_lots')
+        .select('*')
+        .in('product_id', productIds)
+        .eq('is_active', true)
+        .gt('quantity_in_stock', 0)
+        .order('expiry_date', { ascending: true, nullsFirst: false })
+      if (error) throw error
+      // Pick the first lot per product (earliest expiry)
+      const map = new Map<string, ProductLot>()
+      for (const lot of (data as ProductLot[])) {
+        if (!map.has(lot.product_id)) {
+          map.set(lot.product_id, lot)
+        }
+      }
+      return map
+    },
+    enabled: productIds.length > 0,
+  })
+}
+
 export function useProductStock() {
   return useQuery({
     queryKey: ['product_stock'],
