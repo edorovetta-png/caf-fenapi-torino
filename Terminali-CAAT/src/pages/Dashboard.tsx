@@ -43,7 +43,7 @@ async function fetchStats(isAdmin: boolean): Promise<StatsResult> {
   const bozze = await supabase
     .from('orders')
     .select('*', { count: 'exact', head: true })
-    .eq('status', 'bozza')
+    .eq('status', 'draft')
 
   const activeProducts = await supabase
     .from('products')
@@ -87,7 +87,7 @@ async function fetchWeeklyChart(): Promise<ChartDay[]> {
       supabase
         .from('orders')
         .select('*', { count: 'exact', head: true })
-        .in('status', ['confermato', 'evaso'])
+        .in('status', ['confirmed', 'exported', 'completed'])
         .gte('created_at', start)
         .lt('created_at', end)
     )

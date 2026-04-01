@@ -12,9 +12,9 @@ export async function fetchTopProductsForCustomer(
 ): Promise<ProductSales[]> {
   const { data, error } = await supabase
     .from('order_items')
-    .select('quantity, unit_price, line_total, product:products(name, sku), order:orders!inner(customer_id, status)')
+    .select('quantity_ordered, unit_price, line_total, product:products(name, sku), order:orders!inner(customer_id, status)')
     .eq('order.customer_id', customerId)
-    .in('order.status', ['confermato', 'evaso'])
+    .in('order.status', ['confirmed', 'exported', 'completed'])
 
   if (error) throw error
   if (!data) return []
@@ -27,13 +27,13 @@ export async function fetchTopProductsForCustomer(
     const key = sku || name
     const existing = map.get(key)
     if (existing) {
-      existing.total_qty += row.quantity
+      existing.total_qty += row.quantity_ordered
       existing.total_spent += row.line_total
     } else {
       map.set(key, {
         name,
         sku,
-        total_qty: row.quantity,
+        total_qty: row.quantity_ordered,
         total_spent: row.line_total,
       })
     }
@@ -51,7 +51,7 @@ export async function fetchCustomerStats(
     .from('orders')
     .select('id, total_amount, created_at')
     .eq('customer_id', customerId)
-    .in('status', ['confermato', 'evaso'])
+    .in('status', ['confirmed', 'exported', 'completed'])
     .order('created_at', { ascending: true })
 
   if (error) throw error
@@ -98,7 +98,7 @@ export async function fetchDormantCustomers(
   const { data: orders, error: ordErr } = await supabase
     .from('orders')
     .select('customer_id, total_amount, created_at')
-    .in('status', ['confermato', 'evaso'])
+    .in('status', ['confirmed', 'exported', 'completed'])
 
   if (ordErr) throw ordErr
 
@@ -169,7 +169,7 @@ export async function fetchMonthlyRevenue(): Promise<MonthlyRevenue[]> {
   const { data, error } = await supabase
     .from('orders')
     .select('total_amount, created_at')
-    .in('status', ['confermato', 'evaso'])
+    .in('status', ['confirmed', 'exported', 'completed'])
 
   if (error) throw error
   if (!data) return []

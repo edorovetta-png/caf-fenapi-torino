@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useCustomers } from '@/hooks/useCustomers'
@@ -32,8 +32,7 @@ import {
 import OrderItemRow from '@/components/OrderItemRow'
 import { toast } from 'sonner'
 import { Search, Plus, ArrowLeft } from 'lucide-react'
-import { useActiveLots } from '@/hooks/useLots'
-import type { Order, Product, ProductLot } from '@/types'
+import type { Order, Product } from '@/types'
 
 export default function OrderNew() {
   const navigate = useNavigate()
@@ -44,7 +43,6 @@ export default function OrderNew() {
   const [notes, setNotes] = useState('')
   const [order, setOrder] = useState<Order | null>(null)
   const [productSearch, setProductSearch] = useState('')
-  const [lotSelectProduct, setLotSelectProduct] = useState<Product | null>(null)
 
   const createOrder = useCreateOrder()
   const addItem = useAddOrderItem()
@@ -56,7 +54,6 @@ export default function OrderNew() {
   const { data: products } = useProducts(
     productSearch ? { search: productSearch } : undefined
   )
-  const { data: activeLots } = useActiveLots(lotSelectProduct?.id)
 
   async function handleCreateDraft() {
     if (!customerId) {
@@ -82,28 +79,17 @@ export default function OrderNew() {
     }
   }
 
-  function handleAddProduct(product: Product) {
-    // If a lot selector is already open for this product, close it
-    if (lotSelectProduct?.id === product.id) {
-      setLotSelectProduct(null)
-      return
-    }
-    // Open lot selector — the useActiveLots query will fire
-    setLotSelectProduct(product)
-  }
-
-  async function handleAddWithLot(product: Product, lot?: ProductLot) {
+  async function handleAddProduct(product: Product) {
     if (!order || !customerId) return
     try {
       const lastPrice = await getLastPriceForCustomer(customerId, product.id)
       await addItem.mutateAsync({
         order_id: order.id,
         product_id: product.id,
-        quantity: 1,
+        quantity_ordered: 1,
         unit_price: lastPrice ?? product.price,
-        lot_id: lot?.id ?? null,
+        vat_rate: product.vat_rate,
       })
-      setLotSelectProduct(null)
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : 'Errore aggiunta prodotto'
@@ -114,15 +100,17 @@ export default function OrderNew() {
   async function handleUpdateQuantity(
     itemId: string,
     quantity: number,
-    unitPrice: number
+    unitPrice: number,
+    vatRate: number
   ) {
     if (!order) return
     try {
       await updateItem.mutateAsync({
         id: itemId,
         order_id: order.id,
-        quantity,
+        quantity_ordered: quantity,
         unit_price: unitPrice,
+        vat_rate: vatRate,
       })
     } catch (err) {
       toast.error(
@@ -147,7 +135,7 @@ export default function OrderNew() {
     try {
       await updateStatus.mutateAsync({
         id: order.id,
-        status: 'confermato',
+        status: 'confirmed',
       })
       toast.success('Ordine confermato')
       navigate(`/orders/${order.id}`)
@@ -242,65 +230,27 @@ export default function OrderNew() {
                 (products ?? [])
                   .filter((p) => p.is_active)
                   .map((product) => (
-                    <div key={product.id}>
-                      <div className="flex items-center justify-between py-2 px-2 rounded hover:bg-muted">
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium truncate">
-                            {product.name}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {product.sku} &middot; {product.price.toFixed(2)}{' '}
-                            &euro;/{product.unit}
-                          </p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => handleAddProduct(product)}
-                          disabled={addItem.isPending}
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
+                    <div
+                      key={product.id}
+                      className="flex items-center justify-between py-2 px-2 rounded hover:bg-muted"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium truncate">
+                          {product.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {product.sku} &middot; {product.price.toFixed(2)}{' '}
+                          &euro;/{product.unit}
+                        </p>
                       </div>
-                      {lotSelectProduct?.id === product.id && (
-                        <div className="ml-4 mb-2 border-l-2 border-primary/30 pl-3 space-y-1">
-                          {!activeLots ? (
-                            <p className="text-xs text-muted-foreground py-1">Caricamento lotti...</p>
-                          ) : activeLots.length === 0 ? (
-                            // No lots — add directly without lot_id
-                            <LotAutoAdd product={product} onAdd={handleAddWithLot} />
-                          ) : (
-                            <>
-                              <p className="text-xs font-medium text-muted-foreground py-1">Seleziona lotto:</p>
-                              {activeLots.map((lot) => (
-                                <button
-                                  key={lot.id}
-                                  type="button"
-                                  className="w-full text-left py-1.5 px-2 rounded hover:bg-muted text-sm flex justify-between items-center"
-                                  onClick={() => handleAddWithLot(product, lot)}
-                                  disabled={addItem.isPending}
-                                >
-                                  <span>{lot.lot_number}</span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {lot.expiry_date
-                                      ? `Scad. ${new Date(lot.expiry_date).toLocaleDateString('it-IT')}`
-                                      : 'No scadenza'}
-                                    {' \u00b7 '}{lot.quantity_in_stock} disp.
-                                  </span>
-                                </button>
-                              ))}
-                              <button
-                                type="button"
-                                className="w-full text-left py-1.5 px-2 rounded hover:bg-muted text-xs text-muted-foreground"
-                                onClick={() => handleAddWithLot(product)}
-                                disabled={addItem.isPending}
-                              >
-                                Aggiungi senza lotto
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => handleAddProduct(product)}
+                        disabled={addItem.isPending}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
                     </div>
                   ))}
               {productSearch && !products?.length && (
@@ -330,7 +280,7 @@ export default function OrderNew() {
                     item={item}
                     editable
                     onUpdate={(quantity, unitPrice) =>
-                      handleUpdateQuantity(item.id, quantity, unitPrice)
+                      handleUpdateQuantity(item.id, quantity, unitPrice, item.vat_rate)
                     }
                     onDelete={() => handleDeleteItem(item.id)}
                   />
@@ -368,19 +318,4 @@ export default function OrderNew() {
       </div>
     </div>
   )
-}
-
-/** Auto-adds product without lot when activeLots query resolves to empty */
-function LotAutoAdd({
-  product,
-  onAdd,
-}: {
-  product: Product
-  onAdd: (product: Product, lot?: ProductLot) => void
-}) {
-  useEffect(() => {
-    onAdd(product)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  return <p className="text-xs text-muted-foreground py-1">Aggiunta in corso...</p>
 }

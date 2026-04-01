@@ -5,6 +5,7 @@ import type {
   OrderWithCustomer,
   OrderItemWithProduct,
   OrderStatus,
+  PickingScan,
 } from '@/types'
 
 /**
@@ -20,7 +21,7 @@ export async function getLastPriceForCustomer(
     .select('unit_price, order:orders!inner(customer_id, status)')
     .eq('product_id', productId)
     .eq('order.customer_id', customerId)
-    .in('order.status', ['confermato', 'evaso'])
+    .in('order.status', ['confirmed', 'exported', 'completed'])
     .order('created_at', { ascending: false })
     .limit(1)
 
@@ -102,7 +103,7 @@ export function useCreateOrder() {
         .insert({
           customer_id: input.customer_id,
           created_by: input.created_by,
-          status: 'bozza' as OrderStatus,
+          status: 'draft' as OrderStatus,
           notes: input.notes ?? null,
           total_amount: 0,
         })
@@ -121,20 +122,22 @@ export function useAddOrderItem() {
     mutationFn: async (input: {
       order_id: string
       product_id: string
-      quantity: number
+      quantity_ordered: number
       unit_price: number
-      lot_id?: string | null
+      vat_rate: number
     }) => {
-      const line_total = input.quantity * input.unit_price
+      const line_total = input.quantity_ordered * input.unit_price
+      const line_total_vat = line_total * (1 + input.vat_rate / 100)
       const { data, error } = await supabase
         .from('order_items')
         .insert({
           order_id: input.order_id,
           product_id: input.product_id,
-          quantity: input.quantity,
+          quantity_ordered: input.quantity_ordered,
           unit_price: input.unit_price,
           line_total,
-          lot_id: input.lot_id ?? null,
+          vat_rate: input.vat_rate,
+          line_total_vat,
         })
         .select('*, product:products(*), lot:product_lots(*)')
         .single()
@@ -154,13 +157,21 @@ export function useUpdateOrderItem() {
     mutationFn: async (input: {
       id: string
       order_id: string
-      quantity: number
+      quantity_ordered: number
       unit_price: number
+      vat_rate: number
     }) => {
-      const line_total = input.quantity * input.unit_price
+      const line_total = input.quantity_ordered * input.unit_price
+      const line_total_vat = line_total * (1 + input.vat_rate / 100)
       const { data, error } = await supabase
         .from('order_items')
-        .update({ quantity: input.quantity, unit_price: input.unit_price, line_total })
+        .update({
+          quantity_ordered: input.quantity_ordered,
+          unit_price: input.unit_price,
+          line_total,
+          vat_rate: input.vat_rate,
+          line_total_vat,
+        })
         .eq('id', input.id)
         .select('*, product:products(*), lot:product_lots(*)')
         .single()
@@ -213,6 +224,70 @@ export function useUpdateOrderStatus() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['orders'] })
       queryClient.invalidateQueries({ queryKey: ['orders', data.id] })
+    },
+  })
+}
+
+export function usePickingScans(orderId: string | undefined) {
+  return useQuery({
+    queryKey: ['picking_scans', orderId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('picking_scans')
+        .select('*')
+        .eq('order_id', orderId!)
+        .order('scanned_at', { ascending: false })
+      if (error) throw error
+      return data as PickingScan[]
+    },
+    enabled: !!orderId,
+  })
+}
+
+export function useAddPickingScan() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (input: {
+      order_id: string
+      order_item_id: string
+      lot_id: string
+      product_id: string
+      quantity: number
+      new_quantity_picked: number
+      quantity_ordered: number
+    }) => {
+      // 1. Insert picking_scan record
+      const { data: scan, error: scanError } = await supabase
+        .from('picking_scans')
+        .insert({
+          order_id: input.order_id,
+          order_item_id: input.order_item_id,
+          lot_id: input.lot_id,
+          product_id: input.product_id,
+          quantity: input.quantity,
+        })
+        .select()
+        .single()
+      if (scanError) throw scanError
+
+      // 2. Update order_item: quantity_picked, lot_id, picked status
+      const picked = input.new_quantity_picked >= input.quantity_ordered
+      const { error: itemError } = await supabase
+        .from('order_items')
+        .update({
+          quantity_picked: input.new_quantity_picked,
+          lot_id: input.lot_id,
+          picked,
+        })
+        .eq('id', input.order_item_id)
+      if (itemError) throw itemError
+
+      return scan as PickingScan
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['picking_scans', variables.order_id] })
+      queryClient.invalidateQueries({ queryKey: ['order_items', variables.order_id] })
+      queryClient.invalidateQueries({ queryKey: ['orders'] })
     },
   })
 }

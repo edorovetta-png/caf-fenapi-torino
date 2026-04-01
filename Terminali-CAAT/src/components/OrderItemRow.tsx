@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Check } from 'lucide-react'
 import type { OrderItemWithProduct } from '@/types'
 
 interface OrderItemRowProps {
@@ -17,7 +17,7 @@ export default function OrderItemRow({
   onUpdate,
   onDelete,
 }: OrderItemRowProps) {
-  const [qty, setQty] = useState(String(item.quantity))
+  const [qty, setQty] = useState(String(item.quantity_ordered))
   const [price, setPrice] = useState(item.unit_price.toFixed(2))
 
   const vatRate = item.product.vat_rate ?? 22
@@ -27,10 +27,10 @@ export default function OrderItemRow({
   function handleQtyBlur() {
     const parsed = parseFloat(qty)
     if (isNaN(parsed) || parsed <= 0) {
-      setQty(String(item.quantity))
+      setQty(String(item.quantity_ordered))
       return
     }
-    if (parsed !== item.quantity) {
+    if (parsed !== item.quantity_ordered) {
       onUpdate(parsed, parseFloat(price))
     }
   }
@@ -58,6 +58,14 @@ export default function OrderItemRow({
             Lotto {item.lot.lot_number}
             {item.lot.expiry_date &&
               ` \u00b7 Scad. ${new Date(item.lot.expiry_date).toLocaleDateString('it-IT')}`}
+          </p>
+        )}
+        {item.quantity_picked > 0 && (
+          <p className="text-xs font-medium mt-0.5 flex items-center gap-1">
+            {item.picked && <Check className="h-3 w-3 text-green-600" />}
+            <span className={item.picked ? 'text-green-600' : 'text-yellow-600'}>
+              Raccolti: {item.quantity_picked}/{item.quantity_ordered}
+            </span>
           </p>
         )}
       </div>
@@ -88,7 +96,7 @@ export default function OrderItemRow({
             className="text-right h-7 text-sm"
           />
         ) : (
-          <span className="block text-right text-sm">{item.quantity}</span>
+          <span className="block text-right text-sm">{item.quantity_ordered}</span>
         )}
       </div>
       <div className="w-20 text-right text-xs shrink-0">

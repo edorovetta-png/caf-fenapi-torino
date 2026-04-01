@@ -19,28 +19,34 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Plus } from 'lucide-react'
+import { Plus, ClipboardList } from 'lucide-react'
 import type { OrderStatus } from '@/types'
 
 const STATUS_OPTIONS: { value: OrderStatus | 'tutti'; label: string }[] = [
   { value: 'tutti', label: 'Tutti' },
-  { value: 'bozza', label: 'Bozza' },
-  { value: 'confermato', label: 'Confermato' },
-  { value: 'evaso', label: 'Evaso' },
+  { value: 'draft', label: 'Bozza' },
+  { value: 'picking', label: 'In Picking' },
+  { value: 'confirmed', label: 'Confermato' },
+  { value: 'exported', label: 'Esportato' },
+  { value: 'completed', label: 'Completato' },
   { value: 'annullato', label: 'Annullato' },
 ]
 
 const STATUS_BADGE_VARIANT: Record<OrderStatus, 'secondary' | 'default' | 'outline' | 'destructive'> = {
-  bozza: 'secondary',
-  confermato: 'default',
-  evaso: 'outline',
+  draft: 'secondary',
+  picking: 'outline',
+  confirmed: 'default',
+  exported: 'outline',
+  completed: 'default',
   annullato: 'destructive',
 }
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
-  bozza: 'Bozza',
-  confermato: 'Confermato',
-  evaso: 'Evaso',
+  draft: 'Bozza',
+  picking: 'In Picking',
+  confirmed: 'Confermato',
+  exported: 'Esportato',
+  completed: 'Completato',
   annullato: 'Annullato',
 }
 
@@ -125,6 +131,7 @@ export default function Orders() {
               <TableHead className="hidden sm:table-cell">Data</TableHead>
               <TableHead className="hidden sm:table-cell">Totale</TableHead>
               <TableHead>Stato</TableHead>
+              <TableHead className="w-[100px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -148,6 +155,21 @@ export default function Orders() {
                   <Badge variant={STATUS_BADGE_VARIANT[order.status]}>
                     {STATUS_LABEL[order.status]}
                   </Badge>
+                </TableCell>
+                <TableCell>
+                  {order.status === 'draft' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        navigate(`/orders/${order.id}/picking`)
+                      }}
+                    >
+                      <ClipboardList className="mr-1 h-4 w-4" />
+                      Picking
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

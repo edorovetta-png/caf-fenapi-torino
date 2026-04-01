@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import {
@@ -24,21 +24,24 @@ import {
 import OrderItemRow from '@/components/OrderItemRow'
 import { exportOrderToCSV, orderCSVFilename, downloadCSV } from '@/lib/export'
 import { toast } from 'sonner'
-import { ArrowLeft, Download, Copy, CheckCircle, Truck, XCircle, Search, Plus } from 'lucide-react'
-import { useActiveLots } from '@/hooks/useLots'
-import type { OrderStatus, Product, ProductLot } from '@/types'
+import { ArrowLeft, Download, Copy, CheckCircle, Truck, XCircle, Search, Plus, ClipboardList } from 'lucide-react'
+import type { OrderStatus, Product } from '@/types'
 
 const STATUS_BADGE_VARIANT: Record<OrderStatus, 'secondary' | 'default' | 'outline' | 'destructive'> = {
-  bozza: 'secondary',
-  confermato: 'default',
-  evaso: 'outline',
+  draft: 'secondary',
+  picking: 'outline',
+  confirmed: 'default',
+  exported: 'outline',
+  completed: 'default',
   annullato: 'destructive',
 }
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
-  bozza: 'Bozza',
-  confermato: 'Confermato',
-  evaso: 'Evaso',
+  draft: 'Bozza',
+  picking: 'In Picking',
+  confirmed: 'Confermato',
+  exported: 'Esportato',
+  completed: 'Completato',
   annullato: 'Annullato',
 }
 
@@ -54,32 +57,21 @@ export default function OrderDetail() {
   const updateStatus = useUpdateOrderStatus()
   const addItem = useAddOrderItem()
   const [productSearch, setProductSearch] = useState('')
-  const [lotSelectProduct, setLotSelectProduct] = useState<Product | null>(null)
   const { data: searchProducts } = useProducts(
     productSearch ? { search: productSearch } : undefined
   )
-  const { data: activeLots } = useActiveLots(lotSelectProduct?.id)
 
-  function handleAddProduct(product: Product) {
-    if (lotSelectProduct?.id === product.id) {
-      setLotSelectProduct(null)
-      return
-    }
-    setLotSelectProduct(product)
-  }
-
-  async function handleAddWithLot(product: Product, lot?: ProductLot) {
+  async function handleAddProduct(product: Product) {
     if (!order) return
     try {
       const lastPrice = await getLastPriceForCustomer(order.customer_id, product.id)
       await addItem.mutateAsync({
         order_id: order.id,
         product_id: product.id,
-        quantity: 1,
+        quantity_ordered: 1,
         unit_price: lastPrice ?? product.price,
-        lot_id: lot?.id ?? null,
+        vat_rate: product.vat_rate,
       })
-      setLotSelectProduct(null)
       setProductSearch('')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Errore aggiunta prodotto')
@@ -90,13 +82,13 @@ export default function OrderDetail() {
     if (!order) return
     try {
       await updateStatus.mutateAsync({ id: order.id, status })
-      toast.success(
-        status === 'confermato'
-          ? 'Ordine confermato'
-          : status === 'evaso'
-            ? 'Ordine evaso'
-            : 'Ordine annullato'
-      )
+      const msgs: Partial<Record<OrderStatus, string>> = {
+        confirmed: 'Ordine confermato',
+        exported: 'Ordine esportato',
+        completed: 'Ordine completato',
+        annullato: 'Ordine annullato',
+      }
+      toast.success(msgs[status] ?? 'Stato aggiornato')
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : 'Errore aggiornamento stato'
@@ -107,15 +99,17 @@ export default function OrderDetail() {
   async function handleUpdateQuantity(
     itemId: string,
     quantity: number,
-    unitPrice: number
+    unitPrice: number,
+    vatRate: number
   ) {
     if (!order) return
     try {
       await updateItem.mutateAsync({
         id: itemId,
         order_id: order.id,
-        quantity,
+        quantity_ordered: quantity,
         unit_price: unitPrice,
+        vat_rate: vatRate,
       })
     } catch (err) {
       toast.error(
@@ -163,7 +157,7 @@ export default function OrderDetail() {
     )
   }
 
-  const editable = order.status === 'bozza'
+  const editable = order.status === 'draft'
   const imponibile = (orderItems ?? []).reduce((sum, i) => sum + i.line_total, 0)
   const totalVat = (orderItems ?? []).reduce((sum, i) => sum + i.line_total * ((i.product.vat_rate ?? 22) / 100), 0)
   const totaleIvato = imponibile + totalVat
@@ -205,27 +199,47 @@ export default function OrderDetail() {
             )}
           </CardContent>
           <CardFooter className="flex-wrap gap-2">
-            {order.status === 'bozza' && isAdmin && (
+            {order.status === 'draft' && (
               <Button
                 size="sm"
-                onClick={() => handleStatusChange('confermato')}
+                onClick={() => navigate(`/orders/${order.id}/picking`)}
+              >
+                <ClipboardList className="mr-1 h-4 w-4" />
+                Avvia Picking
+              </Button>
+            )}
+            {order.status === 'draft' && isAdmin && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleStatusChange('confirmed')}
                 disabled={updateStatus.isPending}
               >
                 <CheckCircle className="mr-1 h-4 w-4" />
                 Conferma
               </Button>
             )}
-            {order.status === 'confermato' && isAdmin && (
+            {order.status === 'confirmed' && isAdmin && (
               <Button
                 size="sm"
-                onClick={() => handleStatusChange('evaso')}
+                onClick={() => handleStatusChange('exported')}
                 disabled={updateStatus.isPending}
               >
                 <Truck className="mr-1 h-4 w-4" />
-                Segna evaso
+                Esporta
               </Button>
             )}
-            {(order.status === 'bozza' || order.status === 'confermato') &&
+            {order.status === 'exported' && isAdmin && (
+              <Button
+                size="sm"
+                onClick={() => handleStatusChange('completed')}
+                disabled={updateStatus.isPending}
+              >
+                <CheckCircle className="mr-1 h-4 w-4" />
+                Completa
+              </Button>
+            )}
+            {(order.status === 'draft' || order.status === 'confirmed') &&
               isAdmin && (
                 <Button
                   variant="destructive"
@@ -270,61 +284,24 @@ export default function OrderDetail() {
                     {(searchProducts ?? [])
                       .filter((p) => p.is_active)
                       .map((product) => (
-                        <div key={product.id}>
-                          <div className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted">
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium truncate">{product.name}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {product.sku} · {product.price.toFixed(2)} €/{product.unit}
-                              </p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => handleAddProduct(product)}
-                              disabled={addItem.isPending}
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
+                        <div
+                          key={product.id}
+                          className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium truncate">{product.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {product.sku} · {product.price.toFixed(2)} €/{product.unit}
+                            </p>
                           </div>
-                          {lotSelectProduct?.id === product.id && (
-                            <div className="ml-4 mb-1 border-l-2 border-primary/30 pl-3 space-y-1">
-                              {!activeLots ? (
-                                <p className="text-xs text-muted-foreground py-1">Caricamento lotti...</p>
-                              ) : activeLots.length === 0 ? (
-                                <DetailLotAutoAdd product={product} onAdd={handleAddWithLot} />
-                              ) : (
-                                <>
-                                  <p className="text-xs font-medium text-muted-foreground py-1">Seleziona lotto:</p>
-                                  {activeLots.map((lot) => (
-                                    <button
-                                      key={lot.id}
-                                      type="button"
-                                      className="w-full text-left py-1 px-2 rounded hover:bg-muted text-sm flex justify-between items-center"
-                                      onClick={() => handleAddWithLot(product, lot)}
-                                      disabled={addItem.isPending}
-                                    >
-                                      <span>{lot.lot_number}</span>
-                                      <span className="text-xs text-muted-foreground">
-                                        {lot.expiry_date
-                                          ? `Scad. ${new Date(lot.expiry_date).toLocaleDateString('it-IT')}`
-                                          : 'No scadenza'}
-                                        {' \u00b7 '}{lot.quantity_in_stock} disp.
-                                      </span>
-                                    </button>
-                                  ))}
-                                  <button
-                                    type="button"
-                                    className="w-full text-left py-1 px-2 rounded hover:bg-muted text-xs text-muted-foreground"
-                                    onClick={() => handleAddWithLot(product)}
-                                    disabled={addItem.isPending}
-                                  >
-                                    Aggiungi senza lotto
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => handleAddProduct(product)}
+                            disabled={addItem.isPending}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
                         </div>
                       ))}
                     {!searchProducts?.length && (
@@ -346,7 +323,7 @@ export default function OrderDetail() {
                     item={item}
                     editable={editable}
                     onUpdate={(quantity, unitPrice) =>
-                      handleUpdateQuantity(item.id, quantity, unitPrice)
+                      handleUpdateQuantity(item.id, quantity, unitPrice, item.vat_rate)
                     }
                     onDelete={() => handleDeleteItem(item.id)}
                   />
@@ -372,19 +349,4 @@ export default function OrderDetail() {
       </div>
     </div>
   )
-}
-
-/** Auto-adds product without lot when activeLots query resolves to empty */
-function DetailLotAutoAdd({
-  product,
-  onAdd,
-}: {
-  product: Product
-  onAdd: (product: Product, lot?: ProductLot) => void
-}) {
-  useEffect(() => {
-    onAdd(product)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  return <p className="text-xs text-muted-foreground py-1">Aggiunta in corso...</p>
 }

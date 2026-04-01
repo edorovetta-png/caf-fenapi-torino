@@ -1,5 +1,5 @@
 export type UserRole = 'admin' | 'operatore'
-export type OrderStatus = 'bozza' | 'confermato' | 'evaso' | 'annullato'
+export type OrderStatus = 'draft' | 'picking' | 'confirmed' | 'exported' | 'completed' | 'annullato'
 
 export interface Profile {
   id: string
@@ -94,6 +94,8 @@ export interface Order {
   status: OrderStatus
   notes: string | null
   total_amount: number
+  total_with_vat: number
+  exported_at: string | null
   created_at: string
   updated_at: string
 }
@@ -107,9 +109,13 @@ export interface OrderItem {
   order_id: string
   product_id: string
   lot_id: string | null
-  quantity: number
+  quantity_ordered: number
+  quantity_picked: number
   unit_price: number
   line_total: number
+  vat_rate: number
+  line_total_vat: number
+  picked: boolean
   created_at: string
 }
 
@@ -160,4 +166,14 @@ export interface MonthlyRevenue {
   month: string
   num_orders: number
   revenue: number
+}
+
+export interface PickingScan {
+  id: string
+  order_id: string
+  order_item_id: string
+  lot_id: string
+  product_id: string
+  quantity: number
+  scanned_at: string
 }

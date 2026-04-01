@@ -1,6 +1,6 @@
 # PROJECT STATUS — Magazzino QR (Terminali CAAT)
 
-> Ultimo aggiornamento: 2026-04-01
+> Ultimo aggiornamento: 2026-04-01 (v3 picking flow)
 > Questo file serve come contesto condiviso tra Claude e Gemini. Ogni agente DEVE leggerlo prima di iniziare e aggiornarlo dopo ogni modifica significativa.
 
 ---
@@ -80,19 +80,31 @@ Terminali-CAAT/
 - **Analytics**: trend fatturato, clienti dormienti, cross-selling
 - **PWA**: manifest, meta tags iOS/Android
 
+### v3 Picking Flow (2026-04-01)
+
+- **Order statuses**: `draft` -> `picking` -> `confirmed` -> `exported` -> `completed` (+ `annullato`)
+- **order_items**: `quantity` rinominato `quantity_ordered`, nuove colonne `quantity_picked`, `vat_rate`, `line_total_vat`, `picked`
+- **Nuova tabella**: `picking_scans` (order_id, order_item_id, lot_id, product_id, quantity, scanned_at)
+- **Nuova pagina**: `/orders/:id/picking` — checklist prodotti + scanner QR per evasione magazzino
+- **Scanner standalone** (`/scan`) ora redirige al flusso picking (non piu usato per composizione ordini)
+- **Lot selection rimossa** dalla composizione ordini (lot_id e NULL in bozza, assegnato durante picking)
+- TypeScript: 0 errori (`npx tsc --noEmit`)
+
 ### Da fare per andare live
 
-1. Creare progetto Supabase Cloud ed eseguire le migration SQL
-2. Configurare .env.local con URL e anon key reali
-3. Creare primo utente admin via Supabase dashboard
-4. Generare icone PWA (icon-192.png, icon-512.png)
-5. (Futuro) Deploy su Vercel
-6. (Futuro) Integrazione Arca
+1. Eseguire migration SQL v3 (nuove colonne order_items, tabella picking_scans, aggiornamento enum status)
+2. Creare progetto Supabase Cloud ed eseguire le migration SQL
+3. Configurare .env.local con URL e anon key reali
+4. Creare primo utente admin via Supabase dashboard
+5. Generare icone PWA (icon-192.png, icon-512.png)
+6. (Futuro) Deploy su Vercel
+7. (Futuro) Integrazione Arca
 
 ---
 
 ## 5. Prossimi Step
 
+- Scrivere migration SQL v3 per le nuove colonne e tabella picking_scans
 - Setup Supabase Cloud + primo utente admin
 - Test end-to-end manuale dell'app con dati reali
 - Generare icone PWA

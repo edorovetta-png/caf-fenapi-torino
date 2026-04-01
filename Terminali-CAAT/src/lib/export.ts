@@ -5,7 +5,7 @@ const HEADER = 'SKU;Descrizione;Quantita;UnitaMisura;PrezzoUnitario;TotaleRiga;N
 
 export function exportOrderToCSV(_order: Order, items: OrderItemWithProduct[], customer: Customer): string {
   const rows = items.map((item) =>
-    [item.product.sku, item.product.name, item.quantity, item.product.unit,
+    [item.product.sku, item.product.name, item.quantity_ordered, item.product.unit,
      item.unit_price.toFixed(2), item.line_total.toFixed(2), customer.name].join(';')
   )
   return BOM + HEADER + '\n' + rows.join('\n')
