@@ -1,23 +1,46 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useProduct, useUpdateProduct } from '@/hooks/useProducts'
+import { useLots, useCreateLot } from '@/hooks/useLots'
 import { useAuth } from '@/hooks/useAuth'
 import QRCode from '@/components/QRCode'
 import LabelPrint from '@/components/LabelPrint'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { toast } from 'sonner'
-import { ArrowLeft, Printer } from 'lucide-react'
+import { ArrowLeft, Printer, Plus } from 'lucide-react'
+import type { ProductLot } from '@/types'
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { data: product, isLoading, error } = useProduct(id)
+  const { data: lots, isLoading: lotsLoading } = useLots(id)
   const updateProduct = useUpdateProduct()
+  const createLot = useCreateLot()
   const { isAdmin } = useAuth()
   const [editing, setEditing] = useState(false)
+  const [lotDialogOpen, setLotDialogOpen] = useState(false)
+  const [printLot, setPrintLot] = useState<ProductLot | null>(null)
   const [form, setForm] = useState({
     name: '',
     sku: '',
@@ -27,6 +50,14 @@ export default function ProductDetail() {
     cost_price: 0,
     supplier: '',
     description: '',
+  })
+  const [lotForm, setLotForm] = useState({
+    lot_number: '',
+    expiry_date: '',
+    quantity_received: '',
+    cost_price: '',
+    supplier: '',
+    notes: '',
   })
 
   function startEdit() {
@@ -78,6 +109,65 @@ export default function ProductDetail() {
     }
   }
 
+  function openLotDialog() {
+    if (!product) return
+    setLotForm({
+      lot_number: '',
+      expiry_date: '',
+      quantity_received: '',
+      cost_price: '',
+      supplier: product.supplier ?? '',
+      notes: '',
+    })
+    setLotDialogOpen(true)
+  }
+
+  async function handleCreateLot(e: React.FormEvent) {
+    e.preventDefault()
+    if (!product) return
+    if (!lotForm.lot_number || !lotForm.quantity_received) {
+      toast.error('Compila i campi obbligatori: Numero lotto, Quantita ricevuta')
+      return
+    }
+    try {
+      await createLot.mutateAsync({
+        sku: product.sku,
+        product_id: product.id,
+        lot_number: lotForm.lot_number,
+        expiry_date: lotForm.expiry_date || null,
+        quantity_received: parseFloat(lotForm.quantity_received),
+        quantity_in_stock: parseFloat(lotForm.quantity_received),
+        cost_price: lotForm.cost_price ? parseFloat(lotForm.cost_price) : null,
+        supplier: lotForm.supplier || null,
+        received_at: new Date().toISOString(),
+        notes: lotForm.notes || null,
+        is_active: true,
+      })
+      toast.success('Lotto creato con successo')
+      setLotDialogOpen(false)
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : 'Errore nella creazione del lotto'
+      )
+    }
+  }
+
+  function getLotStatus(lot: ProductLot): { label: string; variant: 'default' | 'secondary' | 'destructive' } {
+    if (lot.expiry_date && new Date(lot.expiry_date) < new Date()) {
+      return { label: 'Scaduto', variant: 'destructive' }
+    }
+    if (lot.quantity_in_stock <= 0) {
+      return { label: 'Esaurito', variant: 'secondary' }
+    }
+    return { label: 'Attivo', variant: 'default' }
+  }
+
+  function handlePrintLot(lot: ProductLot) {
+    setPrintLot(lot)
+    // Allow React to render the print area before printing
+    setTimeout(() => window.print(), 100)
+  }
+
   if (isLoading) return <div className="p-6">Caricamento...</div>
   if (error || !product) return <div className="p-6">Prodotto non trovato</div>
 
@@ -123,7 +213,7 @@ export default function ProductDetail() {
                 <Input id="category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="unit">Unità</Label>
+                <Label htmlFor="unit">Unita</Label>
                 <Input id="unit" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} />
               </div>
               <div className="space-y-1">
@@ -162,7 +252,7 @@ export default function ProductDetail() {
                 <dd className="font-medium">{product.category ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-muted-foreground">Unità</dt>
+                <dt className="text-muted-foreground">Unita</dt>
                 <dd className="font-medium">{product.unit}</dd>
               </div>
               <div>
@@ -195,7 +285,7 @@ export default function ProductDetail() {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>QR Code</span>
-              <Button size="sm" variant="outline" onClick={() => window.print()}>
+              <Button size="sm" variant="outline" onClick={() => { setPrintLot(null); window.print() }}>
                 <Printer className="mr-2 size-4" /> Stampa etichetta
               </Button>
             </CardTitle>
@@ -206,9 +296,153 @@ export default function ProductDetail() {
         </Card>
       )}
 
+      {/* Lotti */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>Lotti</span>
+            {isAdmin && (
+              <Dialog open={lotDialogOpen} onOpenChange={setLotDialogOpen}>
+                <DialogTrigger
+                  render={
+                    <Button size="sm" onClick={openLotDialog}>
+                      <Plus className="mr-1 h-4 w-4" />
+                      Nuovo Lotto
+                    </Button>
+                  }
+                />
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Nuovo Lotto</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleCreateLot} className="space-y-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="lot_number">Numero lotto *</Label>
+                      <Input
+                        id="lot_number"
+                        value={lotForm.lot_number}
+                        onChange={(e) => setLotForm((f) => ({ ...f, lot_number: e.target.value }))}
+                        placeholder="LOT-001"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="lot_expiry_date">Data di scadenza</Label>
+                      <Input
+                        id="lot_expiry_date"
+                        type="date"
+                        value={lotForm.expiry_date}
+                        onChange={(e) => setLotForm((f) => ({ ...f, expiry_date: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="lot_quantity_received">Quantita ricevuta *</Label>
+                      <Input
+                        id="lot_quantity_received"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={lotForm.quantity_received}
+                        onChange={(e) => setLotForm((f) => ({ ...f, quantity_received: e.target.value }))}
+                        placeholder="0"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="lot_cost_price">Prezzo acquisto</Label>
+                      <Input
+                        id="lot_cost_price"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={lotForm.cost_price}
+                        onChange={(e) => setLotForm((f) => ({ ...f, cost_price: e.target.value }))}
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="lot_supplier">Fornitore</Label>
+                      <Input
+                        id="lot_supplier"
+                        value={lotForm.supplier}
+                        onChange={(e) => setLotForm((f) => ({ ...f, supplier: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="lot_notes">Note</Label>
+                      <Input
+                        id="lot_notes"
+                        value={lotForm.notes}
+                        onChange={(e) => setLotForm((f) => ({ ...f, notes: e.target.value }))}
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit" disabled={createLot.isPending}>
+                        {createLot.isPending ? 'Creazione...' : 'Crea Lotto'}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {lotsLoading ? (
+            <p className="text-muted-foreground">Caricamento lotti...</p>
+          ) : !lots?.length ? (
+            <p className="text-muted-foreground">Nessun lotto registrato.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Lotto</TableHead>
+                  <TableHead className="hidden sm:table-cell">Ricevuto</TableHead>
+                  <TableHead className="hidden sm:table-cell">Scadenza</TableHead>
+                  <TableHead>Qta</TableHead>
+                  <TableHead>Stato</TableHead>
+                  <TableHead></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {lots.map((lot) => {
+                  const status = getLotStatus(lot)
+                  return (
+                    <TableRow key={lot.id}>
+                      <TableCell className="font-medium">{lot.lot_number}</TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        {new Date(lot.received_at).toLocaleDateString('it-IT')}
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        {lot.expiry_date
+                          ? new Date(lot.expiry_date).toLocaleDateString('it-IT')
+                          : '—'}
+                      </TableCell>
+                      <TableCell>
+                        {lot.quantity_in_stock} / {lot.quantity_received}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={status.variant}>{status.label}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handlePrintLot(lot)}
+                        >
+                          <Printer className="mr-1 size-3" /> QR
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Hidden print area */}
       <div className="print-area hidden print:block">
-        <LabelPrint product={product} />
+        <LabelPrint product={product} lot={printLot ?? undefined} />
       </div>
     </div>
   )
