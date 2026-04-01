@@ -8,12 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Login() {
   const { login, session } = useAuth()
-
-  if (session) return <Navigate to="/" replace />
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  if (session) return <Navigate to="/" replace />
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
