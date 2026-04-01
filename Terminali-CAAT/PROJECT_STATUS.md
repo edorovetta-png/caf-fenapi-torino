@@ -1,6 +1,6 @@
 # PROJECT STATUS — Magazzino QR (Terminali CAAT)
 
-> Ultimo aggiornamento: 2026-04-01 (Task 5)
+> Ultimo aggiornamento: 2026-04-01 (Task 15)
 > Questo file serve come contesto condiviso tra Claude e Gemini. Ogni agente DEVE leggerlo prima di iniziare e aggiornarlo dopo ogni modifica significativa.
 
 ---
@@ -107,6 +107,30 @@ Terminali-CAAT/
 
 ---
 
+---
+
+- [x] Task 13: Dashboard Page completato
+  - Creato `src/components/StatCard.tsx`: componente riutilizzabile con titolo, valore, icona (LucideIcon), subtitle opzionale
+  - Sostituito `src/pages/Dashboard.tsx` con dashboard completo:
+    - Greeting con titolo "Dashboard" + "Ciao, {display_name}"
+    - Quick actions: bottoni Scanner (/scan) e Nuovo Ordine (/orders/new)
+    - 4 stat cards in grid (ordini oggi, bozze, prodotti attivi, clienti admin-only) — query parallelizzate con Promise.all
+    - Bar chart "Ordini ultimi 7 giorni" con Recharts (admin only), giorni in italiano (Lun-Dom)
+  - `npx tsc --noEmit` passa senza errori
+
+- [x] Task 15: PWA Configuration completato
+  - Creato `public/manifest.json`: configurazione PWA con name, short_name, description, start_url, display standalone, theme/background colors, orientation portrait, icons 192x192 e 512x512
+  - Aggiunto 6 meta tag a `index.html` per PWA e iOS:
+    - `<link rel="manifest" href="/manifest.json" />`
+    - `<meta name="theme-color" content="#1e40af" />`
+    - `<meta name="apple-mobile-web-app-capable" content="yes" />`
+    - `<meta name="apple-mobile-web-app-status-bar-style" content="default" />`
+    - `<meta name="apple-mobile-web-app-title" content="MagQR" />`
+    - `<link rel="apple-touch-icon" href="/icon-192.png" />`
+  - Committed con: "feat: add PWA manifest and meta tags"
+
+---
+
 ## 5. Prossimi Step
 
-- Task 6: (da definire)
+- Task 6+: (da definire — scanner, orders, customers pages)
