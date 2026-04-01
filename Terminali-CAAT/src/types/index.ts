@@ -31,6 +31,7 @@ export interface Product {
   cost_price: number | null
   supplier: string | null
   barcode_data: string | null
+  vat_rate: number
   is_active: boolean
   created_at: string
   updated_at: string

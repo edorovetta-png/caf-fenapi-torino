@@ -1,0 +1,85 @@
+<h2>Architettura — Quale approccio?</h2>
+<p class="subtitle">Il brief definisce già stack e struttura. La differenza sta in come organizziamo il codice e gestiamo multi-utente + ruoli.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Monolite Semplice (Raccomandato)</h3>
+      <p>Un singolo progetto Vite con React Router. Supabase gestisce auth + RLS per i ruoli. TanStack Query per cache e sync tra operatori.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pro</h4>
+          <ul>
+            <li>Setup rapido — un solo progetto da gestire</li>
+            <li>Supabase RLS gestisce i permessi lato DB (sicuro)</li>
+            <li>TanStack Query + Supabase Realtime per sync multi-utente</li>
+            <li>Deploy semplice su Vercel (quando serve)</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Contro</h4>
+          <ul>
+            <li>Scanner e dashboard nello stesso bundle (mitigabile con lazy loading)</li>
+            <li>Ruoli gestiti solo via RLS + check frontend</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>App Separata per Scanner</h3>
+      <p>Due app: una PWA leggera solo scanner (mobile), una dashboard completa (desktop). Stesso Supabase backend.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pro</h4>
+          <ul>
+            <li>PWA scanner ultra-leggera e veloce</li>
+            <li>Separazione netta mobile vs desktop</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Contro</h4>
+          <ul>
+            <li>Due codebase da mantenere</li>
+            <li>Duplicazione logica (auth, types, Supabase client)</li>
+            <li>Complessità doppia per un team piccolo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Monolite + Supabase Edge Functions</h3>
+      <p>Come A, ma con logica business (calcolo totali, validazione ordini) spostata in Edge Functions server-side.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pro</h4>
+          <ul>
+            <li>Logica business protetta lato server</li>
+            <li>Più sicuro per calcoli critici (prezzi, totali)</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Contro</h4>
+          <ul>
+            <li>Setup più complesso (Deno runtime per Edge Functions)</li>
+            <li>Overhead per un'app interna su rete WiFi</li>
+            <li>Debugging più difficile</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem; padding: 1.5rem; background: rgba(99,102,241,0.08); border-radius: 12px;">
+  <h3>💡 Raccomandazione: Opzione A</h3>
+  <p>Per un'app interna multi-operatore, il monolite semplice è la scelta migliore. Supabase RLS fa il lavoro pesante sui permessi, TanStack Query gestisce la sincronizzazione, e React.lazy() tiene il bundle leggero su mobile. Nessun motivo per complicare l'infrastruttura.</p>
+</div>

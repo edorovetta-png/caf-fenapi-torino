@@ -125,7 +125,9 @@ export default function OrderDetail() {
   }
 
   const editable = order.status === 'bozza'
-  const total = (orderItems ?? []).reduce((sum, i) => sum + i.line_total, 0)
+  const imponibile = (orderItems ?? []).reduce((sum, i) => sum + i.line_total, 0)
+  const totalVat = (orderItems ?? []).reduce((sum, i) => sum + i.line_total * ((i.product.vat_rate ?? 22) / 100), 0)
+  const totaleIvato = imponibile + totalVat
 
   return (
     <div className="p-4 sm:p-6 space-y-4">
@@ -224,8 +226,8 @@ export default function OrderDetail() {
                     key={item.id}
                     item={item}
                     editable={editable}
-                    onUpdate={(quantity) =>
-                      handleUpdateQuantity(item.id, quantity, item.unit_price)
+                    onUpdate={(quantity, unitPrice) =>
+                      handleUpdateQuantity(item.id, quantity, unitPrice)
                     }
                     onDelete={() => handleDeleteItem(item.id)}
                   />
@@ -233,9 +235,19 @@ export default function OrderDetail() {
               </div>
             )}
           </CardContent>
-          <CardFooter className="justify-between">
-            <span className="font-bold">Totale</span>
-            <span className="font-bold">{total.toFixed(2)} &euro;</span>
+          <CardFooter className="flex-col items-stretch gap-1">
+            <div className="flex justify-between text-sm">
+              <span>Imponibile</span>
+              <span>{imponibile.toFixed(2)} &euro;</span>
+            </div>
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>IVA</span>
+              <span>+{totalVat.toFixed(2)} &euro;</span>
+            </div>
+            <div className="flex justify-between font-bold text-lg pt-1 border-t">
+              <span>Totale</span>
+              <span>{totaleIvato.toFixed(2)} &euro;</span>
+            </div>
           </CardFooter>
         </Card>
       </div>
