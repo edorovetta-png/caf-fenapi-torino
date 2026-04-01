@@ -7,7 +7,13 @@ export function useCustomers(search?: string) {
     queryKey: ['customers', search],
     queryFn: async () => {
       let query = supabase.from('customers').select('*').order('name')
-      if (search) query = query.or(`name.ilike.%${search}%,phone.ilike.%${search}%`)
+      if (search) {
+        // Remove characters that could inject PostgREST filter syntax
+        const safe = search.replace(/[,().]/g, '')
+        if (safe) {
+          query = query.or(`name.ilike.%${safe}%,phone.ilike.%${safe}%`)
+        }
+      }
       const { data, error } = await query
       if (error) throw error
       return data as Customer[]

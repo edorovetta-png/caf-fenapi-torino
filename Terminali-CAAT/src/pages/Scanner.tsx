@@ -54,8 +54,8 @@ export default function Scanner() {
 
   async function handleAddToOrder() {
     if (!product) return
-    const qty = parseInt(quantity, 10)
-    if (!qty || qty < 1) {
+    const qty = parseFloat(quantity)
+    if (!qty || qty <= 0) {
       toast.error('Quantità non valida')
       return
     }
@@ -94,8 +94,8 @@ export default function Scanner() {
     }
     if (!product) return
 
-    const qty = parseInt(quantity, 10)
-    if (!qty || qty < 1) {
+    const qty = parseFloat(quantity)
+    if (!qty || qty <= 0) {
       toast.error('Quantità non valida')
       return
     }

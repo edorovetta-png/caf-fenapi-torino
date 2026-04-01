@@ -9,10 +9,13 @@ export function useProducts(filters?: { category?: string; search?: string }) {
     queryFn: async () => {
       let query = supabase.from('products').select('*').order('name')
       if (filters?.category) query = query.eq('category', filters.category)
-      if (filters?.search)
-        query = query.or(
-          `name.ilike.%${filters.search}%,sku.ilike.%${filters.search}%`
-        )
+      if (filters?.search) {
+        // Remove characters that could inject PostgREST filter syntax
+        const safe = filters.search.replace(/[,().]/g, '')
+        if (safe) {
+          query = query.or(`name.ilike.%${safe}%,sku.ilike.%${safe}%`)
+        }
+      }
       const { data, error } = await query
       if (error) throw error
       return data as Product[]
