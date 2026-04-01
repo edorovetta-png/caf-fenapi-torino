@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useOrders } from '@/hooks/useOrders'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -45,6 +45,7 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
 }
 
 export default function Orders() {
+  const navigate = useNavigate()
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'tutti'>('tutti')
   const [dateFilter, setDateFilter] = useState('')
 
@@ -128,14 +129,13 @@ export default function Orders() {
           </TableHeader>
           <TableBody>
             {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell>
-                  <Link
-                    to={`/orders/${order.id}`}
-                    className="font-medium text-primary underline-offset-4 hover:underline"
-                  >
-                    {order.order_number}
-                  </Link>
+              <TableRow
+                key={order.id}
+                className="cursor-pointer"
+                onClick={() => navigate(`/orders/${order.id}`)}
+              >
+                <TableCell className="font-medium text-primary">
+                  #{order.order_number}
                 </TableCell>
                 <TableCell>{order.customer?.name ?? '-'}</TableCell>
                 <TableCell className="hidden sm:table-cell">

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import {
@@ -6,8 +7,11 @@ import {
   useUpdateOrderItem,
   useDeleteOrderItem,
   useUpdateOrderStatus,
+  useAddOrderItem,
 } from '@/hooks/useOrders'
+import { useProducts } from '@/hooks/useProducts'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -19,8 +23,8 @@ import {
 import OrderItemRow from '@/components/OrderItemRow'
 import { exportOrderToCSV, orderCSVFilename, downloadCSV } from '@/lib/export'
 import { toast } from 'sonner'
-import { ArrowLeft, Download, Copy, CheckCircle, Truck, XCircle } from 'lucide-react'
-import type { OrderStatus } from '@/types'
+import { ArrowLeft, Download, Copy, CheckCircle, Truck, XCircle, Search, Plus } from 'lucide-react'
+import type { OrderStatus, Product } from '@/types'
 
 const STATUS_BADGE_VARIANT: Record<OrderStatus, 'secondary' | 'default' | 'outline' | 'destructive'> = {
   bozza: 'secondary',
@@ -46,6 +50,26 @@ export default function OrderDetail() {
   const updateItem = useUpdateOrderItem()
   const deleteItem = useDeleteOrderItem()
   const updateStatus = useUpdateOrderStatus()
+  const addItem = useAddOrderItem()
+  const [productSearch, setProductSearch] = useState('')
+  const { data: searchProducts } = useProducts(
+    productSearch ? { search: productSearch } : undefined
+  )
+
+  async function handleAddProduct(product: Product) {
+    if (!order) return
+    try {
+      await addItem.mutateAsync({
+        order_id: order.id,
+        product_id: product.id,
+        quantity: 1,
+        unit_price: product.price,
+      })
+      setProductSearch('')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Errore aggiunta prodotto')
+    }
+  }
 
   async function handleStatusChange(status: OrderStatus) {
     if (!order) return
@@ -214,7 +238,50 @@ export default function OrderDetail() {
           <CardHeader>
             <CardTitle>Prodotti</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
+            {editable && (
+              <div className="space-y-2">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Aggiungi prodotto..."
+                    value={productSearch}
+                    onChange={(e) => setProductSearch(e.target.value)}
+                    className="pl-8"
+                  />
+                </div>
+                {productSearch && (
+                  <div className="max-h-40 overflow-y-auto space-y-1 border rounded p-1">
+                    {(searchProducts ?? [])
+                      .filter((p) => p.is_active)
+                      .map((product) => (
+                        <div
+                          key={product.id}
+                          className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium truncate">{product.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {product.sku} · {product.price.toFixed(2)} €/{product.unit}
+                            </p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => handleAddProduct(product)}
+                            disabled={addItem.isPending}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    {!searchProducts?.length && (
+                      <p className="text-xs text-muted-foreground p-2">Nessun risultato</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             {!orderItems?.length ? (
               <p className="text-sm text-muted-foreground">
                 Nessun prodotto in questo ordine.
