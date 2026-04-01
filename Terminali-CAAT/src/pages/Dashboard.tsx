@@ -34,30 +34,24 @@ async function fetchStats(isAdmin: boolean): Promise<StatsResult> {
   today.setHours(0, 0, 0, 0)
   const todayISO = today.toISOString()
 
-  const queries: [
-    Promise<{ count: number | null; error: unknown }>,
-    Promise<{ count: number | null; error: unknown }>,
-    Promise<{ count: number | null; error: unknown }>,
-    Promise<{ count: number | null; error: unknown }>,
-  ] = [
-    supabase
-      .from('orders')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', todayISO),
-    supabase
-      .from('orders')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'bozza'),
-    supabase
-      .from('products')
-      .select('*', { count: 'exact', head: true })
-      .eq('is_active', true),
-    isAdmin
-      ? supabase.from('customers').select('*', { count: 'exact', head: true })
-      : Promise.resolve({ count: null, error: null }),
-  ]
+  const ordersToday = await supabase
+    .from('orders')
+    .select('*', { count: 'exact', head: true })
+    .gte('created_at', todayISO)
 
-  const [ordersToday, bozze, activeProducts, customers] = await Promise.all(queries)
+  const bozze = await supabase
+    .from('orders')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'bozza')
+
+  const activeProducts = await supabase
+    .from('products')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_active', true)
+
+  const customers = isAdmin
+    ? await supabase.from('customers').select('*', { count: 'exact', head: true })
+    : { count: null, error: null }
 
   return {
     ordersToday: ordersToday.count ?? 0,
