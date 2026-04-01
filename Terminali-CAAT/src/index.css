@@ -128,3 +128,18 @@
     @apply font-sans;
     }
 }
+
+@media print {
+  @page {
+    size: 50mm 25mm;
+    margin: 0;
+  }
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; left: 0; top: 0; }
+  .label { width: 50mm; height: 25mm; display: flex; align-items: center; padding: 2mm; font-family: 'Arial', sans-serif; }
+  .label-qr { width: 21mm; height: 21mm; flex-shrink: 0; }
+  .label-qr canvas { width: 21mm !important; height: 21mm !important; }
+  .label-text { margin-left: 2mm; font-size: 8pt; line-height: 1.2; }
+  .label-sku { font-weight: bold; font-size: 9pt; }
+}
