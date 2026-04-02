@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback, DragEvent, ChangeEvent } from "react";
 import * as XLSX from "xlsx";
+import { supabase } from "@/lib/supabase";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
@@ -101,8 +102,185 @@ function downloadCSV(headers: string[], filename: string) {
 
 /* ───────────────── Types ───────────────── */
 
-type ImportReport = { importati: number; aggiornati: number; errori: number };
+type ImportReport = { importati: number; aggiornati: number; errori: number; errorDetails?: string[] };
 type ValidationResult = { valid: Record<string, string>[]; errors: { row: number; fields: string[] }[]; warnings?: { row: number; fields: string[] }[] };
+
+/* ───────────────── Batch upsert helpers ───────────────── */
+
+const BATCH_SIZE = 50;
+
+function parseBool(value: string | undefined | null): boolean {
+  if (!value) return false;
+  return ["si", "sì", "yes", "true", "1", "vero"].includes(value.toLowerCase().trim());
+}
+
+function parseNumber(val: string): number | null {
+  if (!val || !val.trim()) return null;
+  const cleaned = val.replace(/€/g, "").replace(/\s/g, "").trim();
+  // Handle European format: 1.234,56 → 1234.56
+  const n = cleaned.includes(",") ? Number(cleaned.replace(/\./g, "").replace(",", ".")) : Number(cleaned);
+  return isNaN(n) ? null : n;
+}
+
+function normPhone(tel: string): string {
+  let t = tel.replace(/[\s\-]/g, "");
+  if (t.startsWith("3") && t.length === 10) t = "+39" + t;
+  else if (t.startsWith("39") && !t.startsWith("+")) t = "+" + t;
+  return t;
+}
+
+async function batchImportClienti(
+  rows: Record<string, string>[],
+  onProgress: (done: number) => void
+): Promise<ImportReport> {
+  let importati = 0, aggiornati = 0, errori = 0;
+  const errorDetails: string[] = [];
+
+  for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+    const batch = rows.slice(i, i + BATCH_SIZE);
+    for (const row of batch) {
+      try {
+        const data: Record<string, any> = {};
+        if (row.nome?.trim()) data.nome = row.nome.trim();
+        if (row.telefono?.trim()) data.telefono = normPhone(row.telefono.trim());
+        if (row.email?.trim()) data.email = row.email.trim();
+        if (row.indirizzo?.trim()) data.indirizzo = row.indirizzo.trim();
+        if (row.categoria?.trim()) data.categoria = row.categoria.trim().toLowerCase();
+        if (row.note?.trim()) data.note_titolare = row.note.trim();
+        if (row.consenso_whatsapp?.trim()) data.consenso_whatsapp = parseBool(row.consenso_whatsapp);
+
+        if (row.arca_id?.trim()) {
+          data.arca_id = row.arca_id.trim();
+          // Check if exists
+          const { data: existing } = await supabase.from("clienti").select("id").eq("arca_id", data.arca_id).maybeSingle();
+          if (existing) {
+            const { error } = await supabase.from("clienti").update(data).eq("arca_id", data.arca_id);
+            if (error) throw error;
+            aggiornati++;
+          } else {
+            if (!data.nome) { errori++; errorDetails.push(`Riga ${i + batch.indexOf(row) + 2}: nome mancante`); continue; }
+            if (!data.telefono) data.telefono = "";
+            const { error } = await supabase.from("clienti").insert(data);
+            if (error) throw error;
+            importati++;
+          }
+        } else {
+          if (!data.nome) { errori++; errorDetails.push(`Riga ${i + batch.indexOf(row) + 2}: nome mancante`); continue; }
+          if (!data.telefono) data.telefono = "";
+          const { error } = await supabase.from("clienti").insert(data);
+          if (error) throw error;
+          importati++;
+        }
+      } catch (e: any) {
+        errori++;
+        errorDetails.push(`Riga ${i + batch.indexOf(row) + 2}: ${e.message || e}`);
+      }
+    }
+    onProgress(Math.min(i + BATCH_SIZE, rows.length));
+  }
+  return { importati, aggiornati, errori, errorDetails };
+}
+
+async function batchImportProdotti(
+  rows: Record<string, string>[],
+  onProgress: (done: number) => void
+): Promise<ImportReport> {
+  let importati = 0, aggiornati = 0, errori = 0;
+  const errorDetails: string[] = [];
+
+  for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+    const batch = rows.slice(i, i + BATCH_SIZE);
+    for (const row of batch) {
+      try {
+        const data: Record<string, any> = {};
+        if (row.nome?.trim()) data.nome = row.nome.trim();
+        if (row.categoria?.trim()) data.categoria = row.categoria.trim().toLowerCase();
+        const prezzo = parseNumber(row.prezzo_listino);
+        if (prezzo !== null) data.prezzo_listino = prezzo;
+        if (row.unita_misura?.trim()) data.unita_misura = row.unita_misura.trim().toLowerCase();
+        if (row.fornitore?.trim()) data.fornitore = row.fornitore.trim();
+        if (row.disponibile?.trim()) data.disponibile = parseBool(row.disponibile);
+
+        if (row.arca_articolo_id?.trim()) {
+          data.arca_articolo_id = row.arca_articolo_id.trim();
+          const { data: existing } = await supabase.from("prodotti").select("id").eq("arca_articolo_id", data.arca_articolo_id).maybeSingle();
+          if (existing) {
+            const { error } = await supabase.from("prodotti").update(data).eq("arca_articolo_id", data.arca_articolo_id);
+            if (error) throw error;
+            aggiornati++;
+          } else {
+            if (!data.nome) { errori++; errorDetails.push(`${data.arca_articolo_id}: nome mancante`); continue; }
+            const { error } = await supabase.from("prodotti").insert(data);
+            if (error) throw error;
+            importati++;
+          }
+        } else {
+          if (!data.nome) { errori++; continue; }
+          const { error } = await supabase.from("prodotti").insert(data);
+          if (error) throw error;
+          importati++;
+        }
+      } catch (e: any) {
+        errori++;
+        errorDetails.push(`${row.arca_articolo_id || "?"}: ${e.message || e}`);
+      }
+    }
+    onProgress(Math.min(i + BATCH_SIZE, rows.length));
+  }
+  return { importati, aggiornati, errori, errorDetails };
+}
+
+async function batchImportStorico(
+  rows: Record<string, string>[],
+  onProgress: (done: number) => void
+): Promise<ImportReport> {
+  let importati = 0, aggiornati = 0, errori = 0;
+  const errorDetails: string[] = [];
+
+  // Pre-fetch lookup maps
+  const { data: allClienti } = await supabase.from("clienti").select("id, arca_id");
+  const { data: allProdotti } = await supabase.from("prodotti").select("id, arca_articolo_id");
+  const clientiMap = new Map((allClienti || []).filter((c: any) => c.arca_id).map((c: any) => [c.arca_id, c.id]));
+  const prodottiMap = new Map((allProdotti || []).filter((p: any) => p.arca_articolo_id).map((p: any) => [p.arca_articolo_id, p.id]));
+
+  for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+    const batch = rows.slice(i, i + BATCH_SIZE);
+    const inserts: any[] = [];
+
+    for (const row of batch) {
+      const clienteId = clientiMap.get(row.arca_id_cliente?.trim());
+      const prodottoId = prodottiMap.get(row.arca_articolo_id_prodotto?.trim());
+
+      if (!clienteId) { errori++; errorDetails.push(`Riga ${i + batch.indexOf(row) + 2}: cliente ${row.arca_id_cliente} non trovato`); continue; }
+      if (!prodottoId) { errori++; errorDetails.push(`Riga ${i + batch.indexOf(row) + 2}: prodotto ${row.arca_articolo_id_prodotto} non trovato`); continue; }
+
+      const quantita = parseNumber(row.quantita) ?? 0;
+      const prezzo_unitario = parseNumber(row.prezzo_unitario) ?? 0;
+      const importo = parseNumber(row.importo_totale) ?? quantita * prezzo_unitario;
+
+      inserts.push({
+        cliente_id: clienteId,
+        prodotto_id: prodottoId,
+        data_acquisto: row.data_acquisto,
+        quantita,
+        prezzo_unitario,
+        importo_totale: importo,
+      });
+    }
+
+    if (inserts.length > 0) {
+      const { error, count } = await supabase.from("storico_acquisti").insert(inserts);
+      if (error) {
+        errori += inserts.length;
+        errorDetails.push(`Batch ${i}-${i + BATCH_SIZE}: ${error.message}`);
+      } else {
+        importati += inserts.length;
+      }
+    }
+    onProgress(Math.min(i + BATCH_SIZE, rows.length));
+  }
+  return { importati, aggiornati, errori, errorDetails };
+}
 
 const CATEGORIE_CLIENTI = ["ristorante", "pizzeria", "bar", "trattoria", "hotel", "catering", "rosticceria", "gastronomia", "altro"];
 
@@ -351,6 +529,7 @@ function CSVImportSection({
   const [rows, setRows] = useState<Record<string, string>[]>([]);
   const [validation, setValidation] = useState<ValidationResult | null>(null);
   const [importing, setImporting] = useState(false);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const [report, setReport] = useState<ImportReport | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -384,22 +563,30 @@ function CSVImportSection({
     if (!validation) return;
     setImporting(true);
     setError(null);
+    setReport(null);
+    const total = validation.valid.length;
+    setProgress({ done: 0, total });
+
     try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/import-csv`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, rows: validation.valid }),
-      });
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err || `Errore ${res.status}`);
+      const onProgress = (done: number) => setProgress({ done, total });
+      let result: ImportReport;
+
+      if (type === "clienti") {
+        result = await batchImportClienti(validation.valid, onProgress);
+      } else if (type === "prodotti") {
+        result = await batchImportProdotti(validation.valid, onProgress);
+      } else if (type === "storico") {
+        result = await batchImportStorico(validation.valid, onProgress);
+      } else {
+        throw new Error(`Tipo sconosciuto: ${type}`);
       }
-      const data = await res.json();
-      setReport(data);
+
+      setReport(result);
     } catch (e: any) {
       setError(e.message);
     } finally {
       setImporting(false);
+      setProgress(null);
     }
   };
 
@@ -458,17 +645,29 @@ function CSVImportSection({
           >
             {importing ? "Importazione in corso..." : "Importa"}
           </button>
-          {importing && (
-            <div className="mt-2 w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500 rounded-full animate-pulse" style={{ width: "70%" }} />
+          {importing && progress && (
+            <div className="mt-3">
+              <p className="text-xs text-slate-500 mb-1">Importati {progress.done}/{progress.total}...</p>
+              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div className="h-full bg-blue-500 rounded-full transition-all duration-300" style={{ width: `${Math.round((progress.done / progress.total) * 100)}%` }} />
+              </div>
             </div>
           )}
         </>
       )}
 
       {report && (
-        <div className="mt-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-800">
-          {report.importati} importati, {report.aggiornati} aggiornati, {report.errori} errori
+        <div className={`mt-4 border rounded-lg px-4 py-3 text-sm ${report.errori > 0 ? "bg-amber-50 border-amber-200 text-amber-800" : "bg-green-50 border-green-200 text-green-800"}`}>
+          <p className="font-medium">{report.importati} importati, {report.aggiornati} aggiornati, {report.errori} errori</p>
+          {report.errorDetails && report.errorDetails.length > 0 && (
+            <details className="mt-2">
+              <summary className="text-xs cursor-pointer">Dettagli errori ({report.errorDetails.length})</summary>
+              <div className="mt-1 text-xs space-y-0.5 max-h-40 overflow-y-auto">
+                {report.errorDetails.slice(0, 50).map((e, i) => <p key={i}>{e}</p>)}
+                {report.errorDetails.length > 50 && <p>...e altri {report.errorDetails.length - 50}</p>}
+              </div>
+            </details>
+          )}
         </div>
       )}
       {error && (
