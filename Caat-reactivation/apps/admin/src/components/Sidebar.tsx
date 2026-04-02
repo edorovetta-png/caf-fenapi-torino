@@ -40,8 +40,13 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <div className="p-4 border-t border-slate-700 text-xs text-slate-500">
-        mock mode attivo
+      <div className="p-4 border-t border-slate-700">
+        <button
+          onClick={() => { localStorage.removeItem("caat_auth"); window.location.href = "/login"; }}
+          className="text-xs text-slate-500 hover:text-white transition-colors"
+        >
+          Esci
+        </button>
       </div>
     </aside>
   );
