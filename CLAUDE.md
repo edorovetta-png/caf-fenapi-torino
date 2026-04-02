@@ -1,13 +1,15 @@
 # CLAUDE.md — Antigravity Workspace
 
-This is the root workspace for multiple projects. Each project lives in its own subdirectory with its own CLAUDE.md containing project-specific instructions.
+IMPORTANTE: Prima di ogni task, leggi SEMPRE il `PROJECT_STATUS.md` del progetto su cui stai lavorando. Dopo ogni modifica significativa, aggiornalo con quello che hai fatto. Questo file è condiviso con Gemini — se non lo aggiorni, l'altro agente lavorerà senza contesto e commetterà errori.
 
-## Projects
+Se il progetto non ha un PROJECT_STATUS.md, crealo con: descrizione, tech stack, struttura cartelle, stato attuale e prossimi step.
 
-- **`fenapi/`** — Website and booking system for Circolo FENAPI Torino (CAF/tax assistance). See `fenapi/CLAUDE.md` for details.
+## Workspace
 
-## General Principles
+Questo workspace contiene più progetti, ognuno nella propria directory. Ogni progetto può avere un proprio `CLAUDE.md` con istruzioni specifiche — leggilo se presente.
 
-- Each project has its own `PROJECT_STATUS.md` — read it before starting any task.
-- Each project has its own `CLAUDE.md` and `Gemini.md` with specific instructions.
-- The root `.gitignore` applies to all projects.
+## Principi
+
+- Leggi PROJECT_STATUS.md prima, aggiornalo dopo.
+- Non duplicare informazioni tra CLAUDE.md e PROJECT_STATUS.md — lo stato vive in PROJECT_STATUS.md.
+- Il root `.gitignore` si applica a tutti i progetti.
