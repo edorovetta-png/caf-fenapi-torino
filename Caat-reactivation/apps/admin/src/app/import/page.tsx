@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useCallback, DragEvent, ChangeEvent } from "react";
+import * as XLSX from "xlsx";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
@@ -60,6 +61,28 @@ function parseCSV(text: string): { headers: string[]; rows: Record<string, strin
   return { headers, rows };
 }
 
+function parseXLSX(buffer: ArrayBuffer): { headers: string[]; rows: Record<string, string>[] } {
+  const workbook = XLSX.read(buffer, { type: "array" });
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+  const json = XLSX.utils.sheet_to_json<Record<string, any>>(sheet, { defval: "" });
+  if (json.length === 0) return { headers: [], rows: [] };
+  const headers = Object.keys(json[0]).map((h) => h.toLowerCase().trim());
+  const rows = json.map((row) => {
+    const obj: Record<string, string> = {};
+    Object.entries(row).forEach(([key, val]) => {
+      obj[key.toLowerCase().trim()] = String(val ?? "");
+    });
+    return obj;
+  });
+  return { headers, rows };
+}
+
+function isXLSX(file: File): boolean {
+  const ext = file.name.toLowerCase();
+  return ext.endsWith(".xlsx") || ext.endsWith(".xls");
+}
+
 function convertDate(val: string): string {
   const m = val.match(/^(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{4})$/);
   if (m) return `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
@@ -79,9 +102,87 @@ function downloadCSV(headers: string[], filename: string) {
 /* ───────────────── Types ───────────────── */
 
 type ImportReport = { importati: number; aggiornati: number; errori: number };
-type ValidationResult = { valid: Record<string, string>[]; errors: { row: number; fields: string[] }[] };
+type ValidationResult = { valid: Record<string, string>[]; errors: { row: number; fields: string[] }[]; warnings?: { row: number; fields: string[] }[] };
 
 const CATEGORIE_CLIENTI = ["ristorante", "pizzeria", "bar", "trattoria", "hotel", "catering", "rosticceria", "gastronomia", "altro"];
+
+/* ───────────────── Arca Prodotti Mapper ───────────────── */
+
+function mapArcaProdotti(rawHeaders: string[], rawRows: Record<string, string>[]): { headers: string[]; rows: Record<string, string>[] } {
+  // Arca columns can come with various header names or positionally (A-Q)
+  // We detect by known header patterns or fall back to positional mapping
+  const hLower = rawHeaders.map((h) => h.toLowerCase().trim());
+
+  // Try to find columns by header name first
+  const colMap: Record<string, number> = {};
+
+  // codart / arca_articolo_id → column C
+  let idx = hLower.findIndex((h) => h === "codart" || h === "cod.art" || h === "codice" || h === "arca_articolo_id" || h === "cod art");
+  if (idx >= 0) colMap.codart = idx;
+  else if (rawHeaders.length >= 3) colMap.codart = 2; // column C
+
+  // desc / nome → column D
+  idx = hLower.findIndex((h) => h === "desc" || h === "descrizione" || h === "nome" || h === "description");
+  if (idx >= 0) colMap.desc = idx;
+  else if (rawHeaders.length >= 4) colMap.desc = 3;
+
+  // FAMIGLIA / categoria → column F
+  idx = hLower.findIndex((h) => h === "famiglia" || h === "categoria" || h === "family");
+  if (idx >= 0) colMap.famiglia = idx;
+  else if (rawHeaders.length >= 6) colMap.famiglia = 5;
+
+  // UNITA DI MISURA → column H
+  idx = hLower.findIndex((h) => h.includes("unita") || h.includes("misura") || h === "um" || h === "u.m.");
+  if (idx >= 0) colMap.um = idx;
+  else if (rawHeaders.length >= 8) colMap.um = 7;
+
+  // PREZZO (listino) → column K (index 10)
+  // Find the LAST column named "prezzo" or "PREZZO" (column K, not column I)
+  const prezzoIndices = hLower.map((h, i) => (h === "prezzo" || h === "prezzo listino" || h === "prz.listino") ? i : -1).filter((i) => i >= 0);
+  if (prezzoIndices.length > 0) colMap.prezzo = prezzoIndices[prezzoIndices.length - 1]; // last one = column K
+  else if (rawHeaders.length >= 11) colMap.prezzo = 10;
+
+  // Fornitore → column A
+  idx = hLower.findIndex((h) => h === "fornitore" || h === "supplier" || h === "forn.");
+  if (idx >= 0) colMap.fornitore = idx;
+  else colMap.fornitore = 0;
+
+  const mappedHeaders = ["arca_articolo_id", "nome", "categoria", "prezzo_listino", "unita_misura", "fornitore"];
+  const mappedRows: Record<string, string>[] = [];
+
+  for (const raw of rawRows) {
+    const values = Object.values(raw);
+    const codart = (values[colMap.codart] ?? "").trim();
+
+    // Skip rows with empty codart
+    if (!codart) continue;
+
+    // Parse prezzo: remove €, convert comma to dot
+    let prezzo = (values[colMap.prezzo] ?? "").trim();
+    prezzo = prezzo.replace(/€/g, "").replace(/\s/g, "").trim();
+    if (prezzo && prezzo.includes(",")) {
+      prezzo = prezzo.replace(/\./g, "").replace(",", "."); // 1.234,56 → 1234.56
+    }
+
+    // Normalize unita_misura
+    let um = (values[colMap.um] ?? "").trim().toLowerCase();
+    if (um === "kg" || um === "kilo") um = "kg";
+    else if (um === "pz" || um === "pezzo" || um === "pezzi" || um === "nr") um = "pz";
+    else if (um === "lt" || um === "litro" || um === "litri" || um === "l") um = "lt";
+    else if (um === "ct" || um === "cartone" || um === "cartoni") um = "cartone";
+
+    mappedRows.push({
+      arca_articolo_id: codart,
+      nome: (values[colMap.desc] ?? "").trim(),
+      categoria: (values[colMap.famiglia] ?? "").trim().toLowerCase(),
+      prezzo_listino: prezzo,
+      unita_misura: um,
+      fornitore: (values[colMap.fornitore] ?? "").trim(),
+    });
+  }
+
+  return { headers: mappedHeaders, rows: mappedRows };
+}
 
 /* ───────────────── Validators ───────────────── */
 
@@ -102,14 +203,18 @@ function validateClienti(rows: Record<string, string>[]): ValidationResult {
 function validateProdotti(rows: Record<string, string>[]): ValidationResult {
   const valid: Record<string, string>[] = [];
   const errors: { row: number; fields: string[] }[] = [];
+  const warnings: { row: number; fields: string[] }[] = [];
   rows.forEach((r, i) => {
     const errs: string[] = [];
+    const warns: string[] = [];
     if (!r.nome?.trim()) errs.push("nome");
-    if (r.prezzo_listino && isNaN(Number(r.prezzo_listino.replace(",", ".")))) errs.push("prezzo_listino");
+    if (r.prezzo_listino && isNaN(Number(r.prezzo_listino.replace(",", ".")))) errs.push("prezzo_listino (formato)");
+    if (!r.prezzo_listino?.trim()) warns.push("prezzo_listino mancante");
     if (errs.length > 0) errors.push({ row: i + 2, fields: errs });
     else valid.push(r);
+    if (warns.length > 0) warnings.push({ row: i + 2, fields: warns });
   });
-  return { valid, errors };
+  return { valid, errors, warnings };
 }
 
 function validateStorico(rows: Record<string, string>[]): ValidationResult {
@@ -192,8 +297,8 @@ function DragDropArea({ onFile }: { onFile: (file: File) => void }) {
         dragging ? "border-blue-400 bg-blue-50" : "border-slate-300 bg-slate-50 hover:bg-slate-100"
       }`}
     >
-      <input ref={inputRef} type="file" accept=".csv" className="hidden" onChange={handleChange} />
-      <p className="text-slate-500 text-sm">Trascina qui il file CSV oppure <span className="text-blue-600 font-medium">clicca per sfogliare</span></p>
+      <input ref={inputRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={handleChange} />
+      <p className="text-slate-500 text-sm">Trascina qui il file CSV o Excel oppure <span className="text-blue-600 font-medium">clicca per sfogliare</span></p>
     </div>
   );
 }
@@ -233,11 +338,13 @@ function CSVImportSection({
   templateHeaders,
   templateFilename,
   validate,
+  mapRows,
 }: {
   type: string;
   templateHeaders: string[];
   templateFilename: string;
   validate: (rows: Record<string, string>[]) => ValidationResult;
+  mapRows?: (headers: string[], rows: Record<string, string>[]) => { headers: string[]; rows: Record<string, string>[] };
 }) {
   const [fileName, setFileName] = useState<string | null>(null);
   const [headers, setHeaders] = useState<string[]>([]);
@@ -252,17 +359,25 @@ function CSVImportSection({
       setReport(null);
       setError(null);
       setFileName(file.name);
-      const reader = new FileReader();
-      reader.onload = () => {
-        const text = reader.result as string;
-        const parsed = parseCSV(text);
-        setHeaders(parsed.headers);
-        setRows(parsed.rows);
-        setValidation(validate(parsed.rows));
+
+      const processParsed = (parsed: { headers: string[]; rows: Record<string, string>[] }) => {
+        const mapped = mapRows ? mapRows(parsed.headers, parsed.rows) : parsed;
+        setHeaders(mapped.headers);
+        setRows(mapped.rows);
+        setValidation(validate(mapped.rows));
       };
-      reader.readAsText(file, "utf-8");
+
+      if (isXLSX(file)) {
+        const reader = new FileReader();
+        reader.onload = () => processParsed(parseXLSX(reader.result as ArrayBuffer));
+        reader.readAsArrayBuffer(file);
+      } else {
+        const reader = new FileReader();
+        reader.onload = () => processParsed(parseCSV(reader.result as string));
+        reader.readAsText(file, "utf-8");
+      }
     },
-    [validate]
+    [validate, mapRows]
   );
 
   const handleImport = async () => {
@@ -324,6 +439,16 @@ function CSVImportSection({
                 </p>
               ))}
               {validation.errors.length > 10 && <p>...e altri {validation.errors.length - 10} errori</p>}
+            </div>
+          )}
+          {validation.warnings && validation.warnings.length > 0 && (
+            <div className="mt-2 text-xs text-amber-600 space-y-1">
+              {validation.warnings.slice(0, 5).map((w, i) => (
+                <p key={i}>
+                  Riga {w.row}: {w.fields.join(", ")} — verrà usato il prezzo dallo storico acquisti
+                </p>
+              ))}
+              {validation.warnings.length > 5 && <p>...e altri {validation.warnings.length - 5} avvisi</p>}
             </div>
           )}
           <button
@@ -566,12 +691,13 @@ export default function ImportPage() {
       </SectionCard>
 
       {/* Section 2: Prodotti */}
-      <SectionCard number={2} title="Prodotti" description="Carica il listino prodotti da Arca.">
+      <SectionCard number={2} title="Prodotti" description="Carica il file Excel o CSV dei prodotti esportato da Arca Evolution. Le colonne vengono mappate automaticamente.">
         <CSVImportSection
           type="prodotti"
-          templateHeaders={["arca_articolo_id", "nome", "categoria", "prezzo_listino", "unita_misura", "fornitore", "disponibile"]}
-          templateFilename="template_prodotti.csv"
+          templateHeaders={["Fornitore", "", "codart", "desc", "IVA", "FAMIGLIA", "SOTTOFAMIGLIA", "UNITA DI MISURA", "prezzo", "cod.form", "PREZZO", "prz.min", "Q.tà1", "prz.c1", "N", "P", "OBSOLETO"]}
+          templateFilename="template_prodotti_arca.csv"
           validate={validateProdotti}
+          mapRows={mapArcaProdotti}
         />
       </SectionCard>
 
