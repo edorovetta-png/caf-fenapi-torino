@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-03-31 (bugfix double-booking GCal, setup Vercel aggiornato, redesign Refined Editorial)
+> Ultimo aggiornamento: 2026-04-07 (tracking provenienza prenotazioni: QR negozio vs sito vs diretto)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -173,3 +173,37 @@ Antigravity/
 6. **Build pipeline**: minificazione CSS/JS e ottimizzazione immagini per il sito vetrina
 7. **PWA/Accessibilita**: valutare Progressive Web App e audit accessibilita (WCAG)
 8. **Direttive**: creare direttive specifiche per i flussi operativi
+
+---
+
+## 6. Tracking Provenienza Prenotazioni (2026-04-07)
+
+Sistema per distinguere da dove arrivano le prenotazioni: **QR esposto in negozio** vs **sito vetrina** (Google → fenapipiemonte.org → CTA) vs **accessi diretti**.
+
+### Componenti
+
+| Layer | File | Cosa fa |
+|---|---|---|
+| **Asset offline** | `qr-code/qr-prenotazioni-negozio.png` + `README.md` | Nuovo QR statico (PNG 1060×1060) che codifica `https://prenotazioni.fenapipiemonte.org/?utm_source=qr_negozio&utm_medium=offline&utm_campaign=vetrina_torino`. Da stampare e sostituire fisicamente al QR esistente quando comodo. |
+| **Sito vetrina** | `frontend/**/*.html` (18 file) | Tutti i CTA che linkano alla piattaforma prenotazioni hanno UTM appesi: `?utm_source=sito&utm_medium=referral&utm_campaign=fenapipiemonte`. |
+| **DB** | `caffenapi/supabase/migrations/20260407120000_add_appointment_source_tracking.sql` | Aggiunge ad `appointments` le colonne `utm_source`, `utm_medium`, `utm_campaign`, `referrer`, `landing_path` + indice su `utm_source`. **Da applicare con `supabase db push` o dashboard.** |
+| **Frontend hook** | `caffenapi/src/hooks/useUtmTracking.ts` | Hook che al primo atterraggio legge `utm_*` dalla URL + `document.referrer` + `pathname`, salva in `sessionStorage` (first-touch attribution: la prima fonte vince), e li ritorna al componente che lo usa. |
+| **Booking dialog** | `caffenapi/src/components/BookingDialog.tsx` | Importa `useUtmTracking` e allega i 5 campi al payload di `create-appointment`. |
+| **Edge function** | `caffenapi/supabase/functions/create-appointment/index.ts` | Sanitizza i campi UTM dal body (trim + max length) e li scrive nella riga inserita. |
+| **Analytics** | `caffenapi/src/pages/Analytics.tsx` | Nuova card "Provenienza Prenotazioni" con pie chart + legenda con conteggio + percentuale. Etichette: "QR Negozio", "Sito Vetrina", "Diretto / Sconosciuto", + fallback su `referrer` (Google organico, Facebook…). |
+
+### Stato deploy
+
+- [x] Codice scritto
+- [x] QR PNG generato
+- [x] CTA sito vetrina taggati
+- [ ] **Migration da applicare** (`supabase db push` dalla cartella `caffenapi/`)
+- [ ] **Deploy edge function** `create-appointment` (Supabase CLI)
+- [ ] **Deploy frontend caffenapi** su Vercel (auto al merge nel suo repo separato)
+- [ ] **Sostituzione fisica del QR** in negozio (quando comodo)
+
+### Note
+
+- `caffenapi/` è repo git separato (`github.com/edorovetta-png/caffenapi`), gitignored qui. Le modifiche al booking dialog, hook, edge function, migration e Analytics vanno committate **in quel repo**, non in Antigravity.
+- `frontend/`, `qr-code/`, `PROJECT_STATUS.md` invece sono nel repo Antigravity principale.
+- Il **vecchio QR statico continua a funzionare** finché esiste l'URL nudo: le sue scansioni risultano "Diretto / Sconosciuto" finché non viene sostituito.
