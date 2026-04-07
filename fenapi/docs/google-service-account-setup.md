@@ -114,20 +114,26 @@ Ad esempio: `caffenapi-edge@caffenapi-edge-functions-447821.iam.gserviceaccount.
 
 Questo è il pezzo più tedioso ma indispensabile. **Il SA non vede i calendari finché ogni proprietario non lo invita esplicitamente.**
 
-⚠️ **Importante**: gli account Gmail degli operatori sono **privati**, NON Google Workspace. Implica che:
-- Non esiste un admin centrale che può condividere in nome loro
-- Tu non hai (e non devi avere) le password dei loro Gmail
-- **Ogni operatore deve fare la procedura personalmente, dal suo PC, loggato col suo account**
+⚠️ **Contesto importante (chiarito 2026-04-07)**: gli account Gmail degli operatori sono account Google **privati nominalmente**, ma di fatto sono usati come account aziendali condivisi. **La collega tecnica del CAF (la stessa che farà il setup del SA al passo 3) ha accesso (password) a tutti i 7 Gmail.** Quindi può condividere i 7 calendari in un colpo solo, in autonomia, senza dover coinvolgere fisicamente ogni singolo operatore.
 
-Quindi NON loggi 7 volte tu — mandi un messaggio a ognuno con istruzioni semplici e aspetti che lo facciano.
+Questo semplifica drasticamente i tempi: invece di mandare 7 messaggi e aspettare giorni per le risposte, la collega lo fa in 10-15 minuti consecutivi.
 
-### 4.1 Documento da girare agli operatori
+### 4.1 Procedura per la collega (15 min, sequenziale)
 
-C'è già un template messaggio pronto in **`fenapi/docs/istruzioni-operatori-condivisione-calendar.md`**. Lo apri, sostituisci `[NOME]` e `[EMAIL_SA]` (la trovi nel JSON sotto `client_email`), e lo mandi ai 7 operatori via WhatsApp/Telegram/email.
+Per ognuno dei 7 Gmail (vedi tabella sezione 2 — escluso `mi.salerno@tecnos-servizi.it` che non è un operatore + Daniela Palillo da verificare):
 
-Per ognuno, l'operatore esegue 9 click sul suo Calendar (1 minuto reale). Ti risponde "fatto" e tu spunti la lista.
+1. **Login su `https://calendar.google.com`** con il primo Gmail (es. `fenapicaf2022@gmail.com`)
+   - Tip: usa una finestra in incognito separata per ogni account, oppure crea profili Chrome diversi così non devi sloggarti ogni volta
+2. Sidebar sinistra → sotto **"I miei calendari"** → trova il calendario principale dell'account
+3. Passa il mouse sopra il nome → click sui **3 puntini** → **"Impostazioni e condivisione"**
+4. Scorri fino a **"Condividi con persone e gruppi specifici"**
+5. Click **"+ Aggiungi persone e gruppi"**
+6. Incolla l'**email del SA** (la trovi nel JSON sotto `client_email`, formato: `caffenapi-edge@<id>.iam.gserviceaccount.com`)
+7. Permission: **"Apportare modifiche agli eventi"** (NON owner, NON solo libero/occupato)
+8. **Invia**
+9. Logout / cambia profilo → ripeti col Gmail successivo
 
-### 4.2 Lista da spuntare (per te, mentre arrivano le risposte)
+### 4.2 Lista da spuntare (mentre la collega lavora)
 
 - [ ] `fenapicaf2022@gmail.com` (Erika Borghese)
 - [ ] `fenapitorino@gmail.com` (Giorgia Longhi)
@@ -135,15 +141,11 @@ Per ognuno, l'operatore esegue 9 click sul suo Calendar (1 minuto reale). Ti ris
 - [ ] `infofenapitorino@gmail.com` (Leonardo Ottaiano)
 - [ ] `paghefenapi@gmail.com` (Eliane Do Carmo)
 - [ ] `inapitorino1@gmail.com` (Michela Salerno)
-- [ ] Dott.ssa Daniela Palillo (verificare prima se ha calendar Google attivo — il `calendar_id` nei dati migrati è vuoto)
+- [ ] Dott.ssa Daniela Palillo (verificare prima se ha calendar Google attivo — il `calendar_id` nei dati migrati è vuoto. Se non ha calendar, salta.)
 
-### 4.3 Tempi realistici
+### 4.3 Fallback se in futuro un operatore aggiunge un nuovo calendar
 
-- **Best case**: tutti rispondono nello stesso pomeriggio → ~3 ore totali
-- **Realistico**: 2-3 giorni (qualcuno in ferie, qualcuno se ne dimentica)
-- **Worst case**: 1 settimana
-
-Mentre aspetti, puoi NON fare nient'altro: la fase 4 è bloccante per la fase di deploy delle edge function (perché senza le condivisioni, le function darebbero errori `403 Forbidden` quando provano a leggere i calendari).
+Se in futuro arriva un nuovo operatore o uno cambia email, e la collega non ha più accesso, puoi usare il template messaggio in **`fenapi/docs/istruzioni-operatori-condivisione-calendar.md`** che è stato pensato per l'operatore-che-condivide-il-proprio-calendar. Quel doc resta utile come fallback ma per ora non serve usarlo.
 
 ---
 
