@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-04-07 (tracking provenienza prenotazioni: QR negozio vs sito vs diretto)
+> Ultimo aggiornamento: 2026-04-07 (tracking provenienza prenotazioni LIVE in produzione)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -197,13 +197,97 @@ Sistema per distinguere da dove arrivano le prenotazioni: **QR esposto in negozi
 - [x] Codice scritto
 - [x] QR PNG generato
 - [x] CTA sito vetrina taggati
-- [ ] **Migration da applicare** (`supabase db push` dalla cartella `caffenapi/`)
-- [ ] **Deploy edge function** `create-appointment` (Supabase CLI)
-- [ ] **Deploy frontend caffenapi** su Vercel (auto al merge nel suo repo separato)
-- [ ] **Sostituzione fisica del QR** in negozio (quando comodo)
+- [x] Commit + push `caffenapi` (commit `8599556`, `main`)
+- [x] Commit + push Antigravity subset fenapi/ (commit `0253337`, `main`)
+- [x] **Migration applicata in produzione** (2026-04-07, Supabase project `oswjgmavxbypnhhinypj`, via `supabase db push`)
+- [x] **Edge function `create-appointment` deployata in produzione** (2026-04-07, via `supabase functions deploy`)
+- [x] **Frontend caffenapi**: auto-deploy Vercel innescato dal push (`caffenapi.vercel.app`)
+- [x] **Sito vetrina**: auto-deploy Vercel innescato dal push (dominio `fenapipiemonte.org` su Aruba DNS)
+- [ ] **Sostituzione fisica del QR** in negozio (quando comodo — nessun blocker)
+- [ ] **Verifica end-to-end**: prenotazione di prova dall'URL UTM-tagged → conferma in Analytics che `utm_source` venga popolato
 
-### Note
+### Stato Supabase project — chiarimento finale (2026-04-07)
 
-- `caffenapi/` è repo git separato (`github.com/edorovetta-png/caffenapi`), gitignored qui. Le modifiche al booking dialog, hook, edge function, migration e Analytics vanno committate **in quel repo**, non in Antigravity.
-- `frontend/`, `qr-code/`, `PROJECT_STATUS.md` invece sono nel repo Antigravity principale.
-- Il **vecchio QR statico continua a funzionare** finché esiste l'URL nudo: le sue scansioni risultano "Diretto / Sconosciuto" finché non viene sostituito.
+Dopo investigazione approfondita:
+
+- **In produzione gira `patzvzdxsglsbfqymgtz`** — è un progetto Supabase **provisionato da Lovable** sotto la loro Organization, NON sotto l'account dell'utente. L'utente non ha accesso amministrativo (CLI/dashboard) ma il sistema funziona perché Vercel/frontend usano l'anon key.
+- `oswjgmavxbypnhhinypj` è il **progetto Supabase personale dell'utente** (org "edorovetta-png's Org"), creato successivamente, dove sono state applicate le migration UTM. Non è quello che il frontend usa.
+
+**Migrazione completa tentata e poi annullata** lo stesso 2026-04-07: vedi sezione 7.
+
+### Note operative
+
+- `caffenapi/` è repo git separato (`github.com/edorovetta-png/caffenapi`), gitignored qui. Le modifiche al booking dialog, hook, edge function, migration e Analytics sono committate **in quel repo**, non in Antigravity.
+- `frontend/`, `qr-code/`, `PROJECT_STATUS.md` invece sono nel repo Antigravity principale (`caf-fenapi-torino`).
+- Il **vecchio QR statico continua a funzionare** e va lasciato così finché la migrazione completa non è chiusa. Il nuovo QR (`fenapi/qr-code/qr-prenotazioni-negozio.png`) è pronto ma inutile finché il backend non supporta UTM.
+- La migration applicata è puramente additiva (`ADD COLUMN IF NOT EXISTS`): le righe esistenti hanno tutte `utm_source = NULL` e quindi compariranno raggruppate sotto "Diretto / Sconosciuto" nella nuova card Analytics.
+
+---
+
+## 7. Tentativo di migrazione a Supabase personale + ROLLBACK (2026-04-07 pomeriggio)
+
+### Cosa è stato scoperto durante la sessione
+
+Il Supabase `patzvzdxsglsbfqymgtz` su cui gira la produzione è stato **provisionato da Lovable** e sta nell'organizzazione di Lovable, NON in `edorovetta-png's Org`. L'utente non ha accesso amministrativo (CLI, dashboard, secrets) — può solo loggarsi come admin tramite l'app. Implicazione: non può applicare migration, deployare edge function, o gestire secrets su quel project. Era impossibile attivare la pipeline UTM tracking lì.
+
+### Cosa è stato fatto
+
+1. ✅ **Migrazione completa dei dati al Supabase personale `oswjgmavxbypnhhinypj`** via uno script Python (`fenapi/scripts/migrate-data-to-new-supabase.py`):
+   - 8 auth users creati con UUID originali (Auth Admin API consente di specificare l'id custom — preserva tutte le foreign key)
+   - 22 categories (sostituite le 7 di seed iniziale)
+   - 7 profiles, 8 user_roles, 1 master_admins, 36 user_service_assignments
+   - 34 appointments (con operator_id già coerente grazie agli UUID preservati)
+   - 21 document_uploads (solo metadata; i blob in Storage NON sono stati migrati)
+2. ✅ **Frontend ridepoyato** su Vercel con env vars puntate al nuovo Supabase: bundle nuovo `jwr8MCz8.js` con URL `oswjgmavxbypnhhinypj`. Verificato pixel-per-pixel.
+3. ✅ **Edge function `create-appointment` deployata** sul nuovo project (durante una sessione precedente con `supabase functions deploy`).
+
+### Cosa è rimasto fuori e ha portato al rollback
+
+Le altre **7 edge function** (`check-availability`, `send-booking-email`, `google-calendar`, `google-drive-upload`, `manage-appointment`, `manage-operators`, `process-email-queue`) **non sono state deployate** sul nuovo project. Senza:
+- `check-availability` → flusso prenotazione cliente bloccato (niente slot)
+- `manage-operators` → admin gestione operatori rotto
+- `google-calendar` / `google-drive-upload` → niente sync con Calendar/Drive degli operatori
+
+In più sono emerse **2 dipendenze esterne pesanti** che bloccano la migrazione completa:
+
+| Dipendenza | Cosa è | Stato |
+|---|---|---|
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | JSON credenziali service account Google per leggere/scrivere Calendar e Drive degli 8 operatori | ❌ Non disponibile in locale, l'utente non ha attualmente accesso a Google Cloud Console per rigenerarlo. **Bloccante per la migrazione**. |
+| `LOVABLE_API_KEY` + `LOVABLE_SEND_URL` | API proprietaria Lovable usata da `send-booking-email` e `process-email-queue` per inviare le email di conferma | ❌ Non disponibile. Le email di conferma erano comunque non in produzione (problemi precedenti con Aruba), quindi non bloccante in pratica. Va sostituito con un servizio email proprio (es. Resend) quando si farà la migrazione completa. |
+
+### Decisione
+
+L'utente non poteva permettersi di perdere la sync Google Calendar e ha richiesto **rollback al setup di stamane**. Eseguito con successo:
+
+1. ✅ Rollback env vars Vercel (production + development): `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` riportate ai valori di `patzvzdxsglsbfqymgtz`
+2. ✅ Redeploy production (`vercel --prod`) → bundle è tornato `iSARw9tA.js` (Vercel ha riusato la build cache, byte-per-byte identico al deploy delle 12:12 di stamane)
+3. ✅ `caffenapi/supabase/config.toml` rollback a `project_id = "patzvzdxsglsbfqymgtz"`
+
+### Stato post-rollback
+
+| Componente | Stato |
+|---|---|
+| Frontend | 🟢 Funziona normalmente, identico a stamane |
+| Login admin operatori | 🟢 Password originali, niente da comunicare |
+| Google Calendar sync | 🟢 Funzionante (continua a usare il vecchio service account su Lovable) |
+| Edge function complete | 🟢 Tutte attive sul vecchio project |
+| Tracking UTM frontend | 🟡 Codice presente nel bundle (cattura UTM da URL e li passa al body), ma silenziosamente ignorato dalla edge function vecchia |
+| Tracking UTM persistito | 🔴 Niente colonne `utm_source` su `patzvzdxsglsbfqymgtz`, quindi card "Provenienza Prenotazioni" sempre vuota |
+| Sostituzione fisica QR negozio | 🔴 Da NON fare per ora — il nuovo QR non darebbe alcun beneficio finché backend non supporta UTM |
+| Snapshot dati su `oswjgmavxbypnhhinypj` | 🟢 Intatto, pronto per essere riutilizzato quando si completerà la migrazione |
+
+### Cosa serve per chiudere la migrazione (in futuro, quando l'utente ha tempo + accessi)
+
+1. Recuperare o rigenerare `GOOGLE_SERVICE_ACCOUNT_JSON` (ricondividendo gli 8 calendari operatori col nuovo SA via Calendar.google.com)
+2. Decidere servizio email (Resend free tier 100/giorno è la scelta ovvia) e modificare `send-booking-email` + `process-email-queue` per usarlo invece di Lovable API
+3. Ri-eseguire la migrazione dati con lo script (è idempotente, non duplica) — eventualmente fare prima un nuovo export per recuperare prenotazioni nuove arrivate nel frattempo
+4. Deploy completo edge function: `supabase functions deploy` (senza arg, deploya tutte) sul project linkato
+5. Settare secrets edge function: `supabase secrets set GOOGLE_SERVICE_ACCOUNT_JSON=@path/al/file.json FRIDAY_OPERATOR_ID=187e9f13-ae3d-4471-b272-835126bec10a RESEND_API_KEY=...`
+6. Migrare i file Storage del bucket `appointment-documents` (script separato che scarica/riupload via service_role)
+7. Switchare env vars Vercel + redeploy + verifica
+8. Sostituire QR fisico in vetrina
+
+### Sicurezza
+
+- La `service_role key` di `oswjgmavxbypnhhinypj` è apparsa in chat durante la migrazione. **Rigenerarla** dalla dashboard Supabase quando comodo (Settings → API → Reset).
+- La `anon key` del nuovo project è apparsa anche lei ma è progettata per essere pubblica, nessun rischio.
