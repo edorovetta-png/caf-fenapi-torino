@@ -114,25 +114,20 @@ Ad esempio: `caffenapi-edge@caffenapi-edge-functions-447821.iam.gserviceaccount.
 
 Questo è il pezzo più tedioso ma indispensabile. **Il SA non vede i calendari finché ogni proprietario non lo invita esplicitamente.**
 
-Per ognuno dei 7 operatori che hanno un calendar Google attivo (vedi tabella sezione 2 — escluso Daniela Palillo da verificare e mi.salerno che non è un operatore):
+⚠️ **Importante**: gli account Gmail degli operatori sono **privati**, NON Google Workspace. Implica che:
+- Non esiste un admin centrale che può condividere in nome loro
+- Tu non hai (e non devi avere) le password dei loro Gmail
+- **Ogni operatore deve fare la procedura personalmente, dal suo PC, loggato col suo account**
 
-### 4.1 Procedura di condivisione (ripeti 7 volte)
+Quindi NON loggi 7 volte tu — mandi un messaggio a ognuno con istruzioni semplici e aspetti che lo facciano.
 
-1. **Login su `https://calendar.google.com`** con l'account dell'operatore (es. `fenapicaf2022@gmail.com`)
-   - **Tip**: usa una finestra in incognito per ognuno per non doversi sloggare-rilogare 7 volte. Oppure crea profili Chrome diversi.
-   - **Tip 2**: chiedi all'operatore di farlo lui sul suo PC se preferisci, mandandogli queste istruzioni semplificate
-2. Nella sidebar sinistra, sotto **"My calendars"**, trova il calendario principale dell'account (di solito ha il nome dell'utente o l'email). 
-3. Passa il mouse sopra → click sui **3 puntini** che appaiono → **"Settings and sharing"** (o "Impostazioni e condivisione")
-4. Scorri fino a **"Share with specific people or groups"** (o "Condividi con persone e gruppi specifici")
-5. Click **"+ Add people and groups"**
-6. Nel campo email, **incolla l'email del SA** (la trovi nel JSON sotto la chiave `client_email`, esempio: `caffenapi-edge@caffenapi-edge-functions-447821.iam.gserviceaccount.com`)
-7. **Permission**: scegli **"Make changes to events"** (la terza opzione, NON "owner" che è troppo, NON "see only free/busy" che è troppo poco)
-8. **Send** (può apparire "Send notification" — disabilita se vuoi, il SA non legge email comunque)
-9. Verifica: dovresti vedere l'email del SA elencata sotto "Shared with" con il permesso giusto
+### 4.1 Documento da girare agli operatori
 
-### 4.2 Lista da spuntare
+C'è già un template messaggio pronto in **`fenapi/docs/istruzioni-operatori-condivisione-calendar.md`**. Lo apri, sostituisci `[NOME]` e `[EMAIL_SA]` (la trovi nel JSON sotto `client_email`), e lo mandi ai 7 operatori via WhatsApp/Telegram/email.
 
-Quando hai finito di condividere ogni calendario, segna ☑ qui:
+Per ognuno, l'operatore esegue 9 click sul suo Calendar (1 minuto reale). Ti risponde "fatto" e tu spunti la lista.
+
+### 4.2 Lista da spuntare (per te, mentre arrivano le risposte)
 
 - [ ] `fenapicaf2022@gmail.com` (Erika Borghese)
 - [ ] `fenapitorino@gmail.com` (Giorgia Longhi)
@@ -140,7 +135,15 @@ Quando hai finito di condividere ogni calendario, segna ☑ qui:
 - [ ] `infofenapitorino@gmail.com` (Leonardo Ottaiano)
 - [ ] `paghefenapi@gmail.com` (Eliane Do Carmo)
 - [ ] `inapitorino1@gmail.com` (Michela Salerno)
-- [ ] (eventuale Daniela Palillo, se ha calendar attivo da verificare)
+- [ ] Dott.ssa Daniela Palillo (verificare prima se ha calendar Google attivo — il `calendar_id` nei dati migrati è vuoto)
+
+### 4.3 Tempi realistici
+
+- **Best case**: tutti rispondono nello stesso pomeriggio → ~3 ore totali
+- **Realistico**: 2-3 giorni (qualcuno in ferie, qualcuno se ne dimentica)
+- **Worst case**: 1 settimana
+
+Mentre aspetti, puoi NON fare nient'altro: la fase 4 è bloccante per la fase di deploy delle edge function (perché senza le condivisioni, le function darebbero errori `403 Forbidden` quando provano a leggere i calendari).
 
 ---
 
