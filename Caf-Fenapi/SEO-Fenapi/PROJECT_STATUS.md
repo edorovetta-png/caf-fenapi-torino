@@ -1,6 +1,6 @@
 # PROJECT STATUS — SEO-Fenapi
 
-> Ultimo aggiornamento: 2026-04-08 (aggiunte cartelle `content/` e `reports/`, creato `SEO-TRACKER.md` per continuità tra sessioni, registrata regola di continuità SEO in `../CLAUDE.md` e `../Gemini.md`)
+> Ultimo aggiornamento: 2026-04-08 (brief 001 Foundation **applicato** in `fenapi/frontend/` su branch `seo/brief-001-foundation`. 21 file modificati, 35 JSON-LD validati localmente, check §10 passati. In attesa di push+preview Vercel+merge. OG image usa fallback temporaneo `hero_banner.png` — TODO 7gg per sostituirla con asset 1200×630 dedicato.)
 > File condiviso tra Claude e Gemini. Leggilo prima di ogni task, aggiornalo dopo modifiche significative.
 >
 > **Continuità sessioni**: oltre a questo file, leggi e aggiorna SEMPRE anche `SEO-TRACKER.md` in questa stessa cartella. Il PROJECT_STATUS descrive lo *stato*, il TRACKER traccia *cosa è stato fatto sessione per sessione*.
@@ -66,42 +66,74 @@ Caf-Fenapi/SEO-Fenapi/
 
 ## 4. Stato Attuale
 
-**Fase corrente: PRE-AUDIT** (progetto appena creato, nessuna analisi prodotta)
+**Fase corrente: POST-AUDIT, PRE-FIX** — primo audit completo prodotto, in attesa che l'utente legga e decida le priorità prima di qualsiasi brief di hotfix.
+
+### Riepilogo audit 2026-04-08
+
+- **SEO Health Score**: **62/100**
+- **Business type rilevato**: Local Service (CAF)
+- **Punteggi per categoria** (vedi report completo):
+  - Technical SEO: 68
+  - Content Quality (E-E-A-T): 66
+  - On-Page SEO: 74
+  - Schema / Structured Data: 55
+  - Performance (CWV stimato): 72 — PSI rate-limited, da rimisurare
+  - AI Search Readiness: 58
+  - Images: 70
+- **Issue più gravi (Critical/High)**:
+  1. Nessun `<link rel="canonical">` su nessuna pagina + mismatch `www.` vs apex nella sitemap
+  2. Schema `LocalBusiness` minimale — mancano `openingHoursSpecification`, `geo`, `image`, `postalCode`, `addressRegion`, `priceRange`, `sameAs`
+  3. Booking CTA homepage punta a `caffenapi.vercel.app` invece del canonico `prenotazioni.fenapipiemonte.org` (il blog è già corretto)
+  4. Mancano `og:image`, `og:url`, `og:locale`, `twitter:card` ovunque
+  5. Pagine servizio senza schema; blog con `Article` ma senza `image` + `dateModified`; nessun `BreadcrumbList`
+  6. Security headers mancanti (solo HSTS presente)
 
 ### Cosa esiste già
 
 - [x] Cartella creata in `Antigravity/Caf-Fenapi/SEO-Fenapi/`
-- [x] Struttura `audits/ research/ briefs/ scripts/` con README di scope per ognuna
+- [x] Struttura `audits/ research/ briefs/ scripts/ content/ reports/` con README di scope
 - [x] `CLAUDE.md` e `Gemini.md` di parent (`Caf-Fenapi/`) con contesto consolidato del cliente
 - [x] Vincoli di non-rottura documentati in `../CLAUDE.md` sezione 8
-- [x] Indirizzo sede registrato in `../CLAUDE.md` sezione 1 (Via Sacra di San Michele 53, 10141 Torino) — utile per local SEO e structured data LocalBusiness
-- [x] Google Business Profile registrato in `../CLAUDE.md` sezione 5, con nota "gestito dalla titolare"
-- [x] Skill `claude-seo` registrata come toolkit principale in `../CLAUDE.md` sezione 9 e in questo file (sezione 2)
-- [x] Cartelle `content/` e `reports/` create con README di scope
-- [x] `SEO-TRACKER.md` creato come file di continuità tra sessioni (log attività, blocker, decisioni strategiche)
-- [x] Regola di continuità SEO documentata in `../CLAUDE.md` (nuova sezione) e in `../Gemini.md` (sezione "Regole specifiche per Caf-Fenapi")
+- [x] Indirizzo sede registrato in `../CLAUDE.md` §1 (Via Sacra di San Michele 53, 10141 Torino) — usato come oracolo di confronto col sito live
+- [x] Google Business Profile registrato in `../CLAUDE.md` §5, aggiornamenti 2026-04-08 (accesso Gestore, categoria, duplicato rimosso)
+- [x] Skill `claude-seo` registrata come toolkit principale e **verificata empiricamente** col primo audit
+- [x] `SEO-TRACKER.md` creato come file di continuità tra sessioni
+- [x] Regola di continuità SEO documentata in `../CLAUDE.md` e in `../Gemini.md`
+- [x] **Audit tecnico + contenuto + schema + performance iniziale del sito live** → `audits/2026-04-08-full-audit-report.md`
+- [x] **Action plan prioritizzato Critical→Low** → `audits/2026-04-08-action-plan.md`
+- [x] **Brief 001 — Foundation consolidato** (canonical + OG + security headers + schema LocalBusiness/Service/BreadcrumbList + Article→BlogPosting + fix CTA prenotazioni) → `briefs/001-foundation-canonical-og-schema-cta.md`. Eseguibile in una sessione aperta in `fenapi/frontend/`. Expected impact: 62 → ~78/100.
 
 ### Cosa NON esiste ancora
 
-- [ ] Audit tecnico iniziale del sito live
+- [ ] Decisione dell'utente sulle priorità post-audit (in corso)
+- [ ] Primo brief di hotfix (vedi sezione "Prossimi Step" sotto per l'ordine proposto)
 - [ ] Baseline metrics da Search Console (impressions, click, CTR, posizione media)
-- [ ] Baseline metrics da GA4 (sorgenti traffico, landing page top, bounce, conversioni → prenotazioni)
+- [ ] Baseline metrics da GA4 (sorgenti, landing, bounce, conversioni → prenotazioni)
+- [ ] Misura CWV lab reale via PSI (rinviata per rate-limit)
 - [ ] Keyword research per territorio Torino
-- [ ] Competitor analysis (CAF concorrenti su Torino — solo per analisi interna, MAI menzionati nei contenuti pubblici)
-- [ ] Audit on-page: title, meta description, H1, structured data, internal linking
-- [ ] Audit tecnico: Core Web Vitals, sitemap, robots.txt, mobile, indexability
-- [ ] Audit blog SEO esistente (8 articoli in `fenapi/frontend/blog/`)
+- [ ] Competitor analysis interna (no citazioni pubbliche, da regola §7.2)
+- [ ] Audit blog SEO esistente (8 articoli dichiarati in sitemap)
 
 ---
 
 ## 5. Prossimi Step
 
-### Priorità Alta — Setup e baseline
+### Priorità immediata — In attesa dell'utente
 
-1. **Verificare il link Vercel del sito vetrina**: capire qual è il progetto Vercel di produzione che serve `fenapipiemonte.org`, per sapere dove guardare logs/analytics di deploy senza toccarlo. Solo lettura.
-2. **Audit tecnico iniziale del sito live** (`audits/001-audit-tecnico-iniziale.md`): crawl read-only, estrazione di tutti i meta tag, structured data presenti, status code, redirect chain, sitemap, robots.txt, hreflang (se presente), Core Web Vitals via PageSpeed Insights.
-3. **Baseline Search Console** (`audits/002-baseline-search-console.md`): export ultimi 3-6 mesi di query, click, impressions, CTR, posizione media. Top 50 query, top 50 landing page, query con CTR basso ma posizione decente (= quick wins).
-4. **Baseline GA4** (`audits/003-baseline-ga4.md`): sorgenti di traffico, top landing page, bounce rate, conversioni verso `prenotazioni.fenapipiemonte.org` (UTM `utm_source=sito` già taggati).
+0. **L'utente legge `audits/2026-04-08-full-audit-report.md` + `audits/2026-04-08-action-plan.md`** e decide quali issue diventano brief di hotfix. Non applicare nessun fix prima di questo passaggio.
+
+### Priorità Alta — Subito dopo la review dell'utente
+
+Ordine di attacco suggerito (impatto/sforzo):
+
+1. **`briefs/001-foundation-canonical-og-security.md`** — pacchetto "fondamenta": `<link rel="canonical">` self-referenziale su tutte le pagine, risoluzione www-vs-apex (scegliere host canonico + 301), OG metadata completi (`og:image` 1200×630, `og:url`, `og:locale`, `og:site_name`, `twitter:card`), security headers in `vercel.json`/`vercel.ts`. **Sforzo**: ~2-3 h. **Impatto**: alto (tocca tutte le pagine, abilita indicizzazione pulita e condivisioni social).
+2. **`briefs/002-schema-localbusiness-service-breadcrumb.md`** — pacchetto schema: upgrade `LocalBusiness` homepage con `openingHoursSpecification` (9–13/14–18 Lun–Gio, 9–12 Ven), `geo`, `image`, `postalCode`, `addressRegion`, `priceRange`, `sameAs`, `foundingDate` 1992, `areaServed` Torino; aggiunta `Service` schema su ognuna delle 8 pagine servizio; `BreadcrumbList` ovunque; aggiunta `image` + `dateModified` + `BlogPosting` sui blog post. **Sforzo**: ~3 h. **Impatto**: alto (sblocca rich results, coerenza entità con GBP).
+3. **`briefs/003-homepage-booking-cta.md`** — microfix: sostituire `caffenapi.vercel.app` con `prenotazioni.fenapipiemonte.org` sulla homepage mantenendo gli UTM. **Sforzo**: 15 min. **Impatto**: medio (coerenza brand + conversion tracking).
+4. **`briefs/004-chi-siamo-contatti-pages.md`** — promuovere `#chi-siamo` e `#contatti` da ancore della homepage a pagine standalone indicizzabili. **Sforzo**: ~2 h. **Impatto**: alto per query local ("contatti CAF Torino", "chi è FENAPI Torino") + apre lo spazio per bio autore credenziali (leva E-E-A-T YMYL).
+5. **`briefs/005-hero-image-webp.md`** — conversione `hero_banner.png` → WebP/AVIF con `<picture>`, `fetchpriority="high"`. **Sforzo**: ~1 h. **Impatto**: medio (LCP mobile).
+6. **Baseline Search Console** (`audits/004-baseline-search-console.md`): export ultimi 3-6 mesi (query, click, impressions, CTR, posizione media). Top 50 query, top 50 landing, query con CTR basso ma posizione decente (= quick wins).
+7. **Baseline GA4** (`audits/005-baseline-ga4.md`): sorgenti, top landing, bounce, conversioni verso `prenotazioni.fenapipiemonte.org`.
+8. **Ri-misura CWV lab** via `scripts/pagespeed_check.py` — la prima run è stata rate-limited. Allegare output al report.
 
 ### Priorità Media — Strategia
 
