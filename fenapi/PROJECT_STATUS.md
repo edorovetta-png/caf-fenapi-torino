@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-04-07 (tracking provenienza prenotazioni LIVE in produzione)
+> Ultimo aggiornamento: 2026-04-08 (brief SEO 001 Foundation applicato su branch `seo/brief-001-foundation`: canonical + OG/Twitter + security headers + LocalBusiness schema completo + Service/BlogPosting/BreadcrumbList + CTA canonico + sitemap/robots su host `www.`)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -167,7 +167,7 @@ Antigravity/
 ### Priorita Media
 3. **Dominio unico**: valutare integrazione sito vetrina + app sotto un unico dominio
 4. **Test**: aumentare la copertura test nell'app prenotazioni
-5. **SEO avanzato**: sitemap.xml e robots.txt aggiunti; manca og:image. Blog SEO attivo con primo articolo.
+5. **SEO avanzato**: brief 001 Foundation applicato (canonical, OG/Twitter, LocalBusiness/Service/BlogPosting/BreadcrumbList schema, security headers via `vercel.json`, CTA canonico `prenotazioni.fenapipiemonte.org`, sitemap/robots su `www.`). **TODO 7gg**: sostituire OG image temporanea `hero_banner.png` (2048×2048 quadrato, 2.3MB) con asset 1200×630 dedicato. **TODO**: verificare coordinate geo `45.0753, 7.6401` del LocalBusiness schema su Google Maps. Vedi `Caf-Fenapi/SEO-Fenapi/briefs/001-foundation-canonical-og-schema-cta.md` per dettagli.
 
 ### Priorita Bassa
 6. **Build pipeline**: minificazione CSS/JS e ottimizzazione immagini per il sito vetrina

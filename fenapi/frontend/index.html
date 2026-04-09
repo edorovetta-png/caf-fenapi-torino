@@ -12,14 +12,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Circolo FENAPI Provincia di Torino — Assistenza Fiscale e Previdenziale</title>
-  <meta name="description" content="Circolo FENAPI sede provinciale di Torino. Assistenza fiscale per dipendenti, pensionati e imprese. Modello 730, ISEE, IMU e molto altro. Prenota un appuntamento.">
+  <meta name="description" content="Assistenza fiscale qualificata a Torino. Modello 730, ISEE, IMU e servizi per cittadini e imprese dal 1992.">
   <meta name="keywords" content="CAF, FENAPI, Torino, assistenza fiscale, 730, ISEE, patronato, dichiarazione dei redditi">
   <meta name="author" content="Circolo FENAPI — Provincia di Torino">
 
+  <!-- Canonical -->
+  <link rel="canonical" href="https://www.fenapipiemonte.org/">
+
   <!-- Open Graph -->
-  <meta property="og:title" content="Circolo FENAPI Provincia di Torino — Assistenza Fiscale e Previdenziale">
-  <meta property="og:description" content="Assistenza fiscale qualificata a Torino. Modello 730, ISEE, IMU e servizi per cittadini e imprese.">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Circolo FENAPI Torino">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:url" content="https://www.fenapipiemonte.org/">
+  <meta property="og:title" content="Circolo FENAPI Provincia di Torino — Assistenza Fiscale e Previdenziale">
+  <meta property="og:description" content="Assistenza fiscale qualificata a Torino. Modello 730, ISEE, IMU e servizi per cittadini e imprese dal 1992.">
+  <meta property="og:image" content="https://www.fenapipiemonte.org/images/hero_banner.png">
+  <meta property="og:image:width" content="2048">
+  <meta property="og:image:height" content="2048">
+  <meta property="og:image:alt" content="Circolo FENAPI Provincia di Torino — Assistenza Fiscale e Previdenziale dal 1992">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Circolo FENAPI Provincia di Torino — Assistenza Fiscale">
+  <meta name="twitter:description" content="Assistenza fiscale qualificata a Torino. Modello 730, ISEE, IMU e molto altro.">
+  <meta name="twitter:image" content="https://www.fenapipiemonte.org/images/hero_banner.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/logo-fenapi.png">
@@ -31,19 +47,70 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Schema.org LocalBusiness -->
+  <!-- Schema.org LocalBusiness (entity @id usato come riferimento da tutte le altre pagine) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": ["LocalBusiness", "AccountingService"],
+    "@id": "https://www.fenapipiemonte.org/#business",
     "name": "Circolo FENAPI — Provincia di Torino",
-    "url": "https://fenapipiemonte.org",
-    "telephone": "+39 351 709 1611",
+    "alternateName": "Circolo FENAPI Torino",
+    "description": "Centro di Assistenza Fiscale (CAF) della Federazione Nazionale Autonoma Piccoli Imprenditori, sede provinciale di Torino. Modello 730, ISEE, IMU, pensioni, invalidità, successioni. Dal 1992.",
+    "url": "https://www.fenapipiemonte.org/",
+    "logo": "https://www.fenapipiemonte.org/images/logo-fenapi.png",
+    "image": "https://www.fenapipiemonte.org/images/hero_banner.png",
+    "telephone": "+393517091611",
+    "email": "fenapitorino@gmail.com",
+    "priceRange": "€€",
+    "foundingDate": "1992",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Via Sagra di San Michele 53-55",
+      "streetAddress": "Via Sagra di San Michele, 53",
       "addressLocality": "Torino",
+      "postalCode": "10141",
+      "addressRegion": "TO",
       "addressCountry": "IT"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 45.070756,
+      "longitude": 7.630822
+    },
+    "hasMap": "https://maps.google.com/maps?q=Via+Sagra+di+San+Michele+53,+10141+Torino+TO,+Italy",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+        "opens": "09:00",
+        "closes": "13:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+        "opens": "14:00",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "09:00",
+        "closes": "12:00"
+      }
+    ],
+    "areaServed": [
+      { "@type": "City", "name": "Torino" },
+      { "@type": "AdministrativeArea", "name": "Provincia di Torino" }
+    ],
+    "sameAs": [
+      "https://www.facebook.com/fenapigroup/",
+      "https://www.fenapigroup.it",
+      "https://www.fenapigroup.it/caf-fenapi/"
+    ],
+    "knowsLanguage": "it",
+    "parentOrganization": {
+      "@type": "Organization",
+      "name": "FENAPI — Federazione Nazionale Autonoma Piccoli Imprenditori",
+      "url": "https://www.fenapigroup.it"
     }
   }
   </script>
@@ -54,7 +121,7 @@
        FLOATING CTA — "Prenota un Appuntamento"
        ════════════════════════════════════════════════════════════════════ -->
   <div class="floating-cta" id="floatingCta">
-    <a href="https://caffenapi.vercel.app/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer">
+    <a href="https://prenotazioni.fenapipiemonte.org/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
         <line x1="16" y1="2" x2="16" y2="6"/>
@@ -126,7 +193,7 @@
           <a href="#contatti">Contatti</a>
         </nav>
         <div class="header-cta">
-          <a href="https://caffenapi.vercel.app/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer" class="btn-appointment" id="headerAppointmentBtn">
+          <a href="https://prenotazioni.fenapipiemonte.org/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer" class="btn-appointment" id="headerAppointmentBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
               <line x1="16" y1="2" x2="16" y2="6"/>
@@ -156,7 +223,7 @@
         <h1>CIRCOLO FENAPI <em>Provincia di Torino</em></h1>
         <p class="hero-subtitle">Assistenza fiscale qualificata per dipendenti, pensionati e imprese. Al tuo fianco per ogni esigenza fiscale e previdenziale.</p>
         <div class="hero-actions">
-          <a href="https://caffenapi.vercel.app/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer" class="btn-hero-primary" id="heroAppointmentBtn">
+          <a href="https://prenotazioni.fenapipiemonte.org/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer" class="btn-hero-primary" id="heroAppointmentBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
               <line x1="16" y1="2" x2="16" y2="6"/>
@@ -279,7 +346,7 @@
     <div class="container fade-in">
       <h2>Hai bisogno di assistenza fiscale?</h2>
       <p>Prenota subito un appuntamento presso la nostra sede di Torino. Il nostro team di esperti &egrave; pronto ad aiutarti.</p>
-      <a href="https://caffenapi.vercel.app/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer" class="btn-cta" id="bannerAppointmentBtn">
+      <a href="https://prenotazioni.fenapipiemonte.org/?utm_source=sito&amp;utm_medium=referral&amp;utm_campaign=fenapipiemonte" target="_blank" rel="noopener noreferrer" class="btn-cta" id="bannerAppointmentBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
           <line x1="16" y1="2" x2="16" y2="6"/>

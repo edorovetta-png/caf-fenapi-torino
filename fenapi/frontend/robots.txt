@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fenapipiemonte.org/sitemap.xml
+Sitemap: https://www.fenapipiemonte.org/sitemap.xml
