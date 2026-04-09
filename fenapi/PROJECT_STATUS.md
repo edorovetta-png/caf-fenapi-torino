@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-04-08 (brief SEO 001 Foundation applicato su branch `seo/brief-001-foundation`: canonical + OG/Twitter + security headers + LocalBusiness schema completo + Service/BlogPosting/BreadcrumbList + CTA canonico + sitemap/robots su host `www.`)
+> Ultimo aggiornamento: 2026-04-09 (brief SEO 002 hotfix applicato su branch `seo/brief-002-hotfix`: counter "33+ Anni" no-JS-safe, scadenze 730/2026 aggiornate in pagina servizio — precompilato 30 aprile, presentazione 30 settembre, conservazione formulazione safe con rinvio ad Agenzia Entrate, verificato su agenziaentrate.gov.it — NAP unificato "Via Sagra di San Michele" in 18 file HTML + Maps URL coerenti + iframe homepage. §5 opzione A (logo footer no-op). Da mergere solo dopo verifica preview Vercel.)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
@@ -167,7 +167,7 @@ Antigravity/
 ### Priorita Media
 3. **Dominio unico**: valutare integrazione sito vetrina + app sotto un unico dominio
 4. **Test**: aumentare la copertura test nell'app prenotazioni
-5. **SEO avanzato**: brief 001 Foundation applicato (canonical, OG/Twitter, LocalBusiness/Service/BlogPosting/BreadcrumbList schema, security headers via `vercel.json`, CTA canonico `prenotazioni.fenapipiemonte.org`, sitemap/robots su `www.`). **TODO 7gg**: sostituire OG image temporanea `hero_banner.png` (2048×2048 quadrato, 2.3MB) con asset 1200×630 dedicato. **TODO**: verificare coordinate geo `45.0753, 7.6401` del LocalBusiness schema su Google Maps. Vedi `Caf-Fenapi/SEO-Fenapi/briefs/001-foundation-canonical-og-schema-cta.md` per dettagli.
+5. **SEO avanzato**: brief 001 Foundation applicato (canonical, OG/Twitter, LocalBusiness/Service/BlogPosting/BreadcrumbList schema, security headers via `vercel.json`, CTA canonico `prenotazioni.fenapipiemonte.org`, sitemap/robots su `www.`). **Brief 002 hotfix** applicato su branch `seo/brief-002-hotfix` (in attesa preview Vercel + merge): counter "0 Anni" fallback → "33+", scadenze 730/2026 corrette (verificate su agenziaentrate.gov.it: precompilato 30 aprile 2026, presentazione 30 settembre 2026, conservazione documenti in formulazione safe), NAP footer unificato "Via Sagra di San Michele" su 18 file HTML + Maps URL coerenti + iframe homepage fixato. Logo footer §5 opzione A (no-op, scelta esplicita per evitare overflow mobile). **TODO 7gg**: sostituire OG image temporanea `hero_banner.png` (2048×2048 quadrato, 2.3MB) con asset 1200×630 dedicato. **TODO**: verificare coordinate geo `45.0753, 7.6401` del LocalBusiness schema su Google Maps. Vedi `Caf-Fenapi/SEO-Fenapi/briefs/001-foundation-canonical-og-schema-cta.md` e `002-footer-nap-counter-scadenze.md` per dettagli.
 
 ### Priorita Bassa
 6. **Build pipeline**: minificazione CSS/JS e ottimizzazione immagini per il sito vetrina

@@ -131,6 +131,11 @@
 
     counters.forEach(function (counter) {
       const target = parseInt(counter.getAttribute('data-target'), 10);
+      // Se il fallback HTML mostra gia' il valore target, salta l'animazione
+      // (evita il flash "33+" -> "0+" -> "33+" quando l'IntersectionObserver fire)
+      if (counter.textContent.trim() === target + '+') {
+        return;
+      }
       const duration = 2000; // ms
       const startTime = performance.now();
 
