@@ -1,6 +1,6 @@
 # PROJECT STATUS — SEO-Fenapi
 
-> Ultimo aggiornamento: 2026-04-08 (brief 001 Foundation **applicato** in `fenapi/frontend/` su branch `seo/brief-001-foundation`. 21 file modificati, 35 JSON-LD validati localmente, check §10 passati. In attesa di push+preview Vercel+merge. OG image usa fallback temporaneo `hero_banner.png` — TODO 7gg per sostituirla con asset 1200×630 dedicato.)
+> Ultimo aggiornamento: 2026-04-09 (brief 001 Foundation + 002 hotfix NAP/counter/scadenze + 003 E-E-A-T YMYL bylines + 004 chi-siamo/contatti standalone + **005 OG image 1200×630 + hero WebP/AVIF + alt audit** tutti mergiati in `main` e deployati in production. Brief 005 ha chiuso il TODO 7gg lasciato aperto dal brief 001: nuovo asset `og-fenapi-torino-1200x630.jpg` (75 KB) generato via HTML template + Playwright screenshot deterministico, hero convertito in WebP (154 KB) + AVIF (60 KB) con `<picture>` + preload + fetchpriority=high, og:image + dimensioni su 20 file, logo alt descrittivo su 20 file. Atteso LCP: ~4s → ~2s. **Re-audit post-005 da eseguire**: score atteso 82 → ~85/100 (Performance/CWV 60→85, AI Readiness/Social 68→72, Accessibility +2).)
 > File condiviso tra Claude e Gemini. Leggilo prima di ogni task, aggiornalo dopo modifiche significative.
 >
 > **Continuità sessioni**: oltre a questo file, leggi e aggiorna SEMPRE anche `SEO-TRACKER.md` in questa stessa cartella. Il PROJECT_STATUS descrive lo *stato*, il TRACKER traccia *cosa è stato fatto sessione per sessione*.
