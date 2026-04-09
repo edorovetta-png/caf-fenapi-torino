@@ -1,6 +1,6 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-04-09 (brief SEO 002 hotfix applicato su branch `seo/brief-002-hotfix`: counter "33+ Anni" no-JS-safe, scadenze 730/2026 aggiornate in pagina servizio — precompilato 30 aprile, presentazione 30 settembre, conservazione formulazione safe con rinvio ad Agenzia Entrate, verificato su agenziaentrate.gov.it — NAP unificato "Via Sagra di San Michele" in 18 file HTML + Maps URL coerenti + iframe homepage. §5 opzione A (logo footer no-op). Da mergere solo dopo verifica preview Vercel.)
+> Ultimo aggiornamento: 2026-04-09 (brief SEO 003 E-E-A-T YMYL applicato su branch `seo/brief-003-bylines`: entity Person Michela Salerno Vice-Presidente sulla homepage con @id `#michela-salerno`, byline visibile "Di Michela Salerno..." sugli 8 blog post, BlogPosting.author cambiato da Organization inline a @id reference, 4 outbound link ad agenziaentrate.gov.it su 3 pagine servizio (modello-730, successioni, unico-pf) con target=_blank + rel=noopener noreferrer. 36 blocchi JSON-LD validi. Da mergere solo dopo verifica preview Vercel. Brief 002 hotfix già mergiato.)
 > Questo file serve come contesto condiviso tra Claude e Gemini.
 
 ---
