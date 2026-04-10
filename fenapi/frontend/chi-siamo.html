@@ -552,6 +552,15 @@ h6 { font-size: 14px; line-height: 20px; font-weight: 600; }
 .page-hero h1{font-size:30px}
 .content-section{padding:28px 24px}
 }
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-left{opacity:0;transform:translateX(-24px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.fade-in-left.visible{opacity:1;transform:translateX(0)}
+.fade-in-right{opacity:0;transform:translateX(24px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.fade-in-right.visible{opacity:1;transform:translateX(0)}
+.stagger-children>*{opacity:0;transform:translateY(16px);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1)}
+.scroll-top{position:fixed;bottom:100px;right:34px;z-index:9998;width:42px;height:42px;opacity:0;pointer-events:none}
+.counter-animated{display:inline-block}
   </style>
   <!-- Full stylesheets (non-blocking) -->
   <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
