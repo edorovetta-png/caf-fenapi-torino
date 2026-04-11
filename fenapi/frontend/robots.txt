@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.fenapipiemonte.org/sitemap.xml
+
+# LLM-readable site index (llmstxt.org standard)
+# https://www.fenapipiemonte.org/llms.txt
