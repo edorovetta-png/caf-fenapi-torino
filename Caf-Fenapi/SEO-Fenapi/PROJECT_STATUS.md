@@ -1,6 +1,7 @@
 # PROJECT STATUS — SEO-Fenapi
 
-> Ultimo aggiornamento: 2026-04-09 (brief 001 Foundation + 002 hotfix + 003 E-E-A-T YMYL + 004 chi-siamo/contatti + 005 OG image+WebP/AVIF+alt tutti mergiati in production. **Re-audit completo post-005 eseguito**: SEO Health Score **74 → 80/100 (+6)**. Evoluzione: 62 baseline → 74 post-001 → **80 post-005**. Categorie: Technical 83→85, Content 68→**79 (+11 driver)**, Schema 82→83, Performance 60→70 (ma LCP ancora 5.7s POOR), AI Readiness 62→69, Local 71→79 (+8). Audit completo in `audits/2026-04-09-post-brief-005-audit.md`. **Target 85 non raggiunto**: root cause è il render-blocking CSS di Google Fonts che blocca il paint PRIMA che l'AVIF preload possa fare effetto — brief 005 è strutturalmente corretto, il problema è multi-layer. **Prossimo step critico**: brief 006 Performance (Critical CSS + Google Fonts non-blocking) = saving atteso LCP 5.7s→~2s, +6-8 punti totali. 3 fast wins da chiudere subito: ImageObject dimensions fix, rimozione WebP preload ridondante, llms.txt.)
+> Ultimo aggiornamento: 2026-04-11 (**Brief 007 APPLICATO** in `fenapi/frontend/` — FAQPage JSON-LD (4 Q&A ciascuna) inserito dopo BreadcrumbList su tutte e 8 le pagine servizio (modello-730, modello-isee, imu-tasi, unico-pf, red, pensioni, successioni, invalidita). Creato `frontend/llms.txt` (llmstxt.org standard, 54 righe, 6 sezioni: Contatti/Servizi/Istituzionali/Blog/Risorse/Optional). Aggiunto commento `llms.txt` in `robots.txt` preservando direttive esistenti. Validazione JSON-LD locale: tutti 8 file = 3 blocks OK. Nessuna rottura DOM/testi/schema esistenti. **Pending**: commit+push+preview Vercel, Rich Results Test, re-audit SEO post-deploy (`audits/2026-04-XX-post-brief-007-audit.md`), aggiornamento SEO-TRACKER. Target: AI Readiness 58→~72, Schema 85→~92.)
+> Ultimo aggiornamento precedente: 2026-04-10 (brief 001–006b tutti in production. **Brief 006b COMPLETATO** — inline critical CSS + CSS non-blocking. **PageSpeed finale post-006+006b**: Desktop Performance **98** (FCP 1.6s, LCP **1.9s** GOOD, CLS 0.072, TBT 70ms); Mobile Performance **~65** mediana (FCP 1.2-3.4s, LCP 4.8-5.8s varianza rete, CLS 0.072-0.089, SI 2.5-3.4s). **Render-blocking resources: ZERO**. CLS residuo 0.072 è font-swap inevitabile con `font-display:swap`, sotto soglia GOOD (≤0.1). **Delta complessivo 006+006b**: Desktop 74→**98** (+24), Mobile 56→**~65** (+9), FCP 5.0s→**1.2s**, LCP desktop 4.8s→**1.9s**. Evoluzione score: 62 baseline → 74 post-001 → 80 post-005 → **TBD post-006b** (in attesa re-audit SEO). **Prossimo step**: Brief 007 — FAQPage schema + llms.txt → re-audit → 008-010.)
 > File condiviso tra Claude e Gemini. Leggilo prima di ogni task, aggiornalo dopo modifiche significative.
 >
 > **Continuità sessioni**: oltre a questo file, leggi e aggiorna SEMPRE anche `SEO-TRACKER.md` in questa stessa cartella. Il PROJECT_STATUS descrive lo *stato*, il TRACKER traccia *cosa è stato fatto sessione per sessione*.
@@ -66,7 +67,24 @@ Caf-Fenapi/SEO-Fenapi/
 
 ## 4. Stato Attuale
 
-**Fase corrente: POST-AUDIT, PRE-FIX** — primo audit completo prodotto, in attesa che l'utente legga e decida le priorità prima di qualsiasi brief di hotfix.
+**Fase corrente: POST-BRIEF 006b, PRE-BRIEF 007** — brief 001–006b tutti in production. Performance desktop eccellente (98), mobile migliorato (~65). Render-blocking: ZERO. Prossimo brief: 007 (FAQPage schema + llms.txt).
+
+### Risultati PageSpeed finali post-brief 006 + 006b (2026-04-10)
+
+| Metrica | Mobile (mediana 3 run) | Desktop | Delta vs pre-006 |
+|---|---|---|---|
+| Performance Score | **~65** | **98** | Mobile +9, Desktop **+24** |
+| FCP | 1.2-3.4s | **1.6s** | FCP 5.0s → **1.2s** (best) |
+| LCP | 4.8-5.8s (varianza rete) | **1.9s** (GOOD) | Desktop 4.8s → **1.9s** |
+| CLS | 0.072-0.089 | **0.072** | Era 0, ora 0.072 (font-swap) |
+| TBT | — | **70ms** | 150ms → **70ms** |
+| SI | 2.5-3.4s | — | — |
+| Render-blocking resources | **ZERO** | **ZERO** | Erano 2 (styles.css + service-page.css) |
+
+**Note**:
+- CLS residuo 0.072 è causato dal font-swap (`font-display:swap`) — inevitabile con Google Fonts non self-hosted. Sotto soglia GOOD (≤0.1), non necessita fix.
+- LCP mobile ancora alto (4.8-5.8s) per varianza rete — il rendering è immediato (critical CSS inline), il bottleneck residuo è la latenza di rete per l'immagine hero AVIF. Migliorabile con CDN edge cache o self-hosting font (brief futuri).
+- Desktop Performance 98 è eccellente — poco margine di miglioramento residuo.
 
 ### Riepilogo audit 2026-04-08
 
@@ -101,15 +119,23 @@ Caf-Fenapi/SEO-Fenapi/
 - [x] Regola di continuità SEO documentata in `../CLAUDE.md` e in `../Gemini.md`
 - [x] **Audit tecnico + contenuto + schema + performance iniziale del sito live** → `audits/2026-04-08-full-audit-report.md`
 - [x] **Action plan prioritizzato Critical→Low** → `audits/2026-04-08-action-plan.md`
-- [x] **Brief 001 — Foundation consolidato** (canonical + OG + security headers + schema LocalBusiness/Service/BreadcrumbList + Article→BlogPosting + fix CTA prenotazioni) → `briefs/001-foundation-canonical-og-schema-cta.md`. Eseguibile in una sessione aperta in `fenapi/frontend/`. Expected impact: 62 → ~78/100.
+- [x] **Brief 001 — Foundation consolidato** (canonical + OG + security headers + schema LocalBusiness/Service/BreadcrumbList + Article→BlogPosting + fix CTA prenotazioni) → `briefs/001-foundation-canonical-og-schema-cta.md`. Mergiato in production.
+- [x] **Brief 002 — Hotfix** → mergiato in production
+- [x] **Brief 003 — E-E-A-T YMYL** → mergiato in production
+- [x] **Brief 004 — Chi-siamo/Contatti** → mergiato in production
+- [x] **Brief 005 — OG image + WebP/AVIF + alt** → mergiato in production (commit `921b5c1`)
+- [x] **Brief 006 — Google Fonts non-blocking + font pruning** → mergiato in production (commit `2ca24dc`). Google Fonts non più render-blocking ✓, LCP invariato (bottleneck era styles.css).
+- [x] **Brief 006b — Inline Critical CSS** → mergiato in production. Render-blocking ZERO. Desktop Performance 98, LCP 1.9s. Mobile ~65, LCP variabile per rete.
 
 ### Cosa NON esiste ancora
 
-- [ ] Decisione dell'utente sulle priorità post-audit (in corso)
-- [ ] Primo brief di hotfix (vedi sezione "Prossimi Step" sotto per l'ordine proposto)
+- [x] Misura PageSpeed post-brief 006 — LCP invariato (5.7s mobile), bottleneck = `styles.css` render-blocking
+- [x] Brief 006b — Inline Critical CSS completato. Desktop 98, Mobile ~65, render-blocking ZERO.
+- [x] Misura PageSpeed finale post-006+006b — Desktop LCP 1.9s GOOD, CLS 0.072 (font-swap, sotto soglia)
+- [ ] Brief 007 — FAQPage schema + llms.txt
+- [ ] Re-audit SEO completo post-006b (target score 83-88, pending)
 - [ ] Baseline metrics da Search Console (impressions, click, CTR, posizione media)
 - [ ] Baseline metrics da GA4 (sorgenti, landing, bounce, conversioni → prenotazioni)
-- [ ] Misura CWV lab reale via PSI (rinviata per rate-limit)
 - [ ] Keyword research per territorio Torino
 - [ ] Competitor analysis interna (no citazioni pubbliche, da regola §7.2)
 - [ ] Audit blog SEO esistente (8 articoli dichiarati in sitemap)
@@ -118,22 +144,18 @@ Caf-Fenapi/SEO-Fenapi/
 
 ## 5. Prossimi Step
 
-### Priorità immediata — In attesa dell'utente
+### Priorità immediata
 
-0. **L'utente legge `audits/2026-04-08-full-audit-report.md` + `audits/2026-04-08-action-plan.md`** e decide quali issue diventano brief di hotfix. Non applicare nessun fix prima di questo passaggio.
+1. **Brief 007 — FAQPage schema + llms.txt** — FAQPage schema sulle 8 pagine servizio (+3 punti AI Overviews) + creazione `llms.txt` (fast win residuo). Atteso impatto: AI Readiness 69 → ~75, score complessivo +3-5 punti.
+2. **Re-audit SEO completo post-006b** — aggiornare SEO Health Score con i nuovi dati Performance. Target score 83-88.
 
-### Priorità Alta — Subito dopo la review dell'utente
+### Priorità Alta
 
-Ordine di attacco suggerito (impatto/sforzo):
-
-1. **`briefs/001-foundation-canonical-og-security.md`** — pacchetto "fondamenta": `<link rel="canonical">` self-referenziale su tutte le pagine, risoluzione www-vs-apex (scegliere host canonico + 301), OG metadata completi (`og:image` 1200×630, `og:url`, `og:locale`, `og:site_name`, `twitter:card`), security headers in `vercel.json`/`vercel.ts`. **Sforzo**: ~2-3 h. **Impatto**: alto (tocca tutte le pagine, abilita indicizzazione pulita e condivisioni social).
-2. **`briefs/002-schema-localbusiness-service-breadcrumb.md`** — pacchetto schema: upgrade `LocalBusiness` homepage con `openingHoursSpecification` (9–13/14–18 Lun–Gio, 9–12 Ven), `geo`, `image`, `postalCode`, `addressRegion`, `priceRange`, `sameAs`, `foundingDate` 1992, `areaServed` Torino; aggiunta `Service` schema su ognuna delle 8 pagine servizio; `BreadcrumbList` ovunque; aggiunta `image` + `dateModified` + `BlogPosting` sui blog post. **Sforzo**: ~3 h. **Impatto**: alto (sblocca rich results, coerenza entità con GBP).
-3. **`briefs/003-homepage-booking-cta.md`** — microfix: sostituire `caffenapi.vercel.app` con `prenotazioni.fenapipiemonte.org` sulla homepage mantenendo gli UTM. **Sforzo**: 15 min. **Impatto**: medio (coerenza brand + conversion tracking).
-4. **`briefs/004-chi-siamo-contatti-pages.md`** — promuovere `#chi-siamo` e `#contatti` da ancore della homepage a pagine standalone indicizzabili. **Sforzo**: ~2 h. **Impatto**: alto per query local ("contatti CAF Torino", "chi è FENAPI Torino") + apre lo spazio per bio autore credenziali (leva E-E-A-T YMYL).
-5. **`briefs/005-hero-image-webp.md`** — conversione `hero_banner.png` → WebP/AVIF con `<picture>`, `fetchpriority="high"`. **Sforzo**: ~1 h. **Impatto**: medio (LCP mobile).
-6. **Baseline Search Console** (`audits/004-baseline-search-console.md`): export ultimi 3-6 mesi (query, click, impressions, CTR, posizione media). Top 50 query, top 50 landing, query con CTR basso ma posizione decente (= quick wins).
-7. **Baseline GA4** (`audits/005-baseline-ga4.md`): sorgenti, top landing, bounce, conversioni verso `prenotazioni.fenapipiemonte.org`.
-8. **Ri-misura CWV lab** via `scripts/pagespeed_check.py` — la prima run è stata rate-limited. Allegare output al report.
+4. **Brief 008 — Content YMYL**: outbound gov residui su modello-isee + blog post 730, word count espansione modello-isee.
+5. **Brief 009 — Local enrichment**: PagineGialle canonical listing, sameAs schema, review acquisition CTA, 1 city page `/servizi/caf-730-torino.html`.
+6. **Brief 010 — Schema polish**: Person url homepage, Service @id, aggregateRating quando reviews esistono.
+7. **Baseline Search Console** (`audits/004-baseline-search-console.md`): export ultimi 3-6 mesi.
+8. **Baseline GA4** (`audits/005-baseline-ga4.md`): sorgenti, top landing, bounce, conversioni.
 
 ### Priorità Media — Strategia
 

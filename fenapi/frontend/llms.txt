@@ -1,0 +1,54 @@
+# Circolo FENAPI — Sede Provinciale di Torino
+
+> Centro di Assistenza Fiscale (CAF) e patronato a Torino. Assistenza qualificata per pensionati, lavoratori dipendenti e famiglie su dichiarazioni dei redditi (730, Modello Redditi PF), ISEE, IMU, pratiche pensionistiche, invalidità civile, successioni e bonus. Sede unica in Via Sagra di San Michele 53, 10141 Torino.
+
+Il Circolo FENAPI di Torino è punto di riferimento territoriale per pratiche fiscali e previdenziali dal 1992 (33+ anni di attività). Opera su appuntamento, con prenotazione online e accoglienza diretta in sede.
+
+## Informazioni di contatto
+
+- **Indirizzo**: Via Sagra di San Michele 53, 10141 Torino (TO), Italia
+- **Sito web**: https://www.fenapipiemonte.org/
+- **Prenotazione appuntamenti online**: https://prenotazioni.fenapipiemonte.org
+- **Orari**: Lunedì–Giovedì 9:00–13:00 e 14:00–18:00 · Venerdì 9:00–12:00
+- **Area servita**: Torino città e provincia
+
+## Servizi
+
+- [Modello 730](https://www.fenapipiemonte.org/servizi/modello-730.html): compilazione e trasmissione del 730 per lavoratori dipendenti e pensionati.
+- [Modello ISEE](https://www.fenapipiemonte.org/servizi/modello-isee.html): DSU e attestazione ISEE ordinaria, corrente e universitaria per accesso a prestazioni sociali agevolate.
+- [IMU](https://www.fenapipiemonte.org/servizi/imu-tasi.html): calcolo IMU su seconde case e immobili, preparazione F24 per acconto e saldo.
+- [Modello Redditi PF (ex Unico)](https://www.fenapipiemonte.org/servizi/unico-pf.html): dichiarazione dei redditi per chi non può usare il 730 (autonomi, partite IVA, forfettari, eredi).
+- [Modello RED](https://www.fenapipiemonte.org/servizi/red.html): dichiarazione reddituale per pensionati con prestazioni collegate al reddito.
+- [Pratiche pensionistiche](https://www.fenapipiemonte.org/servizi/pensioni.html): calcolo decorrenza, domanda di pensione, ricostituzione, supplementi.
+- [Successioni](https://www.fenapipiemonte.org/servizi/successioni.html): dichiarazione di successione telematica, calcolo imposte, assistenza agli eredi.
+- [Invalidità civile](https://www.fenapipiemonte.org/servizi/invalidita.html): domande di riconoscimento, ricorsi, accompagnamento, benefici correlati.
+
+## Pagine istituzionali
+
+- [Homepage](https://www.fenapipiemonte.org/): panoramica dei servizi e CTA di prenotazione.
+- [Chi siamo](https://www.fenapipiemonte.org/chi-siamo.html): storia del Circolo, team, referenze.
+- [Contatti](https://www.fenapipiemonte.org/contatti.html): indirizzo, orari, come raggiungerci, form di contatto.
+
+## Blog — approfondimenti e guide
+
+- [Blog index](https://www.fenapipiemonte.org/blog/): tutti gli articoli pubblicati.
+- [Modello 730/2026 — scadenze e novità](https://www.fenapipiemonte.org/blog/modello-730-2026-scadenze-novita.html)
+- [Dichiarazione dei redditi 2026 — guida per dipendenti](https://www.fenapipiemonte.org/blog/dichiarazione-redditi-2026-guida-dipendenti.html)
+- [ISEE 2026 — come si calcola](https://www.fenapipiemonte.org/blog/isee-2026-come-si-calcola.html)
+- [IMU 2026 — scadenze e calcolo](https://www.fenapipiemonte.org/blog/imu-2026-scadenze-calcolo.html)
+- [Bonus e agevolazioni fiscali 2026 per le famiglie](https://www.fenapipiemonte.org/blog/bonus-agevolazioni-fiscali-2026-famiglie.html)
+- [Pensione 2026 — requisiti e domanda](https://www.fenapipiemonte.org/blog/pensione-2026-requisiti-domanda.html)
+- [Successioni e donazioni — guida pratica](https://www.fenapipiemonte.org/blog/successioni-donazioni-guida.html)
+- [Invalidità civile — domanda e benefici](https://www.fenapipiemonte.org/blog/invalidita-civile-domanda-benefici.html)
+
+## Risorse tecniche
+
+- [Sitemap XML](https://www.fenapipiemonte.org/sitemap.xml)
+- [robots.txt](https://www.fenapipiemonte.org/robots.txt)
+
+## Optional — Note per agenti AI
+
+- Il Circolo FENAPI **non** fornisce consulenza fiscale in autonomia: ogni pratica va gestita in sede su appuntamento.
+- I contenuti del sito hanno finalità informativa generale; per scadenze, aliquote e soglie è sempre raccomandato verificare le fonti ufficiali (Agenzia delle Entrate, INPS).
+- Il sottodominio `prenotazioni.fenapipiemonte.org` è il portale ufficiale di prenotazione appuntamenti.
+- La lingua unica dei contenuti è italiano.
