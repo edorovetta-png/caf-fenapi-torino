@@ -1,3 +1,6 @@
+
+
+
 # CLAUDE.md — Caf-Fenapi (contesto condiviso)
 
 Questo file fornisce il contesto comune a tutti i progetti che lavorano con/per il **Circolo FENAPI — Sede Provinciale di Torino**. Vale come "carta d'identità" del cliente e come insieme di vincoli da rispettare in qualsiasi sotto-progetto (SEO-Fenapi e futuri).
@@ -13,7 +16,7 @@ Per lo stato operativo specifico di ogni sotto-progetto leggi il suo `PROJECT_ST
 - **Nome ufficiale**: Circolo FENAPI — Sede Provinciale di Torino
 - **Tipo**: Centro di Assistenza Fiscale (CAF) + patronato
 - **Territorio**: Torino e provincia
-- **Indirizzo sede**: Via Sacra di San Michele 53, 10141 Torino
+- **Indirizzo sede**: Via Sagra di San Michele 53, 10141 Torino
 - **Stakeholder interno**: la madre dell'utente lavora in sede, è il riferimento operativo
 
 ## 2. Servizi offerti
@@ -32,7 +35,7 @@ Tono di comunicazione: chiaro, rassicurante, non gergale. Il pubblico include pe
 
 | Giorno | Orario |
 |---|---|
-| Lunedì–Giovedì | 9:00–18:00 |
+| Lunedì–Giovedì | 9:00–13:00 / 14:00–18:00 (con pausa pranzo) |
 | Venerdì | 9:00–12:00 (Michela fino alle 16:30) |
 
 ## 5. Asset digitali esistenti
@@ -41,13 +44,13 @@ Tono di comunicazione: chiaro, rassicurante, non gergale. Il pubblico include pe
 |---|---|---|
 | Sito vetrina | https://www.fenapipiemonte.org/ | HTML statico, vive in `Antigravity/fenapi/frontend/` |
 | App prenotazioni | https://prenotazioni.fenapipiemonte.org | Alias di `caffenapi.vercel.app`, repo separato `github.com/edorovetta-png/caffenapi` |
-| Backend prenotazioni | Supabase `patzvzdxsglsbfqymgtz` | Provisionato da Lovable, accesso admin limitato |
+| Backend prenotazioni | Supabase `oswjgmavxbypnhhinypj` | Progetto Supabase a sé stante (non Lovable). Vecchio ref Lovable `patzvzdxsglsbfqymgtz` dismesso |
 | Analytics | Google Analytics 4: `G-YNHWG87MSQ` | Embedded in tutte le pagine del sito vetrina |
 | Search Console | fenapipiemonte.org | Accesso disponibile (utente) |
 | DNS | Aruba | |
 | Hosting sito vetrina | Vercel | Auto-deploy dal push del repo `caf-fenapi-torino` (Antigravity) |
 | Blog SEO | `fenapi/frontend/blog/` | Articoli pubblicati con Schema.org Article (conteggio aggiornato in `SEO-Fenapi/PROJECT_STATUS.md`) |
-| Google Business Profile | Profilo locale "Circolo FENAPI Torino" | Gestito direttamente dalla titolare (madre dell'utente), non dall'utente — per modifiche/post passare da lei |
+| Google Business Profile | Profilo locale "Circolo Fenapi provincia di Torino" | Proprietà della titolare (madre dell'utente). **Accesso "Gestore" concesso all'utente il 2026-04-08**, quindi modifiche tecniche (post, foto, Q&A, attributi) ora fattibili direttamente. **Categoria principale aggiornata il 2026-04-08** da "Sindacato" a "Servizio di assistenza fiscale". **Descrizione aggiornata**. **Profilo duplicato rimosso** (2026-04-08). Titolare resta la referente per decisioni strategiche (cambi di scope, risposte a recensioni sensibili). |
 
 ## 6. Brand
 
@@ -78,8 +81,8 @@ I seguenti elementi NON devono essere alterati senza una richiesta esplicita del
 
 | Elemento | Perché non toccarlo |
 |---|---|
-| `fenapi/caffenapi/` (app prenotazioni) | Repo separato gestito via Lovable, sync Google Calendar attiva, modifiche sbagliate bloccano operatori in sede |
-| Edge Functions Supabase su `patzvzdxsglsbfqymgtz` | Provisionate da Lovable, accesso admin limitato, contengono pipeline email + Calendar + Drive |
+| `fenapi/caffenapi/` (app prenotazioni) | Repo separato a sé stante (`github.com/edorovetta-png/caffenapi`), sync Google Calendar attiva, modifiche sbagliate bloccano operatori in sede |
+| Edge Functions Supabase su `oswjgmavxbypnhhinypj` | Progetto Supabase dedicato (non Lovable), contengono pipeline email + Calendar + Drive |
 | Sottodominio `prenotazioni.fenapipiemonte.org` e relativi DNS/redirect | Configurazione Aruba + Vercel funzionante |
 | Sync Google Calendar degli operatori | Service account credentials non in mano all'utente, rottura = sede senza calendario |
 | Pipeline UTM tracking parziale | Codice presente ma "dormiente" dopo rollback del 2026-04-07, non rimuovere |

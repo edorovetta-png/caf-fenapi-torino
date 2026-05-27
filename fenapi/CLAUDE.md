@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Website and booking system for **Circolo FENAPI — Sede Provinciale di Torino** (tax assistance center). Two separate applications live in this directory:
 
 - **`frontend/`** — Static HTML/CSS/JS showcase site presenting CAF services (730, ISEE, IMU, pensions, etc.)
-- **`caffenapi/`** — React app (built with Lovable) for online appointment booking, admin dashboard, and analytics. Uses Supabase as backend.
+- **`caffenapi/`** — React app for online appointment booking, admin dashboard, and analytics. Standalone repo (`github.com/edorovetta-png/caffenapi`) with its own Supabase project as backend.
 
 Read `PROJECT_STATUS.md` for detailed component-by-component status. After significant changes, update it.
 
@@ -46,7 +46,7 @@ python execution/<script_name>.py
 - Supabase handles auth, database (PostgreSQL), and Edge Functions
 - 8 Edge Functions in `supabase/functions/`: appointment CRUD, availability checks, email queue, Google Calendar/Drive integration
 - 12 database migrations in `supabase/migrations/`
-- **Not tracked in the main git repo** — managed separately via Lovable
+- **Not tracked in the main git repo** — it is its own standalone git repo (`github.com/edorovetta-png/caffenapi`), on a dedicated Supabase project (ref `oswjgmavxbypnhhinypj`)
 
 ### Brand guidelines
 Always consult `fenapi-group-brand-guidelines.md` before making visual changes. The primary color is `#206088`, heading font is Lora (serif), body font is Open Sans.
