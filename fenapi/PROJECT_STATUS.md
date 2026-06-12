@@ -1,6 +1,7 @@
 # PROJECT STATUS — Circolo FENAPI Provincia di Torino
 
-> Ultimo aggiornamento: 2026-04-15 (banner lingue aggiunto al sito vetrina: strip informativo `🇮🇹 Italiano · 🇪🇸 Hablamos Español · 🇬🇧 We speak English · 🇧🇷 Falamos Português` inserito tra `.header-top` e `.header-main` su tutte le 21 pagine HTML — index, chi-siamo, contatti, 9 servizi, 9 blog. CSS aggiunto in coda a `frontend/styles.css` (`.header-languages` con sfondo crema `#f4f1ea`, hairline oro, testo blu `#1a3a5c`). Responsive: scroll orizzontale single-line su <640px. Solo informativo, nessun selettore lingua. Non ancora committato.)
+> Ultimo aggiornamento: 2026-05-21 (sessione lunga sul booking system. Sez. 7 marcata obsoleta — nuova sez. 8 con stato reale verificato. Produzione gira su `oswjgmavxbypnhhinypj` (Supabase personale), Lovable abbandonato. Tutti i blocker della migrazione (Google SA JSON, Resend, deploy edge function) risolti. Sessione di oggi: fix venerdì pomeriggio in `check-availability` v6, creazione evento GCal server-side in `create-appointment` v10 (così Indifferente atterra sempre in un calendario), colonna "Operatore" in AdminDashboard, relabel "Indifferente"→"Non assegnato" nelle Analytics. Commit unico `caffenapi` `2e2464d` su `main`. 11 appuntamenti 730 Indifferente futuri rassegnati manualmente dall'utente a Erika. **TODO**: assegnare 730 in `user_service_assignments` (oggi nessuno lo ha, causa root del bug 730 "tutti prenotabili"), correggere `config.toml` a `oswjgmavxbypnhhinypj`.)
+> Ultimo aggiornamento precedente: 2026-04-15 (banner lingue aggiunto al sito vetrina: strip informativo `🇮🇹 Italiano · 🇪🇸 Hablamos Español · 🇬🇧 We speak English · 🇧🇷 Falamos Português` inserito tra `.header-top` e `.header-main` su tutte le 21 pagine HTML — index, chi-siamo, contatti, 9 servizi, 9 blog. CSS aggiunto in coda a `frontend/styles.css` (`.header-languages` con sfondo crema `#f4f1ea`, hairline oro, testo blu `#1a3a5c`). Responsive: scroll orizzontale single-line su <640px. Solo informativo, nessun selettore lingua. Non ancora committato.)
 > Ultimo aggiornamento precedente: 2026-04-14 sera (brief SEO 011+012 applicati insieme e in produzione. Brief 011: caf-torino.html Service con termsOfService+availableLanguage + BreadcrumbList item URL, 8 blog post con publisher BlogPosting espanso inline (Organization+name+logo). Brief 012: rimossi tag deprecati changefreq e priority da 21 URL sitemap.xml, preservati loc+lastmod, payload -40%. 10 file modificati, commit `fd3f5f3`. Verifiche live OK.)
 > Ultimo aggiornamento precedente: 2026-04-14 (brief SEO 010 applicato e in produzione: Person image+url completato (index.html+chi-siamo.html), tag `<img>` visibile nella sezione Michela di chi-siamo.html, Service `@id` univoco su tutte 9 le pagine servizio, aggregateRating 4.5/91 aggiunto al LocalBusiness (dati GBP reali). Foto Michela `images/michela-salerno.jpg` creata (400x400 JPG q85, 20KB). Commit `ffcdf66`. Target: rich result eligibility, star rating SERP, entity graph consolidation.)
 > Ultimo aggiornamento precedente: 2026-04-13 (brief SEO 009 applicato e in produzione: sameAs LocalBusiness arricchito da 3 a 7 URL (Facebook Torino, PagineGialle, PagineBianche, GuidaMonaci). Nuova city page `/servizi/caf-torino.html` con Service+BreadcrumbList+FAQPage schema, areaServed City Torino, 5 sezioni contenuto unico, mappa embed. Sitemap e llms.txt aggiornati. Internal link da homepage. GBP mancante — da creare manualmente. Commit `afa4ae4`.)
@@ -232,6 +233,8 @@ Dopo investigazione approfondita:
 
 ## 7. Tentativo di migrazione a Supabase personale + ROLLBACK (2026-04-07 pomeriggio)
 
+> **⚠️ SEZIONE STORICA — OBSOLETA al 2026-05-21.** Il rollback descritto qui sotto è stato successivamente **annullato** in una sessione non documentata fra il 2026-04-07 e il 2026-04-20. Lo stato reale corrente è descritto nella sezione 8 più sotto. Tenuta solo come archivio. Saltare alla sezione 8 per lo stato attuale.
+
 ### Cosa è stato scoperto durante la sessione
 
 Il Supabase `patzvzdxsglsbfqymgtz` su cui gira la produzione è stato **provisionato da Lovable** e sta nell'organizzazione di Lovable, NON in `edorovetta-png's Org`. L'utente non ha accesso amministrativo (CLI, dashboard, secrets) — può solo loggarsi come admin tramite l'app. Implicazione: non può applicare migration, deployare edge function, o gestire secrets su quel project. Era impossibile attivare la pipeline UTM tracking lì.
@@ -297,3 +300,87 @@ L'utente non poteva permettersi di perdere la sync Google Calendar e ha richiest
 
 - La `service_role key` di `oswjgmavxbypnhhinypj` è apparsa in chat durante la migrazione. **Rigenerarla** dalla dashboard Supabase quando comodo (Settings → API → Reset).
 - La `anon key` del nuovo project è apparsa anche lei ma è progettata per essere pubblica, nessun rischio.
+
+---
+
+## 8. Stato reale di produzione (verificato 2026-05-21)
+
+> Sostituisce la sezione 7 obsoleta. Questa è la fotografia operativa attuale.
+
+### Produzione
+
+| Componente | Valore reale |
+|---|---|
+| Supabase project | **`oswjgmavxbypnhhinypj`** (org `edorovetta-png's Org`) — verificato leggendo il bundle JS di `caffenapi.vercel.app` (`/assets/index-BdZL0Yue.js`) |
+| Frontend | `caffenapi.vercel.app` (Vercel auto-deploy dal repo `github.com/edorovetta-png/caffenapi` branch `main`) |
+| Edge functions | 8 attive su `oswjgmavxbypnhhinypj`: `create-appointment`, `check-availability`, `google-calendar`, `google-drive-upload`, `send-booking-email`, `process-email-queue`, `manage-appointment`, `manage-operators` |
+| Secrets edge function | `GOOGLE_SERVICE_ACCOUNT_JSON`, `RESEND_API_KEY`, `FRIDAY_OPERATOR_ID`, + chiavi interne Supabase — **tutti settati** |
+| `patzvzdxsglsbfqymgtz` (Lovable) | **Abbandonato.** Non più usato in produzione. Lovable non sincronizza più nulla. |
+| `caffenapi/supabase/config.toml` | Ancora dice `project_id = "patzvzdxsglsbfqymgtz"` ma è ignorato in pratica perché si usa `--project-ref oswjgmavxbypnhhinypj` esplicito. **TODO**: aggiornare il file. |
+| Accesso CLI | L'utente ha pieno accesso amministrativo via Supabase CLI: `supabase functions deploy`, `supabase secrets`, `supabase db push` funzionano tutti contro `oswjgmavxbypnhhinypj` |
+
+### Blocker della sez. 7 — tutti risolti
+
+| Ex-blocker | Stato 2026-05-21 |
+|---|---|
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | ✅ Settato come secret. SA: `caffenapi-booking@fenapi-prenotazioni.iam.gserviceaccount.com`. Accesso confermato ai calendari di Eliane, Erika, Glennys, Leonardo, Michela (diagnostic via temp edge function 2026-04-20) |
+| Email service | ✅ Migrato a Resend (`RESEND_API_KEY` settato). `send-booking-email` e `process-email-queue` aggiornate |
+| Migrazione dati | ✅ Completata in qualche sessione fra 2026-04-07 e 2026-04-20 |
+| Deploy completo edge function | ✅ Tutte e 8 attive |
+
+### Canale di deploy "ufficiale" da qui in poi
+
+- **Frontend**: `git push origin main` sul repo `caffenapi` → Vercel auto-deploy
+- **Edge functions**: `supabase functions deploy <name> --project-ref oswjgmavxbypnhhinypj` (richiede `supabase login` con account che ha accesso al progetto — l'utente ce l'ha)
+- **Migration DB**: `supabase db push --project-ref oswjgmavxbypnhhinypj`
+- **Secrets**: `supabase secrets set NAME=value --project-ref oswjgmavxbypnhhinypj`
+
+### Anomalie note (2026-05-21)
+
+- **Operatori senza `calendar_id`**: `Dott.ssa Daniela Palillo` ha `calendar_id=NULL` → se l'auto-assign Indifferente cade su di lei, la prenotazione non viene messa in nessun calendario. Mitigation: o le si setta un calendar_id, o la si tiene fuori dai servizi con Indifferente.
+- **Operatore sospeso con calendar inaccessibile**: `Giorgia Longhi` sospesa (giusto) ma il suo calendario `fenapitorino@gmail.com` risponde 404 al SA — irrilevante finché resta sospesa.
+- **Servizi senza operatori**: pericoloso perché l'auto-assign fallisce silenziosamente (operator_id NULL, nessun GCal). `legge-104` aveva il problema, risolto assegnando a Glennys. **`730`** lo aveva fino al 2026-05-21 (nessuno assegnato), risolto durante la sessione di oggi quando l'utente ha distribuito gli appuntamenti Indifferente esistenti su Erika a mano (calendario `fenapicaf2022@gmail.com`).
+- **`config.toml` ancora puntato a Lovable**: vedi sopra. Da fixare.
+
+### Fix deployati il 2026-05-21 (sessione corrente)
+
+1. **check-availability v6**: bug venerdì — gli slot pomeridiani per servizi non ammessi (es. 730) e operatori non-Michela il venerdì non erano marcati come occupati. Corretto: `bookedSlots = ALL_SLOTS` invece di `getSlotsForDate(date)` (= `FRIDAY_SLOTS` su venerdì) nei 3 branch di "giornata chiusa" + blocco esplicito pomeriggio per Michela.
+2. **create-appointment v10**: creazione evento GCal spostata server-side via fetch interno verso `google-calendar`, così non dipende più dal frontend per la chiamata GCal. Risolve il bug "Indifferente non finisce in nessun calendario" sopravvissuto al fatto che il commit `edeb02f` (2026-03-23) era solo l'aggiunta del campo `assignedOperatorId` nella response.
+3. **Frontend BookingDialog**: skip della chiamata GCal lato client se il backend l'ha già creata (controllo `calendarEventId` nella response, backward-compatible).
+4. **AdminDashboard**: nuova colonna "Operatore" nella tabella appuntamenti del giorno — mostra `display_name` o "Non assegnato" in italic.
+5. **Analytics tables** (`DailyAppointmentsTable`, `CreationDayBookingsTable`): relabel "Indifferente" → "Non assegnato" sui fallback con `operator_id IS NULL`.
+
+Commit unico in `caffenapi` `main`: `2e2464d`. Edge functions deployate via CLI.
+
+### Fix sessione 2026-06-12 (code review: bug evidenti + strutturali) — ✅ DEPLOYATO
+
+Review del codice `caffenapi` su richiesta utente (focus bug/architettura). **In produzione**: commit `caffenapi` `bfac908` (fix) + `51ba24d` (feature contatti) pushati su `main` (Vercel auto-deploy frontend); 3 edge functions deployate via CLI su `oswjgmavxbypnhhinypj` (`create-appointment`, `check-availability`, `manage-appointment`, con `_shared/` caricato come asset). Build+lint+test verdi. **Smoke test produzione OK**: `manage-appointment` `phone:"%"`→400 "Dati non validi"; `create-appointment` weekend→400; `check-availability`→200 con bookedSlots.
+
+Nuovi moduli condivisi: `supabase/functions/_shared/booking-rules.ts` (slot canonici + regole venerdì/gap, unica fonte) e `_shared/google.ts` (auth SA, offset Roma, freeBusy). Eliminano la duplicazione che aveva già prodotto bug.
+
+Bug corretti:
+- **A1** — Servizio senza operatori attivi non crea più appuntamenti "nel vuoto": `create-appointment` ritorna 409 esplicito, `check-availability` marca l'intera giornata occupata (prima: inserimento silenzioso con `operator_id=NULL`, nessun GCal).
+- **A2** — Fallimento token Google non più silenzioso: helper `getGoogleAccessToken()` logga warning strutturato; `create-appointment` ritorna `calendarCheckSkipped` nella response.
+- **A3** — Auto-assign "Indifferente" non sceglie più Michela quando il suo gap 15-min / cap 16:30 la rende non disponibile (prima: 409 spurio anche con altri operatori liberi).
+- **A4** — `BookingDialog`/`AdminBookingDialog`: email + evento GCal ora `await` con warning soft (prima fire-and-forget: utente vedeva "confermato" anche se fallivano).
+- **S1/S2/S3** — Helper Google/timezone e costanti slot estratti in `_shared/`; rimosso lo slot fantasma `13:30` che era solo in `create-appointment` (ora coerente con frontend `TIME_SLOTS` e `check-availability`).
+- **M1** — `manage-appointment`: rifiuto wildcard `%`/`_` in `phone`/`last_name` (prima: `ilike("%")` esponeva/modificava TUTTI gli appuntamenti — buco GDPR). *NB: resta debole il modello "telefono+cognome senza login"; hardening completo via token email rimandato.*
+- **M2** — `ProtectedRoute`: aggiunto `onAuthStateChange` (logout/scadenza ora redirige).
+- **B1/B2/B3** — filename upload sanificato+indicizzato; dedup lettura env `FRIDAY_OPERATOR_ID`; `email` salvata come `NULL` se vuota.
+
+File toccati: `supabase/functions/{create-appointment,check-availability,manage-appointment}/index.ts`, `_shared/{booking-rules,google}.ts`, `src/components/{BookingDialog,AdminBookingDialog,ProtectedRoute}.tsx`.
+
+**Nuova feature — Vista Contatti + export CSV** (`src/pages/AdminContacts.tsx`, rotta `/admin/contatti`, bottone "Contatti" nell'header dashboard). Elenca i contatti deduplicati per telefono (nome, telefono, email, servizi, n° prenotazioni, ultima data) con filtri ricerca/servizio/intervallo date ed export CSV (separatore `;` + BOM UTF‑8 per Excel IT). Dati **RLS-scoped**: operatore vede solo i suoi servizi, master tutto. Banner GDPR derivato dall'informativa reale (`public/privacy_policy_caf.docx`): contatti usabili per gestione appuntamento, **non** per marketing senza consenso separato (non raccolto dal form), prenotazioni senza pratica max 12 mesi. Solo frontend → deploy via push su repo `caffenapi` (Vercel). Build+lint+test verdi (aggiunto `src/test/booking-rules.test.ts`).
+
+**TODO consenso marketing**: il form NON raccoglie un consenso marketing separato → i contatti non sono usabili per promozioni/newsletter finché non si aggiunge un checkbox dedicato (opt-in, default off) + colonna DB `marketing_consent` + timestamp. Testo in valutazione con l'utente.
+
+Privacy: l'informativa vincolante è `caffenapi/public/privacy_policy_caf.docx` (Titolare: Fenapi Services Piemonte s.r.l.); il footer linka invece al centro privacy nazionale `fenapigroup.it`. Il checkbox di consenso nel `BookingDialog` compare **solo nello step documenti (730)** e copre l'accettazione dell'informativa, NON un consenso marketing separato.
+
+**TODO deploy**: `supabase functions deploy create-appointment check-availability manage-appointment --project-ref oswjgmavxbypnhhinypj` (le 3 ora dipendono da `_shared/`, che viene incluso automaticamente). Smoke test post-deploy: prenotazione normale, servizio senza operatori (deve dare 409), `manage-appointment` con `phone:"%"` (deve dare 400). `google-calendar` NON è stata toccata (usa scope write, copia helper propria — candidata a futura estrazione).
+
+### TODO aperti
+
+- Aggiornare `caffenapi/supabase/config.toml` a `project_id = "oswjgmavxbypnhhinypj"` per coerenza
+- Decidere cosa fare di `Dott.ssa Daniela Palillo` (assegnare calendar_id o limitarne i servizi)
+- Rigenerare `service_role key` di `oswjgmavxbypnhhinypj` (sez. 7 — esposta in chat durante la migrazione del 2026-04-07)
+- Sostituire fisicamente il QR in vetrina con quello UTM-tagged (`fenapi/qr-code/qr-prenotazioni-negozio.png`), ora che il backend persiste UTM correttamente
