@@ -253,31 +253,12 @@
 .bandi-empty strong { display: block; color: var(--text-dark); font-size: 15px; margin-bottom: 4px; }
 .bandi-empty p { margin: 0; font-size: 14px; }
 
-/* ---- Archivio (bandi chiusi) ------------------------------------------ */
-.bandi-archivio {
-  margin-top: 8px;
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  background: var(--bg-light);
-}
-.bandi-archivio summary {
-  cursor: pointer;
-  list-style: none;
-  padding: 16px 20px;
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text-dark);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.bandi-archivio summary::-webkit-details-marker { display: none; }
-.bandi-archivio summary svg { width: 18px; height: 18px; transition: transform var(--transition-base); color: var(--text-muted); }
-.bandi-archivio[open] summary svg { transform: rotate(180deg); }
-.bandi-archivio .bandi-list { padding: 4px 20px 20px; }
-.bandi-archivio .bando-card { opacity: 0.85; }
-.bandi-archivio .bando-card-media { aspect-ratio: 1 / 0.6; }
+/* ---- Bandi conclusi (storico) ----------------------------------------- */
+.bandi-archivio .bando-card { opacity: 0.9; }
+.bandi-archivio .bando-card-media { aspect-ratio: 1 / 0.75; }
+.bandi-archivio .bando-card-media img { filter: saturate(0.85); }
+.bandi-empty-muted { background: var(--bg-light); }
+.bandi-empty-muted svg { color: var(--text-muted); }
 
 /* ---- Lightbox locandina ---------------------------------------------- */
 .lightbox {
