@@ -21,6 +21,28 @@
                    bando prima della scadenza (posti esauriti, corso partito).
    ========================================================================== */
 window.ENFIP_BANDI = [
+  {
+    id: "ficp-buono-formazione-2023-2027",
+    categoria: "ficp",
+    titolo: "Corsi di formazione finanziati — Buono Formazione FICP 2023-2027",
+    descrizione: "Comunicazione aziendale analogica relazionale (40 ore), tecniche di comunicazione analogica per relazionarsi, coinvolgere e vendere (40 ore), comunicazione efficace e marketing strategico (40 ore), lingua inglese dal principiante al post-intermedio (60 ore). Il 70% del costo è finanziato dalla Regione Piemonte tramite Buono Formazione; 100% per ISEE fino a 10.000 €.",
+    sede: "Torino / Rivoli",
+    pubblicato: "2026-09-10",
+    locandina: "locandine/ficp-buono-formazione-2023-2027.jpg",
+    pdf: "locandine/ficp-buono-formazione-2023-2027.pdf",
+    stato: "aperto"
+  },
+  {
+    id: "ficp-voucher-2019-2021",
+    categoria: "ficp",
+    titolo: "Corsi di formazione finanziati — Voucher FCI 2019-2021",
+    descrizione: "Comunicazione aziendale analogica relazionale, comunicazione analogica per vendere, team building, comunicazione efficace e marketing strategico, tecniche di leadership. Avviso Città Metropolitana di Torino, voucher 70% (100% per ISEE fino a 10.000 €).",
+    sede: "Torino / Rivoli / Moncalieri",
+    pubblicato: "2019-11-01",
+    locandina: "locandine/ficp-voucher-2019-2021.jpg",
+    pdf: "locandine/ficp-voucher-2019-2021.pdf",
+    stato: "chiuso"
+  },
   /* Esempio (da cancellare quando si inseriscono i bandi reali):
   {
     id: "sicurezza-2026-10",
