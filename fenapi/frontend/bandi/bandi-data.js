@@ -22,6 +22,37 @@
    ========================================================================== */
 window.ENFIP_BANDI = [
   {
+    id: "fitosanitari-rilascio-rinnovo",
+    categoria: "fitosanitari",
+    titolo: "Corsi rilascio e rinnovo patentini fitosanitari",
+    descrizione: "Corso rilascio (base, 20 ore, nessun prerequisito) e corso rinnovo (aggiornamento, 30 ore, per chi ha un patentino in corso di validità): utilizzo sicuro dei prodotti fitosanitari, normative vigenti, modalità d'uso, sicurezza operatori, salvaguardia ambiente, monitoraggio avversità. In collaborazione con Agriforesta.",
+    sede: "Acqui Terme",
+    pubblicato: "2026-09-10",
+    locandina: "locandine/fitosanitari-rilascio-rinnovo.jpg",
+    stato: "aperto"
+  },
+  {
+    id: "sicurezza-corsi-dlgs-81-2008",
+    categoria: "sicurezza",
+    titolo: "Corsi di sicurezza obbligatoria D.Lgs. 81/2008",
+    descrizione: "Lavoratori e preposti (formazione generale e specifica, aggiornamenti periodici, DPI); RSPP e ASPP (moduli A, B, C, rischio alto/medio/basso); macchinari semoventi e attrezzature (movimento terra, sollevatori telescopici, carrelli elevatori, piattaforme di lavoro elevabili PLE).",
+    sede: "Torino",
+    pubblicato: "2026-09-10",
+    locandina: "locandine/sicurezza-corsi-dlgs-81-2008.jpg",
+    stato: "aperto"
+  },
+  {
+    id: "apprendistato-formazione-base-trasversale",
+    categoria: "apprendisti",
+    titolo: "Apprendistato professionalizzante — formazione di base e trasversale",
+    descrizione: "Totalmente finanziata. Modulo 1: sicurezza, organizzazione e qualità aziendale (40 ore). Modulo 2: comunicazione in lingua inglese nell'ambiente di lavoro (40 ore). Modulo 3: competenza chiave di cittadinanza, imparare ad imparare (40 ore, presso l'azienda).",
+    sede: "Torino",
+    pubblicato: "2026-09-10",
+    locandina: "locandine/apprendistato-formazione-base-trasversale.jpg",
+    pdf: "locandine/apprendistato-formazione-base-trasversale.pdf",
+    stato: "aperto"
+  },
+  {
     id: "ficp-buono-formazione-2023-2027",
     categoria: "ficp",
     titolo: "Corsi di formazione finanziati — Buono Formazione FICP 2023-2027",
