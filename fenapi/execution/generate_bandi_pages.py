@@ -256,7 +256,7 @@ for c in CATS:
             <p>%(intro)s <a href="../%(anchor)s">Scopri di pi&ugrave; su questa area formativa</a>.</p>
             <div id="bandiAperti"></div>
           </section>
-          <section class="content-section bandi-archivio fade-in" id="bandiArchivio">
+          <section class="content-section bandi-archivio" id="bandiArchivio">
             <h2>Bandi conclusi <span id="bandiChiusiCount" style="color:var(--text-muted);font-size:20px;"></span></h2>
             <p>Storico dei bandi %(nome)s gi&agrave; chiusi: le iscrizioni sono terminate, ma le locandine restano consultabili. Per conoscere le prossime edizioni contatta la segreteria.</p>
             <div id="bandiChiusi"></div>
