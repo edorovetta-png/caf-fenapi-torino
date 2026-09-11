@@ -33,9 +33,10 @@
 
   function card(b, open) {
     var meta = '';
-    if (b.pubblicato) meta += '<span>Pubblicato il ' + esc(fmtDate(b.pubblicato)) + '</span>';
+    if (b.periodo) meta += '<span>Corso ' + esc(b.periodo) + '</span>';
+    else if (b.pubblicato) meta += '<span>Pubblicato il ' + esc(fmtDate(b.pubblicato)) + '</span>';
     if (open && b.scadenza) meta += '<span class="scadenza">Iscrizioni entro il ' + esc(fmtDate(b.scadenza)) + '</span>';
-    if (!open) meta += '<span class="chiuso">Bando chiuso' + (b.scadenza ? ' &mdash; scaduto il ' + esc(fmtDate(b.scadenza)) : '') + '</span>';
+    if (!open) meta += '<span class="chiuso">' + (b.periodo ? 'Corso concluso' : 'Bando chiuso' + (b.scadenza ? ' &mdash; scaduto il ' + esc(fmtDate(b.scadenza)) : '')) + '</span>';
     if (b.sede) meta += '<span>' + esc(b.sede) + '</span>';
 
     var media;
