@@ -43,7 +43,7 @@ CATS = [
        titolo_pagina="Corsi Privati — corsi a pagamento aperti a tutti",
        intro="Corsi a catalogo organizzati da ENFIP Piemonte con quota di iscrizione a carico del partecipante, aperti a lavoratori, titolari di attività, commercianti, autonomi e privati: digitalizzazione, intelligenza artificiale, vendita e comunicazione. Lezioni in presenza nella sede di Torino, in orario compatibile con il lavoro.",
        anchor="enfip.html#aree-formative",
-       h1="Corsi Privati", label_aperti="Corsi in programma", label_chiusi="Corsi conclusi",
+       h1="Corsi Privati", label_aperti="Corsi in programma", label_chiusi="Corsi conclusi", loghi=False,
        icon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>'),
 ]
 
@@ -87,6 +87,17 @@ CONTACT_CTA = '''          <div class="sidebar-cta">
               <p><strong>Facebook:</strong> <a href="https://www.facebook.com/enfip/" target="_blank" rel="noopener noreferrer">ENFIP Piemonte</a></p>
             </div>
           </div>
+'''
+
+FUNDING_BAND = '''  <!-- Loghi enti finanziatori -->
+  <div class="funding-band" aria-label="Enti finanziatori">
+    <div class="container">
+      <p>Attivit&agrave; formative realizzate con il sostegno di</p>
+      <img src="../images/loghi-csr-piemonte-2023-2027.jpg" alt="Unione Europea, Repubblica Italiana, Regione Piemonte, Sviluppo Rurale Piemonte 2023-2027" width="1600" height="208" loading="lazy">
+      <img src="../images/loghi-fsc-coesione-piemonte.jpg" alt="FSC Fondo per lo Sviluppo e la Coesione, Coesione Italia 21-27 Piemonte, Repubblica Italiana, Regione Piemonte" width="1600" height="117" loading="lazy">
+    </div>
+  </div>
+
 '''
 
 ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
@@ -202,7 +213,7 @@ index_body = header_rel + '''  <!-- Page Hero -->
     </div>
   </section>
 
-  <main class="service-page">
+%(band)s  <main class="service-page">
     <div class="container">
       <div class="service-layout">
         <aside class="service-sidebar">
@@ -231,7 +242,7 @@ index_body = header_rel + '''  <!-- Page Hero -->
     </div>
   </main>
 
-''' % dict(nav=sidebar_nav(None), cta=CONTACT_CTA, cards="\n".join(cards))
+''' % dict(nav=sidebar_nav(None), cta=CONTACT_CTA, cards="\n".join(cards), band=FUNDING_BAND)
 schemas = webpage_schema(url, "Bandi e corsi in partenza — ENFIP Piemonte", desc) + breadcrumb_schema([("Home", SITE + "/"), ("ENFIP Piemonte", SITE + "/enfip.html"), ("Bandi", url)])
 html = head(title, desc, url, "Bandi e corsi ENFIP Piemonte", schemas) + index_body + footer_final + SCRIPTS
 os.makedirs(os.path.join(BASE, "bandi", "locandine"), exist_ok=True)
@@ -254,7 +265,7 @@ for c in CATS:
     </div>
   </section>
 
-  <main class="service-page">
+%(band)s  <main class="service-page">
     <div class="container">
       <div class="service-layout">
         <aside class="service-sidebar">
@@ -286,7 +297,7 @@ for c in CATS:
     </div>
   </main>
 
-''' % dict(c, nav=sidebar_nav(c["slug"]), cta=CONTACT_CTA, nome_url=quote(c["nome"]))
+''' % dict(c, nav=sidebar_nav(c["slug"]), cta=CONTACT_CTA, nome_url=quote(c["nome"]), band=(FUNDING_BAND if c.get("loghi", True) else ""))
     schemas = webpage_schema(url, title, desc) + breadcrumb_schema([("Home", SITE + "/"), ("ENFIP Piemonte", SITE + "/enfip.html"), ("Bandi", SITE + "/bandi/"), (c["nome"], url)])
     html = head(title, desc, url, "Bandi %s — ENFIP Piemonte" % c["nome"], schemas) + body + LIGHTBOX + footer_final + SCRIPTS
     open(os.path.join(BASE, "bandi", "%s.html" % c["slug"]), "w", encoding="utf-8").write(html)
