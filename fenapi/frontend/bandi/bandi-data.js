@@ -7,7 +7,7 @@
    Campi:
    - id          : identificativo unico (es. "sicurezza-2026-10")
    - categoria   : una tra "agricoltura" | "ficp" | "apprendisti" | "sicurezza"
-                   | "fitosanitari" | "fondo-conoscenza"
+                   | "fitosanitari" | "fondo-conoscenza" | "corsi-privati"
    - titolo      : titolo del corso/bando
    - descrizione : (opzionale) una o due righe di dettaglio
    - sede        : (opzionale) es. "Torino" o "Acqui Terme"
@@ -24,6 +24,17 @@
                    bando prima della scadenza (posti esauriti, corso partito).
    ========================================================================== */
 window.ENFIP_BANDI = [
+  {
+    id: "corsi-privati-digitalizzazione-ia-commercio-2026",
+    categoria: "corsi-privati",
+    titolo: "Digitalizzazione e Intelligenza Artificiale per il Commercio",
+    descrizione: "Impara a usare il digitale per aumentare le vendite e far crescere la tua attività: strumenti digitali per vendere, social media, contenuti con l'IA, WhatsApp Business e Google Maps, gestione clienti e recensioni, e-commerce e marketplace, organizzazione digitale di negozio e banco mercato. Per dipendenti del commercio, ambulanti, negozianti, titolari di attività e autonomi con partita IVA. 14 ore, un incontro a settimana il martedì dalle 18:00 alle 20:00, dal 22 settembre 2026. Costo 150 €. In collaborazione con GOIA e Mercato Itinerante.",
+    sede: "Torino",
+    pubblicato: "2026-09-15",
+    periodo: "dal 22 settembre 2026 — il martedì, 18:00–20:00",
+    locandina: "locandine/corsi-privati-digitalizzazione-ia-commercio-2026.jpg",
+    stato: "aperto"
+  },
   {
     id: "fitosanitari-rilascio-rinnovo",
     categoria: "fitosanitari",

@@ -39,6 +39,12 @@ CATS = [
        intro="Piani formativi aziendali finanziati da Fondo Conoscenza, il Fondo Paritetico Interprofessionale promosso da FENAPI e CIU: corsi obbligatori e su misura per le imprese aderenti, senza costi di adesione. ENFIP Piemonte segue analisi dei fabbisogni, presentazione del piano e rendicontazione.",
        anchor="enfip.html#fondo-conoscenza",
        icon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>'),
+  dict(slug="corsi-privati", nome="Corsi Privati", breve="Corsi a pagamento aperti a tutti: digitale, intelligenza artificiale, competenze per commercianti e professionisti.",
+       titolo_pagina="Corsi Privati — corsi a pagamento aperti a tutti",
+       intro="Corsi a catalogo organizzati da ENFIP Piemonte con quota di iscrizione a carico del partecipante, aperti a lavoratori, titolari di attività, commercianti, autonomi e privati: digitalizzazione, intelligenza artificiale, vendita e comunicazione. Lezioni in presenza nella sede di Torino, in orario compatibile con il lavoro.",
+       anchor="enfip.html#aree-formative",
+       h1="Corsi Privati", label_aperti="Corsi in programma", label_chiusi="Corsi conclusi",
+       icon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>'),
 ]
 
 src = open(os.path.join(BASE, "enfip.html"), encoding="utf-8").read()
@@ -178,7 +184,7 @@ footer_final = finish_footer(footer_rel)
 # ---- INDEX -------------------------------------------------------------------
 url = SITE + "/bandi/"
 title = "Bandi e corsi in partenza — ENFIP Piemonte | Locandine per categoria"
-desc = "Bandi e corsi in partenza di ENFIP Piemonte, divisi per categoria: agricoltura, FICP lingue e comunicazione, apprendisti, sicurezza sul lavoro, patentini fitosanitari, Fondo Conoscenza. Locandine, scadenze e contatti per iscriversi."
+desc = "Bandi e corsi in partenza di ENFIP Piemonte, divisi per categoria: agricoltura, FICP lingue e comunicazione, apprendisti, sicurezza sul lavoro, patentini fitosanitari, Fondo Conoscenza, corsi privati. Locandine, scadenze e contatti per iscriversi."
 cards = []
 for c in CATS:
     cards.append('''        <a href="%(slug)s.html" class="categoria-card fade-in">
@@ -233,6 +239,9 @@ open(os.path.join(BASE, "bandi", "index.html"), "w", encoding="utf-8").write(htm
 
 # ---- CATEGORIE ---------------------------------------------------------------
 for c in CATS:
+    c.setdefault("h1", "Bandi %s" % c["nome"])
+    c.setdefault("label_aperti", "Bandi aperti")
+    c.setdefault("label_chiusi", "Bandi conclusi")
     url = SITE + "/bandi/%s.html" % c["slug"]
     title = "%s — ENFIP Piemonte" % c["titolo_pagina"]
     desc = ("Locandine e scadenze dei bandi ENFIP Piemonte nella categoria %s. %s Contatti: 011 799999 int. 1, info@enfip.eu." % (c["nome"], c["breve"]))
@@ -240,7 +249,7 @@ for c in CATS:
   <section class="page-hero">
     <div class="container">
       <div class="breadcrumb"><a href="../index.html">Home</a> <span>/</span> <a href="../enfip.html">ENFIP Piemonte</a> <span>/</span> <a href="index.html">Bandi</a> <span>/</span> <strong>%(nome)s</strong></div>
-      <h1>Bandi %(nome)s</h1>
+      <h1>%(h1)s</h1>
       <p class="page-hero-subtitle">%(breve)s</p>
     </div>
   </section>
@@ -252,12 +261,12 @@ for c in CATS:
 %(nav)s%(cta)s        </aside>
         <div class="service-content">
           <section class="content-section" id="bandiRoot" data-categoria="%(slug)s">
-            <h2>Bandi aperti <span id="bandiApertiCount" style="color:var(--primary);font-size:20px;"></span></h2>
+            <h2>%(label_aperti)s <span id="bandiApertiCount" style="color:var(--primary);font-size:20px;"></span></h2>
             <p>%(intro)s <a href="../%(anchor)s">Scopri di pi&ugrave; su questa area formativa</a>.</p>
             <div id="bandiAperti"></div>
           </section>
           <section class="content-section bandi-archivio" id="bandiArchivio">
-            <h2>Bandi conclusi <span id="bandiChiusiCount" style="color:var(--text-muted);font-size:20px;"></span></h2>
+            <h2>%(label_chiusi)s <span id="bandiChiusiCount" style="color:var(--text-muted);font-size:20px;"></span></h2>
             <p>Storico dei bandi %(nome)s gi&agrave; chiusi: le iscrizioni sono terminate, ma le locandine restano consultabili. Per conoscere le prossime edizioni contatta la segreteria.</p>
             <div id="bandiChiusi"></div>
           </section>
