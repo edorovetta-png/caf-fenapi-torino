@@ -25,6 +25,15 @@
    ========================================================================== */
 window.ENFIP_BANDI = [
   {
+    id: "sicurezza-antincendio-livello-1",
+    categoria: "sicurezza",
+    titolo: "Corso per addetti antincendio — attività di livello 1",
+    descrizione: "2 ore di teoria in presenza e 2 ore di pratica obbligatoria in presenza, con esercitazioni pratiche sull'uso degli estintori. 4 ore, costo 40 €. Corso normato dal D.Lgs. 81/08 con rilascio di attestato ufficiale.",
+    pubblicato: "2026-10-28",
+    locandina: "locandine/sicurezza-antincendio-livello-1.jpg",
+    stato: "aperto"
+  },
+  {
     id: "sicurezza-primo-soccorso-gruppo-b-c",
     categoria: "sicurezza",
     titolo: "Corso di primo soccorso — Gruppo B e C",
