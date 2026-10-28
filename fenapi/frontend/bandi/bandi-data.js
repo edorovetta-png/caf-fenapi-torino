@@ -25,6 +25,25 @@
    ========================================================================== */
 window.ENFIP_BANDI = [
   {
+    id: "sicurezza-primo-soccorso-gruppo-b-c",
+    categoria: "sicurezza",
+    titolo: "Corso di primo soccorso — Gruppo B e C",
+    descrizione: "Gestione delle emergenze sanitarie, tecniche di rianimazione di base, posizionamento e movimentazione sicura, disostruzione delle vie aeree. 12 ore, costo 120 €. Corso normato dal D.Lgs. 81/2008, al termine viene rilasciato un attestato.",
+    pubblicato: "2026-10-28",
+    periodo: "dal 2 dicembre 2026",
+    locandina: "locandine/sicurezza-primo-soccorso-gruppo-b-c.jpg",
+    stato: "aperto"
+  },
+  {
+    id: "sicurezza-rspp-datore-lavoro-rischio-basso",
+    categoria: "sicurezza",
+    titolo: "Corso RSPP Datore di Lavoro — rischio basso",
+    descrizione: "Gestione della sicurezza e salute sul lavoro, valutazione dei rischi e misure di prevenzione, panoramica normativa e D.Lgs. 81/2008, ruolo e responsabilità del Datore di Lavoro come RSPP, criteri di redazione del DVR, misure organizzative e procedurali. 16 ore + modulo comune di 8 ore (24 ore totali), costo 250 €. Il corso è tenuto interamente in presenza.",
+    pubblicato: "2026-10-28",
+    locandina: "locandine/sicurezza-rspp-datore-lavoro-rischio-basso.jpg",
+    stato: "aperto"
+  },
+  {
     id: "corsi-privati-digitalizzazione-ia-commercio-2026",
     categoria: "corsi-privati",
     titolo: "Digitalizzazione e Intelligenza Artificiale per il Commercio",
