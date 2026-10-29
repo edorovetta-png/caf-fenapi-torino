@@ -52,7 +52,7 @@
     var actions = '';
     if (b.locandina) actions += '<a href="' + esc(b.locandina) + '" class="btn-bando js-lightbox" data-title="' + esc(b.titolo) + '">' + ICON_EYE + ' Vedi locandina</a>';
     if (b.pdf) actions += '<a href="' + esc(b.pdf) + '" class="btn-bando' + (b.locandina ? ' btn-bando-secondary' : '') + '" target="_blank" rel="noopener">' + ICON_PDF + ' Scarica PDF</a>';
-    if (open) actions += '<a href="mailto:info@enfip.eu?subject=' + encodeURIComponent('Informazioni: ' + b.titolo) + '" class="btn-bando btn-bando-secondary">' + ICON_MAIL + ' Chiedi info / iscriviti</a>';
+    if (open) actions += '<a href="mailto:info.to@enfip.eu?subject=' + encodeURIComponent('Informazioni: ' + b.titolo) + '" class="btn-bando btn-bando-secondary">' + ICON_MAIL + ' Chiedi info / iscriviti</a>';
 
     return '<article class="bando-card" id="' + esc(b.id || '') + '">' + media +
            '<div class="bando-card-body"><div class="bando-card-meta">' + meta + '</div>' +
@@ -78,7 +78,7 @@
     if (aperti.length) {
       openEl.innerHTML = '<div class="bandi-list">' + aperti.map(function (b) { return card(b, true); }).join('') + '</div>';
     } else {
-      openEl.innerHTML = '<div class="bandi-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div><strong>Nessun bando aperto in questo momento</strong><p>Le nuove edizioni vengono pubblicate qui e sulla pagina Facebook ENFIP Piemonte. Per essere avvisato quando parte un corso scrivi a <a href="mailto:info@enfip.eu">info@enfip.eu</a> o chiama lo <a href="tel:+39011799999">011 799999</a> (int. 1).</p></div></div>';
+      openEl.innerHTML = '<div class="bandi-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div><strong>Nessun bando aperto in questo momento</strong><p>Le nuove edizioni vengono pubblicate qui e sulla pagina Facebook ENFIP Piemonte. Per essere avvisato quando parte un corso scrivi a <a href="mailto:info.to@enfip.eu">info.to@enfip.eu</a> o chiama lo <a href="tel:+39011799999">011 799999</a> (int. 1).</p></div></div>';
     }
     if (countEl) countEl.textContent = aperti.length ? '(' + aperti.length + ')' : '';
     if (archEl && closedEl) {

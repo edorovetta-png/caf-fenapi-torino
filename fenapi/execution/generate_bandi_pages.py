@@ -77,13 +77,13 @@ footer_rel = relativize(footer)
 CONTACT_CTA = '''          <div class="sidebar-cta">
             <h4>Informazioni e iscrizioni</h4>
             <p>Per iscriverti a un corso o ricevere la modulistica contatta la segreteria ENFIP.</p>
-            <a href="mailto:info@enfip.eu?subject=Richiesta%20informazioni%20bandi%20ENFIP" class="btn-sidebar-cta">
+            <a href="mailto:info.to@enfip.eu?subject=Richiesta%20informazioni%20bandi%20ENFIP" class="btn-sidebar-cta">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               Scrivi a ENFIP
             </a>
             <div class="sidebar-contact">
               <p><strong>Telefono:</strong> <a href="tel:+39011799999">011 799999</a> (int. 1)</p>
-              <p><strong>Email:</strong> <a href="mailto:info@enfip.eu">info@enfip.eu</a></p>
+              <p><strong>Email:</strong> <a href="mailto:info.to@enfip.eu">info.to@enfip.eu</a></p>
               <p><strong>Facebook:</strong> <a href="https://www.facebook.com/enfip/" target="_blank" rel="noopener noreferrer">ENFIP Piemonte</a></p>
             </div>
           </div>
@@ -230,9 +230,9 @@ index_body = header_rel + '''  <!-- Page Hero -->
             <h3>Non trovi il corso che cerchi?</h3>
             <p>Scrivi o chiama la segreteria: ti indichiamo le prossime edizioni e le possibilit&agrave; di finanziamento.</p>
             <div class="content-cta-actions">
-              <a href="mailto:info@enfip.eu?subject=Richiesta%%20informazioni%%20corsi%%20ENFIP" class="btn-hero-primary">
+              <a href="mailto:info.to@enfip.eu?subject=Richiesta%%20informazioni%%20corsi%%20ENFIP" class="btn-hero-primary">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                Scrivi a info@enfip.eu
+                Scrivi a info.to@enfip.eu
               </a>
               <a href="tel:+39011799999" class="btn-hero-secondary">Chiama: 011 799999 (int. 1)</a>
             </div>
@@ -255,7 +255,7 @@ for c in CATS:
     c.setdefault("label_chiusi", "Bandi conclusi")
     url = SITE + "/bandi/%s.html" % c["slug"]
     title = "%s — ENFIP Piemonte" % c["titolo_pagina"]
-    desc = ("Locandine e scadenze dei bandi ENFIP Piemonte nella categoria %s. %s Contatti: 011 799999 int. 1, info@enfip.eu." % (c["nome"], c["breve"]))
+    desc = ("Locandine e scadenze dei bandi ENFIP Piemonte nella categoria %s. %s Contatti: 011 799999 int. 1, info.to@enfip.eu." % (c["nome"], c["breve"]))
     body = header_rel + '''  <!-- Page Hero -->
   <section class="page-hero">
     <div class="container">
@@ -285,9 +285,9 @@ for c in CATS:
             <h3>Vuoi iscriverti o avere informazioni?</h3>
             <p>Contatta la segreteria ENFIP Piemonte: ti inviamo la modulistica di iscrizione e i dettagli su date, sedi e finanziamenti.</p>
             <div class="content-cta-actions">
-              <a href="mailto:info@enfip.eu?subject=Informazioni%%20bandi%%20%(nome_url)s" class="btn-hero-primary">
+              <a href="mailto:info.to@enfip.eu?subject=Informazioni%%20bandi%%20%(nome_url)s" class="btn-hero-primary">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                Scrivi a info@enfip.eu
+                Scrivi a info.to@enfip.eu
               </a>
               <a href="tel:+39011799999" class="btn-hero-secondary">Chiama: 011 799999 (int. 1)</a>
             </div>
