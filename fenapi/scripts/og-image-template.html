@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>OG template — Circolo FENAPI Torino</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Open+Sans:wght@400;600&display=swap');
+  html, body { margin: 0; padding: 0; background: #000; }
+  body { font-family: 'Open Sans', sans-serif; }
+  .og {
+    width: 1200px;
+    height: 630px;
+    box-sizing: border-box;
+    padding: 60px;
+    color: #fff;
+    position: relative;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 40%),
+      linear-gradient(135deg, #206088 0%, #11344a 100%);
+    overflow: hidden;
+  }
+  .og::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .logo {
+    width: 120px;
+    height: 120px;
+    background: url('../frontend/images/logo-fenapi.png') no-repeat center / contain;
+    position: relative;
+  }
+  h1 {
+    font-family: 'Lora', 'Playfair Display', 'EB Garamond', serif;
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1.05;
+    margin: 72px 0 0 0;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .bar {
+    width: 80px;
+    height: 4px;
+    background: #C4A052;
+    margin: 24px 0 24px 0;
+    position: relative;
+  }
+  .sub {
+    font-size: 32px;
+    font-weight: 400;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 1000px;
+    position: relative;
+  }
+  .url {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    font-size: 22px;
+    opacity: 0.7;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+  <div class="og">
+    <div class="logo"></div>
+    <h1>Circolo FENAPI Torino</h1>
+    <div class="bar"></div>
+    <p class="sub">CAF e Patronato · Sede Provinciale dal 1992</p>
+    <div class="url">www.fenapipiemonte.org</div>
+  </div>
+</body>
+</html>
