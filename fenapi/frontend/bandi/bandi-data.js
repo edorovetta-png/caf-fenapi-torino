@@ -117,6 +117,16 @@ window.ENFIP_BANDI = [
   {"id": "agricoltura-05-castelnuovo-calcea", "categoria": "agricoltura", "titolo": "Viticoltura e cambiamenti climatici", "descrizione": "Nuove tecniche per mantenimento della sostenibilità e redditività aziendale. Corso finanziato nell’ambito del CSR 2023-27, Intervento SRH03 (Bando 1/2023): 21 ore, dal 8 gennaio 2025 al 12 febbraio 2025. Sede: Cantina Sei Castelli - reg Opessina n. 41 – Castel nuovo Calcea 14040 ( At.).", "sede": "Castelnuovo Calcea (AT)", "pubblicato": "2025-01-08", "periodo": "dal 8 gennaio 2025 al 12 febbraio 2025", "locandina": "locandine/agricoltura-05-castelnuovo-calcea.jpg", "pdf": "locandine/agricoltura-05-castelnuovo-calcea.pdf", "stato": "chiuso"},
   {"id": "agricoltura-01-lagnasco", "categoria": "agricoltura", "titolo": "Cambiamenti climatici in frutticoltura", "descrizione": "Obiettivi del programma farm to fork e mantenimento della produttività della qualità e della redditività aziendale. Corso finanziato nell’ambito del CSR 2023-27, Intervento SRH03 (Bando 1/2023): 30 ore, dal 7 gennaio 2025 al 4 febbraio 2025. Sede: Via Praetta n. 2 - Lagnasco ( Cn).", "sede": "Lagnasco (CN)", "pubblicato": "2025-01-07", "periodo": "dal 7 gennaio 2025 al 4 febbraio 2025", "locandina": "locandine/agricoltura-01-lagnasco.jpg", "pdf": "locandine/agricoltura-01-lagnasco.pdf", "stato": "chiuso"},
   {
+    id: "ficp-inglese-pre-intermedio-b1",
+    categoria: "ficp",
+    titolo: "Corso di inglese pre-intermedio (B1) — solo per occupati",
+    descrizione: "Conversazione, grammatica e vocabolario con insegnanti qualificati madrelingua, in piccoli gruppi, con certificazione finale. 60 ore, orario serale (2 ore settimanali). Finanziato al 70% dalla Regione Piemonte: prezzo intero 765 €, quota a carico 229,50 €; gratuito con ISEE sotto 10.000 €. Corso in attesa di approvazione e finanziamento da parte della Regione Piemonte.",
+    sede: "Torino — Via Sagra di San Michele 53/55",
+    pubblicato: "2026-11-11",
+    locandina: "locandine/ficp-inglese-pre-intermedio-b1.jpg",
+    stato: "aperto"
+  },
+  {
     id: "ficp-buono-formazione-2023-2027",
     categoria: "ficp",
     titolo: "Corsi di formazione finanziati — Buono Formazione FICP 2023-2027",
